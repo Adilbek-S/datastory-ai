@@ -30,6 +30,25 @@ streamlit run app.py
 pytest
 ```
 
+### Демо-данные
+
+В `data/demo/` лежат полностью синтетические данные вымышленной платёжной системы DemoPay KZ (реальные данные и организации не используются):
+
+| Файл | Содержимое |
+|---|---|
+| `transactions_2026.xlsx` | статистика январь — июнь 2026: Month, Transactions, Successful, Failed, Amount_KZT, Channel (Mobile / Web / API), 18 строк; в марте успешность транзакций заметно снижена |
+| `business_metrics.pdf` | описание показателей (Success Rate, Transaction Volume, Average Transaction Amount), каналов и контекстного события в марте |
+| `transactions_screenshot.png` | изображение части таблицы (февраль — март) для распознавания Vision-моделью |
+| `expected_metrics.json` | контрольные показатели, посчитанные обычным Python, — для автотестов |
+
+Файлы воспроизводятся командой (фиксированный seed, результат побайтно одинаков при каждом запуске):
+
+```bash
+python scripts/generate_demo_data.py            # или --out <каталог>
+```
+
+Тест `test_committed_demo_files_are_up_to_date` следит, чтобы закоммиченные файлы совпадали с выводом генератора.
+
 ### MCP-сервер
 
 ```bash
@@ -55,6 +74,8 @@ datastory/
   visualization/            Visualization Engine
   insights/                 Insight Generator
   evaluation/               Evaluation Pipeline
+scripts/                    generate_demo_data.py — генератор демо-данных
+data/demo/                  синтетические демо-данные
 tests/                      Pytest
 ```
 

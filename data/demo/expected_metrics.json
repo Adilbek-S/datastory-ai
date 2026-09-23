@@ -1,0 +1,386 @@
+{
+  "meta": {
+    "description": "Ожидаемые контрольные показатели для синтетического датасета DemoPay KZ.",
+    "synthetic": true,
+    "seed": 2026,
+    "generator": "scripts/generate_demo_data.py",
+    "formulas": {
+      "success_rate_pct": "Successful / Transactions * 100 (при агрегации: суммы, затем деление)",
+      "avg_transaction_amount_kzt": "Amount_KZT / Transactions (при агрегации: суммы, затем деление)"
+    }
+  },
+  "row_count": 18,
+  "columns": [
+    "Month",
+    "Transactions",
+    "Successful",
+    "Failed",
+    "Amount_KZT",
+    "Channel"
+  ],
+  "months": [
+    "2026-01",
+    "2026-02",
+    "2026-03",
+    "2026-04",
+    "2026-05",
+    "2026-06"
+  ],
+  "channels": [
+    "Mobile",
+    "Web",
+    "API"
+  ],
+  "totals": {
+    "transactions": 2007686,
+    "successful": 1943608,
+    "failed": 64078,
+    "amount_kzt": 26377118441,
+    "success_rate_pct": 96.8084,
+    "avg_transaction_amount_kzt": 13138.0696
+  },
+  "by_month": {
+    "2026-01": {
+      "transactions": 317164,
+      "successful": 309747,
+      "failed": 7417,
+      "amount_kzt": 4185883345,
+      "success_rate_pct": 97.6615,
+      "avg_transaction_amount_kzt": 13197.8514
+    },
+    "2026-02": {
+      "transactions": 327675,
+      "successful": 320383,
+      "failed": 7292,
+      "amount_kzt": 4325251527,
+      "success_rate_pct": 97.7746,
+      "avg_transaction_amount_kzt": 13199.8216
+    },
+    "2026-03": {
+      "transactions": 330360,
+      "successful": 303851,
+      "failed": 26509,
+      "amount_kzt": 4362795532,
+      "success_rate_pct": 91.9757,
+      "avg_transaction_amount_kzt": 13206.1858
+    },
+    "2026-04": {
+      "transactions": 336618,
+      "successful": 329095,
+      "failed": 7523,
+      "amount_kzt": 4439243307,
+      "success_rate_pct": 97.7651,
+      "avg_transaction_amount_kzt": 13187.7776
+    },
+    "2026-05": {
+      "transactions": 344235,
+      "successful": 336369,
+      "failed": 7866,
+      "amount_kzt": 4493196653,
+      "success_rate_pct": 97.7149,
+      "avg_transaction_amount_kzt": 13052.7014
+    },
+    "2026-06": {
+      "transactions": 351634,
+      "successful": 344163,
+      "failed": 7471,
+      "amount_kzt": 4570748077,
+      "success_rate_pct": 97.8753,
+      "avg_transaction_amount_kzt": 12998.5953
+    }
+  },
+  "by_channel": {
+    "Mobile": {
+      "transactions": 1140310,
+      "successful": 1105367,
+      "failed": 34943,
+      "amount_kzt": 9569308177,
+      "success_rate_pct": 96.9357,
+      "avg_transaction_amount_kzt": 8391.848
+    },
+    "Web": {
+      "transactions": 607158,
+      "successful": 583308,
+      "failed": 23850,
+      "amount_kzt": 8598651702,
+      "success_rate_pct": 96.0719,
+      "avg_transaction_amount_kzt": 14162.1319
+    },
+    "API": {
+      "transactions": 260218,
+      "successful": 254933,
+      "failed": 5285,
+      "amount_kzt": 8209158562,
+      "success_rate_pct": 97.969,
+      "avg_transaction_amount_kzt": 31547.2356
+    }
+  },
+  "by_month_channel": [
+    {
+      "month": "2026-01",
+      "channel": "Mobile",
+      "transactions": 177841,
+      "successful": 173931,
+      "failed": 3910,
+      "amount_kzt": 1494747476,
+      "success_rate_pct": 97.8014,
+      "avg_transaction_amount_kzt": 8404.9655
+    },
+    {
+      "month": "2026-01",
+      "channel": "Web",
+      "transactions": 98074,
+      "successful": 95133,
+      "failed": 2941,
+      "amount_kzt": 1373382401,
+      "success_rate_pct": 97.0012,
+      "avg_transaction_amount_kzt": 14003.532
+    },
+    {
+      "month": "2026-01",
+      "channel": "API",
+      "transactions": 41249,
+      "successful": 40683,
+      "failed": 566,
+      "amount_kzt": 1317753468,
+      "success_rate_pct": 98.6278,
+      "avg_transaction_amount_kzt": 31946.3131
+    },
+    {
+      "month": "2026-02",
+      "channel": "Mobile",
+      "transactions": 186173,
+      "successful": 182292,
+      "failed": 3881,
+      "amount_kzt": 1584817850,
+      "success_rate_pct": 97.9154,
+      "avg_transaction_amount_kzt": 8512.6084
+    },
+    {
+      "month": "2026-02",
+      "channel": "Web",
+      "transactions": 99395,
+      "successful": 96655,
+      "failed": 2740,
+      "amount_kzt": 1393056031,
+      "success_rate_pct": 97.2433,
+      "avg_transaction_amount_kzt": 14015.3532
+    },
+    {
+      "month": "2026-02",
+      "channel": "API",
+      "transactions": 42107,
+      "successful": 41436,
+      "failed": 671,
+      "amount_kzt": 1347377646,
+      "success_rate_pct": 98.4064,
+      "avg_transaction_amount_kzt": 31998.8991
+    },
+    {
+      "month": "2026-03",
+      "channel": "Mobile",
+      "transactions": 188781,
+      "successful": 174157,
+      "failed": 14624,
+      "amount_kzt": 1599983794,
+      "success_rate_pct": 92.2535,
+      "avg_transaction_amount_kzt": 8475.3434
+    },
+    {
+      "month": "2026-03",
+      "channel": "Web",
+      "transactions": 98142,
+      "successful": 88281,
+      "failed": 9861,
+      "amount_kzt": 1423531581,
+      "success_rate_pct": 89.9523,
+      "avg_transaction_amount_kzt": 14504.8153
+    },
+    {
+      "month": "2026-03",
+      "channel": "API",
+      "transactions": 43437,
+      "successful": 41413,
+      "failed": 2024,
+      "amount_kzt": 1339280157,
+      "success_rate_pct": 95.3404,
+      "avg_transaction_amount_kzt": 30832.7038
+    },
+    {
+      "month": "2026-04",
+      "channel": "Mobile",
+      "transactions": 191290,
+      "successful": 187137,
+      "failed": 4153,
+      "amount_kzt": 1590134697,
+      "success_rate_pct": 97.829,
+      "avg_transaction_amount_kzt": 8312.6912
+    },
+    {
+      "month": "2026-04",
+      "channel": "Web",
+      "transactions": 101616,
+      "successful": 98962,
+      "failed": 2654,
+      "amount_kzt": 1457663497,
+      "success_rate_pct": 97.3882,
+      "avg_transaction_amount_kzt": 14344.8226
+    },
+    {
+      "month": "2026-04",
+      "channel": "API",
+      "transactions": 43712,
+      "successful": 42996,
+      "failed": 716,
+      "amount_kzt": 1391445113,
+      "success_rate_pct": 98.362,
+      "avg_transaction_amount_kzt": 31832.1082
+    },
+    {
+      "month": "2026-05",
+      "channel": "Mobile",
+      "transactions": 195390,
+      "successful": 191015,
+      "failed": 4375,
+      "amount_kzt": 1632968955,
+      "success_rate_pct": 97.7609,
+      "avg_transaction_amount_kzt": 8357.4848
+    },
+    {
+      "month": "2026-05",
+      "channel": "Web",
+      "transactions": 104448,
+      "successful": 101523,
+      "failed": 2925,
+      "amount_kzt": 1454718116,
+      "success_rate_pct": 97.1996,
+      "avg_transaction_amount_kzt": 13927.678
+    },
+    {
+      "month": "2026-05",
+      "channel": "API",
+      "transactions": 44397,
+      "successful": 43831,
+      "failed": 566,
+      "amount_kzt": 1405509582,
+      "success_rate_pct": 98.7251,
+      "avg_transaction_amount_kzt": 31657.7603
+    },
+    {
+      "month": "2026-06",
+      "channel": "Mobile",
+      "transactions": 200835,
+      "successful": 196835,
+      "failed": 4000,
+      "amount_kzt": 1666655405,
+      "success_rate_pct": 98.0083,
+      "avg_transaction_amount_kzt": 8298.6302
+    },
+    {
+      "month": "2026-06",
+      "channel": "Web",
+      "transactions": 105483,
+      "successful": 102754,
+      "failed": 2729,
+      "amount_kzt": 1496300076,
+      "success_rate_pct": 97.4129,
+      "avg_transaction_amount_kzt": 14185.2249
+    },
+    {
+      "month": "2026-06",
+      "channel": "API",
+      "transactions": 45316,
+      "successful": 44574,
+      "failed": 742,
+      "amount_kzt": 1407792596,
+      "success_rate_pct": 98.3626,
+      "avg_transaction_amount_kzt": 31066.1267
+    }
+  ],
+  "anomaly": {
+    "lowest_success_rate_month": "2026-03",
+    "lowest_success_rate_pct": 91.9757,
+    "march_success_rate_pct": 91.9757,
+    "february_success_rate_pct": 97.7746,
+    "baseline_success_rate_excl_march_pct": 97.7602,
+    "march_vs_february_pp": -5.7989,
+    "march_vs_baseline_pp": -5.7845,
+    "march_vs_february_pp_by_channel": {
+      "Mobile": -5.6619,
+      "Web": -7.291,
+      "API": -3.066
+    }
+  },
+  "leaders": {
+    "highest_transactions_channel": "Mobile",
+    "highest_amount_channel": "Mobile",
+    "highest_avg_amount_channel": "API",
+    "highest_success_rate_channel": "API"
+  },
+  "screenshot": {
+    "file": "transactions_screenshot.png",
+    "months": [
+      "2026-02",
+      "2026-03"
+    ],
+    "row_count": 6,
+    "rows": [
+      {
+        "Month": "2026-02",
+        "Transactions": 186173,
+        "Successful": 182292,
+        "Failed": 3881,
+        "Amount_KZT": 1584817850,
+        "Channel": "Mobile"
+      },
+      {
+        "Month": "2026-02",
+        "Transactions": 99395,
+        "Successful": 96655,
+        "Failed": 2740,
+        "Amount_KZT": 1393056031,
+        "Channel": "Web"
+      },
+      {
+        "Month": "2026-02",
+        "Transactions": 42107,
+        "Successful": 41436,
+        "Failed": 671,
+        "Amount_KZT": 1347377646,
+        "Channel": "API"
+      },
+      {
+        "Month": "2026-03",
+        "Transactions": 188781,
+        "Successful": 174157,
+        "Failed": 14624,
+        "Amount_KZT": 1599983794,
+        "Channel": "Mobile"
+      },
+      {
+        "Month": "2026-03",
+        "Transactions": 98142,
+        "Successful": 88281,
+        "Failed": 9861,
+        "Amount_KZT": 1423531581,
+        "Channel": "Web"
+      },
+      {
+        "Month": "2026-03",
+        "Transactions": 43437,
+        "Successful": 41413,
+        "Failed": 2024,
+        "Amount_KZT": 1339280157,
+        "Channel": "API"
+      }
+    ],
+    "totals": {
+      "transactions": 658035,
+      "successful": 624234,
+      "failed": 33801,
+      "amount_kzt": 8688047059,
+      "success_rate_pct": 94.8633,
+      "avg_transaction_amount_kzt": 13203.0166
+    }
+  }
+}

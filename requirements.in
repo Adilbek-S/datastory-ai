@@ -9,6 +9,7 @@ openai
 chromadb
 mcp<2
 pymupdf
+pillow
 pydantic
 pydantic-settings
 python-dotenv
