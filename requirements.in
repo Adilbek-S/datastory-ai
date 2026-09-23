@@ -1,0 +1,16 @@
+﻿streamlit
+pandas
+openpyxl
+plotly
+langgraph
+langchain-openai
+langchain-core
+openai
+chromadb
+mcp<2
+pymupdf
+pydantic
+pydantic-settings
+python-dotenv
+langsmith
+pytest

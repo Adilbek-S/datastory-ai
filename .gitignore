@@ -1,0 +1,20 @@
+# Секреты
+.env
+
+# Python
+.venv/
+__pycache__/
+*.py[cod]
+.pytest_cache/
+*.egg-info/
+
+# Данные и векторная база
+data/chroma/
+data/uploads/
+*.log
+
+# IDE / ОС
+.idea/
+.vscode/
+.DS_Store
+Thumbs.db
