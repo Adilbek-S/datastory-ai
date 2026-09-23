@@ -10,6 +10,7 @@ chromadb
 mcp<2
 pymupdf
 pillow
+pyarrow
 pydantic
 pydantic-settings
 python-dotenv

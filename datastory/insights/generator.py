@@ -6,19 +6,19 @@ from datastory.models import DatasetProfile, Insight
 
 def generate_insights(profile: DatasetProfile) -> list[Insight]:
     insights: list[Insight] = []
-    if profile.duplicate_rows:
+    if profile.duplicate_row_count:
         insights.append(
             Insight(
                 title="Найдены дубликаты",
-                text=f"В данных {profile.duplicate_rows} повторяющихся строк.",
+                text=f"В данных {profile.duplicate_row_count} повторяющихся строк.",
                 severity="warning",
             )
         )
-    if profile.missing_cells:
+    if profile.missing_cell_count:
         insights.append(
             Insight(
                 title="Есть пропуски",
-                text=f"Всего пропущенных ячеек: {profile.missing_cells}.",
+                text=f"Всего пропущенных ячеек: {profile.missing_cell_count}.",
                 severity="warning",
             )
         )

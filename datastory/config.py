@@ -21,6 +21,7 @@ class Settings(BaseSettings):
     embedding_model: str = "text-embedding-3-small"
 
     chroma_dir: Path = Field(default=PROJECT_ROOT / "data" / "chroma")
+    workspace_dir: Path = Field(default=PROJECT_ROOT / "data" / "workspace")
 
     langsmith_tracing: bool = False
     langsmith_api_key: str = ""
@@ -34,8 +35,10 @@ class Settings(BaseSettings):
 @lru_cache
 def get_settings() -> Settings:
     settings = Settings()
-    if not settings.chroma_dir.is_absolute():
-        settings.chroma_dir = PROJECT_ROOT / settings.chroma_dir
+    for name in ("chroma_dir", "workspace_dir"):
+        path = getattr(settings, name)
+        if not path.is_absolute():
+            setattr(settings, name, PROJECT_ROOT / path)
     _configure_langsmith(settings)
     return settings
 

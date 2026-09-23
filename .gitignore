@@ -10,6 +10,7 @@ __pycache__/
 
 # Данные и векторная база
 data/chroma/
+data/workspace/
 data/uploads/
 *.log
 

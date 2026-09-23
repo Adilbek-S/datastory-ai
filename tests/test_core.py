@@ -11,8 +11,8 @@ from datastory.file_processing.loader import (
     file_kind,
     load_table,
 )
-from datastory.models import ColumnKind, KnowledgeChunk
-from datastory.profiler.profiler import profile_dataframe
+from datastory.models import KnowledgeChunk
+from datastory.profiler.profiler import build_profile
 from datastory.rag.engine import split_text
 from datastory.workflow.graph import run_analysis
 
@@ -49,12 +49,12 @@ def test_load_image_not_supported_yet():
 
 
 def test_profile_kinds(df):
-    profile = profile_dataframe(df)
-    assert profile.rows == 4 and profile.columns == 4
-    assert profile.missing_cells == 1
-    assert profile.columns_of(ColumnKind.DATETIME) == ["date"]
-    assert profile.columns_of(ColumnKind.CATEGORICAL) == ["region"]
-    assert profile.columns_of(ColumnKind.NUMERIC) == ["revenue", "orders"]
+    profile, _ = build_profile(df, "test.xlsx")
+    assert profile.row_count == 4 and profile.column_count == 4
+    assert profile.missing_cell_count == 1
+    assert profile.detected_date_columns == ["date"]
+    assert profile.detected_category_columns == ["region"]
+    assert profile.detected_numeric_columns == ["revenue", "orders"]
 
 
 def test_split_text_overlap():
@@ -83,4 +83,4 @@ def test_mcp_tool_registered():
     from datastory.mcp_server.server import mcp
 
     tools = asyncio.run(mcp.list_tools())
-    assert "profile_file" in {t.name for t in tools}
+    assert {"profile_file", "list_datasets", "get_dataset_profile"} <= {t.name for t in tools}

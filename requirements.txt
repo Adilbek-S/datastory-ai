@@ -11,6 +11,7 @@ chromadb==1.5.9
 mcp==1.30.0
 pymupdf==1.28.2
 pillow==12.3.0
+pyarrow==25.0.1
 pydantic==2.13.5
 pydantic-settings==2.15.0
 python-dotenv==1.2.3

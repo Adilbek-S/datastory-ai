@@ -12,8 +12,8 @@ def evaluate_result(result: AnalysisResult) -> list[EvalCase]:
     return [
         EvalCase(
             name="profile_covers_all_columns",
-            passed=len(profile.column_profiles) == profile.columns,
-            details=f"{len(profile.column_profiles)} из {profile.columns}",
+            passed=len(profile.columns) == profile.column_count,
+            details=f"{len(profile.columns)} из {profile.column_count}",
         ),
         EvalCase(name="has_kpis", passed=bool(result.kpis)),
         EvalCase(name="has_insights", passed=bool(result.insights)),

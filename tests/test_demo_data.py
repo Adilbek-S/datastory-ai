@@ -8,8 +8,6 @@ import pytest
 from PIL import Image
 
 from datastory.file_processing.loader import load_table
-from datastory.models import ColumnKind
-from datastory.profiler.profiler import profile_dataframe
 from datastory.workflow.graph import run_analysis
 from scripts import generate_demo_data as gen
 
@@ -150,7 +148,6 @@ def test_committed_demo_files_are_up_to_date(generated):
 # ------------------------------------------------------------------ совместимость с приложением
 def test_app_pipeline_on_demo_xlsx():
     frame = load_table((REPO_DEMO / "transactions_2026.xlsx").read_bytes(), "transactions_2026.xlsx")
-    profile = profile_dataframe(frame)
-    assert profile.columns_of(ColumnKind.NUMERIC) == ["Transactions", "Successful", "Failed", "Amount_KZT"]
     result = run_analysis(frame)
-    assert result.profile.rows == 18 and result.kpis
+    assert result.profile.row_count == 18 and result.kpis
+    assert result.profile.detected_numeric_columns == ["Transactions", "Successful", "Failed", "Amount_KZT"]
