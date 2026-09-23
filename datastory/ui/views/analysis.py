@@ -10,6 +10,7 @@ from datastory.file_processing.loader import detect_format, file_kind, list_shee
 from datastory.models import ColumnKind, DatasetProfile, KPI, Severity
 from datastory.profiler.profiler import build_profile, new_dataset_id
 from datastory.storage.store import DatasetStore
+from datastory.ui.kb import index_profile_safely
 from datastory.ui.theme import kpi_row
 from datastory.visualization.engine import build_figure
 from datastory.workflow.graph import run_analysis_for_dataset
@@ -215,7 +216,10 @@ def _confirm_section(profile, typed, signature, type_overrides, sensitive_overri
         except OSError as exc:
             st.error(f"Не удалось сохранить датасет: {exc}")
             return
-        st.session_state["confirmed"] = {"key": state_key, "dataset_id": reference.dataset_id}
+        indexed, index_message = index_profile_safely(final)  # семантическое описание для RAG
+        st.session_state["confirmed"] = {
+            "key": state_key, "dataset_id": reference.dataset_id, "indexed": indexed, "index_message": index_message,
+        }
 
     confirmed = st.session_state.get("confirmed")
     if not confirmed:
@@ -225,6 +229,10 @@ def _confirm_section(profile, typed, signature, type_overrides, sensitive_overri
         return
 
     st.success(f"Датасет сохранён. ID: `{confirmed['dataset_id']}`", icon=":material/check_circle:")
+    if confirmed.get("indexed"):
+        st.caption(f":material/database: База знаний: {confirmed['index_message']}")
+    else:
+        st.warning(confirmed.get("index_message", ""), icon=":material/warning:")
     _analysis_section(confirmed["dataset_id"])
 
 
@@ -250,7 +258,10 @@ def _analysis_section(dataset_id: str) -> None:
 
     st.markdown("#### Выводы")
     for insight in result.insights:
-        INSIGHT_RENDERERS.get(insight.severity, st.info)(f"**{insight.title}.** {insight.text}")
+        INSIGHT_RENDERERS.get(insight.severity, st.info)(
+            f"**{insight.title}.** {insight.text}", icon=":material/calculate:"
+        )
+    st.caption("Значок калькулятора — результат вычисления по данным (Pandas), а не предположение модели.")
 
     with st.expander("Проверка результата (Evaluation)"):
         for case in evaluate_result(result):

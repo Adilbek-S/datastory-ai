@@ -19,6 +19,7 @@ class Settings(BaseSettings):
     openai_api_key: str = ""
     openai_model: str = "gpt-4o-mini"
     embedding_model: str = "text-embedding-3-small"
+    embedding_provider: str = "auto"  # auto | openai | offline
 
     chroma_dir: Path = Field(default=PROJECT_ROOT / "data" / "chroma")
     workspace_dir: Path = Field(default=PROJECT_ROOT / "data" / "workspace")

@@ -15,6 +15,14 @@ class ColumnKind(str, Enum):
     BOOLEAN = "boolean"
 
 
+class EvidenceType(str, Enum):
+    """Происхождение утверждения: различаем факт, вычисление и предположение."""
+
+    DOCUMENT_FACT = "document_fact"  # прямо сказано в загруженном документе (есть источник)
+    COMPUTED = "computed_result"  # получено вычислением по данным (есть формула/способ)
+    ASSUMPTION = "model_assumption"  # предположение модели, документально не подтверждено
+
+
 class Severity(str, Enum):
     INFO = "info"
     WARNING = "warning"
@@ -124,6 +132,7 @@ class Insight(BaseModel):
     title: str
     text: str
     severity: str = "info"  # info | warning | positive
+    evidence_type: EvidenceType = EvidenceType.COMPUTED
 
 
 class AnalysisResult(BaseModel):
@@ -131,12 +140,6 @@ class AnalysisResult(BaseModel):
     kpis: list[KPI] = Field(default_factory=list)
     charts: list[ChartSpec] = Field(default_factory=list)
     insights: list[Insight] = Field(default_factory=list)
-
-
-class KnowledgeChunk(BaseModel):
-    source: str
-    page: int
-    text: str
 
 
 class EvalCase(BaseModel):

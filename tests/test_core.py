@@ -1,19 +1,15 @@
 import asyncio
 
 import pandas as pd
-import pymupdf
 import pytest
 
 from datastory.evaluation.pipeline import evaluate_result
 from datastory.file_processing.loader import (
     UnsupportedFileError,
-    extract_pdf_chunks,
     file_kind,
     load_table,
 )
-from datastory.models import KnowledgeChunk
 from datastory.profiler.profiler import build_profile
-from datastory.rag.engine import split_text
 from datastory.workflow.graph import run_analysis
 
 
@@ -57,21 +53,6 @@ def test_profile_kinds(df):
     assert profile.detected_numeric_columns == ["revenue", "orders"]
 
 
-def test_split_text_overlap():
-    chunk = KnowledgeChunk(source="a.pdf", page=1, text="x" * 1000)
-    pieces = split_text(chunk, size=400, overlap=100)
-    assert all(len(p.text) <= 400 for p in pieces)
-    assert pieces[0].page == 1
-
-
-def test_extract_pdf_chunks():
-    doc = pymupdf.open()
-    doc.new_page().insert_text((72, 72), "Revenue is total sales")
-    doc.new_page()  # пустая страница пропускается
-    chunks = extract_pdf_chunks(doc.tobytes(), "kpi.pdf")
-    assert len(chunks) == 1 and "Revenue" in chunks[0].text
-
-
 def test_workflow_and_evaluation(df):
     result = run_analysis(df)
     assert len(result.kpis) == 4
@@ -83,4 +64,4 @@ def test_mcp_tool_registered():
     from datastory.mcp_server.server import mcp
 
     tools = asyncio.run(mcp.list_tools())
-    assert {"profile_file", "list_datasets", "get_dataset_profile"} <= {t.name for t in tools}
+    assert {"profile_file", "list_datasets", "get_dataset_profile", "search_business_context", "find_columns", "get_source"} <= {t.name for t in tools}

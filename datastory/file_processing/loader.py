@@ -1,4 +1,4 @@
-"""Загрузка структурированных данных (CSV / XLSX) и извлечение текста из PDF.
+"""Загрузка структурированных данных (CSV / XLSX). PDF обрабатывает datastory.rag.pdf_parser.
 
 Все проблемы с файлом превращаются в DataLoadError с понятным сообщением на русском.
 """
@@ -9,7 +9,6 @@ import zipfile
 from pathlib import Path
 
 import pandas as pd
-import pymupdf
 from openpyxl import load_workbook
 
 from datastory.errors import (
@@ -19,7 +18,6 @@ from datastory.errors import (
     NoDataError,
     UnsupportedFileError,
 )
-from datastory.models import KnowledgeChunk
 
 TABLE_EXTENSIONS = {".csv", ".xlsx"}
 IMAGE_EXTENSIONS = {".png", ".jpg", ".jpeg"}
@@ -30,7 +28,6 @@ __all__ = [
     "DataLoadError",
     "UnsupportedFileError",
     "detect_format",
-    "extract_pdf_chunks",
     "file_kind",
     "list_sheets",
     "load_table",
@@ -167,15 +164,3 @@ def _clean_frame(frame: pd.DataFrame) -> pd.DataFrame:
             else "В файле нет данных: таблица пуста."
         )
     return frame.reset_index(drop=True)
-
-
-# --------------------------------------------------------------------------- PDF
-def extract_pdf_chunks(data: bytes, source: str) -> list[KnowledgeChunk]:
-    """Извлекает текст PDF постранично (PyMuPDF). Пустые страницы пропускаются."""
-    chunks: list[KnowledgeChunk] = []
-    with pymupdf.open(stream=data, filetype="pdf") as doc:
-        for number, page in enumerate(doc, start=1):
-            text = page.get_text().strip()
-            if text:
-                chunks.append(KnowledgeChunk(source=source, page=number, text=text))
-    return chunks
