@@ -10,9 +10,12 @@ from datastory.file_processing.loader import detect_format, file_kind, list_shee
 from datastory.models import ColumnKind, DatasetProfile, KPI, Severity
 from datastory.profiler.profiler import build_profile, new_dataset_id
 from datastory.storage.store import DatasetStore
+from datastory.mcp_client.analytics_client import TOOLS
+from datastory.mcp_client.connection import McpConnectionError, McpToolError
 from datastory.ui.kb import index_profile_safely
+from datastory.ui.mcp import get_analytics_client
 from datastory.ui.theme import kpi_row
-from datastory.visualization.engine import build_figure
+from datastory.visualization.engine import build_figure, suggest_charts
 from datastory.workflow.graph import run_analysis_for_dataset
 
 KIND_LABELS = {
@@ -238,34 +241,60 @@ def _confirm_section(profile, typed, signature, type_overrides, sensitive_overri
 
 # --------------------------------------------------------------------------- 5. результаты
 def _analysis_section(dataset_id: str) -> None:
-    store = DatasetStore()
+    st.subheader("5. Результаты анализа")
     try:
-        result = run_analysis_for_dataset(dataset_id, store)
-        df = store.load_dataframe(dataset_id)
-    except DatasetNotFoundError as exc:
-        st.error(str(exc))
+        with st.spinner("Считаем метрики на MCP-сервере…"):
+            result = run_analysis_for_dataset(dataset_id, get_analytics_client())
+    except McpConnectionError as exc:
+        st.error(exc.user_message, icon=":material/cable:")
+        if exc.details:
+            with st.expander("Технические подробности"):
+                st.code(exc.details)
+        st.caption("Датасет сохранён. Расчёты будут доступны, когда подключение к MCP-серверу заработает.")
+        return
+    except McpToolError as exc:
+        st.error(f"Инструмент {exc.tool} отклонил запрос: {exc.message}", icon=":material/error:")
         return
 
-    st.subheader("5. Результаты анализа")
     kpi_row(result.kpis)
+    st.caption(
+        f"Расчёты выполнил MCP-сервер аналитики (stdio, инструменты {', '.join(TOOLS)}): числа считает Python-код сервера, а не модель."
+    )
 
     st.markdown("#### Визуализации")
     if result.charts:
         for col, spec in zip(st.columns(2) * len(result.charts), result.charts):
-            col.plotly_chart(build_figure(df, spec), width="stretch")
+            col.plotly_chart(build_figure(pd.DataFrame(), spec), width="stretch")
     else:
-        st.caption("Для этих данных пока нет подходящих графиков.")
+        _overview_charts(dataset_id)
 
     st.markdown("#### Выводы")
     for insight in result.insights:
         INSIGHT_RENDERERS.get(insight.severity, st.info)(
             f"**{insight.title}.** {insight.text}", icon=":material/calculate:"
         )
-    st.caption("Значок калькулятора — результат вычисления по данным (Pandas), а не предположение модели.")
+    st.caption("Значок калькулятора — результат вычисления по данным, а не предположение модели.")
 
     with st.expander("Проверка результата (Evaluation)"):
         for case in evaluate_result(result):
             st.write(("✅ " if case.passed else "❌ ") + case.name + (f" — {case.details}" if case.details else ""))
+
+
+def _overview_charts(dataset_id: str) -> None:
+    """Обзорные графики для датасетов без метрик платёжной системы (строятся по таблице, без расчётов метрик)."""
+    store = DatasetStore()
+    try:
+        specs = suggest_charts(store.load_profile(dataset_id))
+        frame = store.load_dataframe(dataset_id)
+    except DatasetNotFoundError as exc:
+        st.error(str(exc))
+        return
+    if not specs:
+        st.caption("Для этих данных пока нет подходящих графиков.")
+        return
+    st.caption("В датасете нет колонок Transactions / Successful / Failed / Amount_KZT, поэтому показаны обзорные графики.")
+    for col, spec in zip(st.columns(2) * len(specs), specs):
+        col.plotly_chart(build_figure(frame, spec), width="stretch")
 
 
 def _saved_datasets() -> None:

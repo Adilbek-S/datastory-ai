@@ -4,7 +4,7 @@
 
 Пользователь загружает Excel, CSV или изображение с таблицей (и, по желанию, PDF с описанием показателей). Приложение анализирует структуру данных, предлагает визуализации, выполняет расчёты и формирует выводы.
 
-> **Статус:** минимальный каркас (MVP). Работают загрузка XLSX/CSV с профилированием и подтверждением структуры, рабочее хранилище датасетов, базовые показатели, графики Plotly, RAG на ChromaDB (PDF-документы и метаданные датасетов), LangGraph-воркфлоу (без LLM), MCP-сервер и тесты. LLM-выводы и OCR изображений — следующие этапы.
+> **Статус:** минимальный каркас (MVP). Работают загрузка XLSX/CSV с профилированием и подтверждением структуры, рабочее хранилище датасетов, базовые показатели, графики Plotly, RAG на ChromaDB (PDF-документы и метаданные датасетов), MCP-сервер аналитики (profile_dataset, calculate_metrics, create_chart_spec) с MCP-клиентом по stdio, LangGraph-воркфлоу на вызовах MCP (без LLM) и тесты. LLM-выводы и OCR изображений — следующие этапы.
 
 ## Стек
 
@@ -107,13 +107,33 @@ python scripts/generate_demo_data.py            # или --out <каталог>
 
 Тест `test_committed_demo_files_are_up_to_date` следит, чтобы закоммиченные файлы совпадали с выводом генератора.
 
-## MCP-сервер
+## MCP-сервер аналитики
+
+Аналитика вынесена в собственный MCP-сервер на FastMCP (`datastory/mcp_server/server.py`, транспорт stdio). Приложение запускает его дочерним процессом и общается с ним настоящим MCP-клиентом; LangGraph-воркфлоу не вызывает функции расчёта напрямую, а обращается к инструментам через клиент.
 
 ```bash
-python -m datastory.mcp_server.server
+python -m datastory.mcp_server.server     # запуск вручную (обычно не нужен: приложение запускает сервер само)
 ```
 
-Сервер работает по stdio и предоставляет инструменты `profile_file`, `list_datasets` и `get_dataset_profile` (возвращают только краткий профиль, без строк таблицы), а также `search_business_context`, `find_columns` и `get_source` для RAG.
+| Инструмент | Вход | Выход |
+|---|---|---|
+| `profile_dataset` | `dataset_id` | строки, названия и типы колонок, числовые показатели, измерения, статистики, пропуски, доступные метрики |
+| `calculate_metrics` | `dataset_id`, `metric`, `group_by`, `filters` | значения по группам, итог по всем строкам, использованные суммы, предупреждения |
+| `create_chart_spec` | результат `calculate_metrics`, `chart_type` (line / bar / pie), `title`, `x_axis`, `y_axis` | Pydantic-модель `ChartSpec` с данными и настройками Plotly |
+
+Метрики: `transaction_count` = SUM(Transactions); `successful_count` = SUM(Successful); `failed_count` = SUM(Failed); `transaction_volume` = SUM(Amount_KZT); `success_rate` = SUM(Successful) / SUM(Transactions) × 100; `average_transaction_amount` = SUM(Amount_KZT) / SUM(Transactions). Отношения считаются как **сумма к сумме**, а не как среднее процентов по строкам или группам. Строки с пропуском в любой нужной колонке исключаются и из числителя, и из знаменателя.
+
+**Безопасность.** Все расчёты — обычный Python/Pandas-код, без LLM, `eval`, `exec`, `DataFrame.query` и SQL (это проверяют тесты статическим анализом). `group_by` и `filters` — данные, а не код: названия сверяются со списком колонок датасета (с подсказкой при опечатке), операторы — с фиксированным набором, значения — по типу колонки. Колонки с персональными данными недоступны для группировки и фильтрации. Сервер не возвращает изображений: график рисует Streamlit через Plotly.
+
+```python
+filters = [{"column": "Channel", "op": "in", "value": ["Mobile", "Web"]}, {"column": "Month", "op": "gte", "value": "2026-03"}]
+result = client.calculate_metrics(dataset_id, "success_rate", group_by=["Month"], filters=filters)
+spec = client.create_chart_spec(result, "line", "Success Rate по месяцам", x_axis="Month")
+```
+
+**Жизненный цикл подключения** (`datastory/mcp_client/connection.py`). Streamlit перезапускает скрипт при каждом действии, поэтому клиент кэшируется (`st.cache_resource`): все перерисовки и сессии делят один серверный процесс. Подключение живёт в собственном потоке, стартует лениво, при обрыве перезапускает сервер и повторяет вызов (инструменты только читают данные), ограничено таймаутами (`MCP_STARTUP_TIMEOUT`, `MCP_CALL_TIMEOUT`) и закрывается при выходе. Если сервер убить вместе с приложением, он завершается сам по закрытию stdin. Ошибка подключения показывается по-русски, с раскрывающимися техническими подробностями (stderr сервера); молчаливого перехода на локальные расчёты нет.
+
+Дополнительный сервер `datastory/mcp_server/knowledge_server.py` (`python -m datastory.mcp_server.knowledge_server`) отдаёт краткие профили датасетов и RAG-поиск: `profile_file`, `list_datasets`, `get_dataset_profile`, `search_business_context`, `find_columns`, `get_source`.
 
 ## Структура
 
@@ -129,8 +149,9 @@ datastory/
   storage/                  рабочее хранилище датасетов (DatasetStore)
   rag/                      RAG: pdf_parser, embeddings, knowledge_base (ChromaDB), dataset_descriptions, evidence, api
   workflow/                 LangGraph Workflow
-  mcp_server/               MCP Server (FastMCP)
-  analytics/                Analytics Engine
+  mcp_server/               server.py — MCP-сервер аналитики (3 инструмента), knowledge_server.py — профили и RAG
+  mcp_client/               клиент MCP (stdio): подключение с жизненным циклом, типизированный клиент
+  analytics/                метрики (metrics), сводка датасета, спецификации графиков, модели
   visualization/            Visualization Engine
   insights/                 Insight Generator
   evaluation/               Evaluation Pipeline

@@ -3,14 +3,12 @@ import asyncio
 import pandas as pd
 import pytest
 
-from datastory.evaluation.pipeline import evaluate_result
 from datastory.file_processing.loader import (
     UnsupportedFileError,
     file_kind,
     load_table,
 )
 from datastory.profiler.profiler import build_profile
-from datastory.workflow.graph import run_analysis
 
 
 @pytest.fixture
@@ -53,15 +51,15 @@ def test_profile_kinds(df):
     assert profile.detected_numeric_columns == ["revenue", "orders"]
 
 
-def test_workflow_and_evaluation(df):
-    result = run_analysis(df)
-    assert len(result.kpis) == 4
-    assert {c.kind for c in result.charts} >= {"histogram", "bar", "line", "scatter"}
-    assert all(case.passed for case in evaluate_result(result))
-
-
-def test_mcp_tool_registered():
+def test_analytics_mcp_server_exposes_exactly_three_tools():
     from datastory.mcp_server.server import mcp
+
+    tools = asyncio.run(mcp.list_tools())
+    assert [t.name for t in tools] == ["profile_dataset", "calculate_metrics", "create_chart_spec"]
+
+
+def test_knowledge_mcp_server_tools_registered():
+    from datastory.mcp_server.knowledge_server import mcp
 
     tools = asyncio.run(mcp.list_tools())
     assert {"profile_file", "list_datasets", "get_dataset_profile", "search_business_context", "find_columns", "get_source"} <= {t.name for t in tools}

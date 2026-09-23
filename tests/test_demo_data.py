@@ -7,8 +7,6 @@ import pymupdf
 import pytest
 from PIL import Image
 
-from datastory.file_processing.loader import load_table
-from datastory.workflow.graph import run_analysis
 from scripts import generate_demo_data as gen
 
 REPO_DEMO = gen.DEFAULT_OUT
@@ -143,11 +141,3 @@ def test_committed_demo_files_are_up_to_date(generated):
         committed = REPO_DEMO / name
         assert committed.exists(), f"{name} не найден в data/demo — запустите scripts/generate_demo_data.py"
         assert committed.read_bytes() == (generated / name).read_bytes(), f"{name} устарел — перегенерируйте"
-
-
-# ------------------------------------------------------------------ совместимость с приложением
-def test_app_pipeline_on_demo_xlsx():
-    frame = load_table((REPO_DEMO / "transactions_2026.xlsx").read_bytes(), "transactions_2026.xlsx")
-    result = run_analysis(frame)
-    assert result.profile.row_count == 18 and result.kpis
-    assert result.profile.detected_numeric_columns == ["Transactions", "Successful", "Failed", "Amount_KZT"]

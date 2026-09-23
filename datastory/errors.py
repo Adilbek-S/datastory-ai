@@ -30,3 +30,14 @@ class NoDataError(DataLoadError):
 
 class DatasetNotFoundError(LookupError):
     """Датасет с таким ID отсутствует в рабочем хранилище."""
+
+
+class AnalyticsError(ValueError):
+    """Некорректный запрос к аналитическим инструментам (метрика, group_by, фильтры, график).
+
+    Сообщение написано для пользователя и для LLM-агента: в нём указано, что именно неверно и что допустимо.
+    """
+
+    def __init__(self, user_message: str):
+        super().__init__(user_message)
+        self.user_message = user_message

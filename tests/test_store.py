@@ -5,7 +5,6 @@ import pytest
 from datastory.errors import DatasetNotFoundError
 from datastory.profiler.profiler import build_profile
 from datastory.storage.store import DatasetStore
-from datastory.workflow.graph import run_analysis_for_dataset
 
 
 @pytest.fixture
@@ -90,25 +89,8 @@ def test_saving_same_id_replaces_dataset(store):
     assert not list((store.root / profile.dataset_id).glob("*.tmp"))
 
 
-def test_workflow_analyzes_dataset_by_id(store, prepared):
-    profile, typed = prepared
-    store.save(typed, profile)
-    result = run_analysis_for_dataset(profile.dataset_id, store)
-    assert result.profile.dataset_id == profile.dataset_id
-    assert result.profile.row_count == 6
-    kinds = {c.kind for c in result.charts}
-    assert {"histogram", "bar", "line"} <= kinds
-    line = next(c for c in result.charts if c.kind == "line")
-    assert line.x == "Month" and line.color == "Channel"
-
-
-def test_workflow_unknown_id(store):
-    with pytest.raises(DatasetNotFoundError):
-        run_analysis_for_dataset("0123456789ab", store)
-
-
 def test_mcp_tools_return_profile_by_id_without_personal_data(store, monkeypatch):
-    from datastory.mcp_server import server
+    from datastory.mcp_server import knowledge_server as server
 
     frame = pd.DataFrame({"email": ["a@b.kz", "c@d.kz", "e@f.kz"], "amount": [1, 2, 3]})
     profile, typed = build_profile(frame, "clients.csv")

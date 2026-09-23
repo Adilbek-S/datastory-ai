@@ -3,6 +3,7 @@ from __future__ import annotations
 
 from datetime import datetime
 from enum import Enum
+from typing import Any
 
 from pydantic import BaseModel, Field
 
@@ -120,12 +121,25 @@ class KPI(BaseModel):
 
 
 class ChartSpec(BaseModel):
+    """Спецификация графика Plotly.
+
+    Два вида: (1) подсказки по профилю (histogram/bar/scatter/line без данных) — строятся из DataFrame;
+    (2) графики из инструмента create_chart_spec (line/bar/pie) — данные лежат в поле data,
+    настройки Plotly Express — в settings. Изображения сервер не возвращает: рисует Streamlit.
+    """
+
     title: str
-    kind: str  # histogram | bar | line | scatter
+    kind: str  # histogram | bar | line | scatter | pie
     x: str
     y: str | None = None
     color: str | None = None
     description: str = ""
+    data: list[dict[str, Any]] = Field(default_factory=list)
+    x_title: str | None = None
+    y_title: str | None = None
+    unit: str | None = None
+    settings: dict[str, Any] = Field(default_factory=dict)
+    source_metric: str | None = None
 
 
 class Insight(BaseModel):
@@ -133,13 +147,6 @@ class Insight(BaseModel):
     text: str
     severity: str = "info"  # info | warning | positive
     evidence_type: EvidenceType = EvidenceType.COMPUTED
-
-
-class AnalysisResult(BaseModel):
-    profile: DatasetProfile
-    kpis: list[KPI] = Field(default_factory=list)
-    charts: list[ChartSpec] = Field(default_factory=list)
-    insights: list[Insight] = Field(default_factory=list)
 
 
 class EvalCase(BaseModel):

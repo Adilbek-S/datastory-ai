@@ -4,17 +4,23 @@
 """
 from __future__ import annotations
 
-from datastory.models import AnalysisResult, EvalCase
+from datastory.analytics.models import AnalysisResult
+from datastory.models import EvalCase
 
 
 def evaluate_result(result: AnalysisResult) -> list[EvalCase]:
-    profile = result.profile
+    summary = result.summary
     return [
         EvalCase(
-            name="profile_covers_all_columns",
-            passed=len(profile.columns) == profile.column_count,
-            details=f"{len(profile.columns)} из {profile.column_count}",
+            name="summary_covers_all_columns",
+            passed=len(summary.columns) == summary.column_count,
+            details=f"{len(summary.columns)} из {summary.column_count}",
         ),
         EvalCase(name="has_kpis", passed=bool(result.kpis)),
         EvalCase(name="has_insights", passed=bool(result.insights)),
+        EvalCase(
+            name="charts_carry_their_data",
+            passed=all(chart.data for chart in result.charts),
+            details=f"графиков: {len(result.charts)}",
+        ),
     ]

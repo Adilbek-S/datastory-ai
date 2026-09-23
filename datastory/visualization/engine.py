@@ -34,8 +34,31 @@ def suggest_charts(profile: DatasetProfile) -> list[ChartSpec]:
     return specs
 
 
+_ALLOWED_SETTINGS = {"markers", "barmode", "category_orders"}  # белый список настроек из ChartSpec.settings
+
+
+def _figure_from_data(spec: ChartSpec) -> Figure:
+    """График из ChartSpec с данными (результат create_chart_spec): без DataFrame и без обращения к датасету."""
+    frame = pd.DataFrame(spec.data)
+    settings = {k: v for k, v in spec.settings.items() if k in _ALLOWED_SETTINGS}
+    if spec.kind == "line":
+        fig = px.line(frame, x=spec.x, y=spec.y, color=spec.color, color_discrete_sequence=PALETTE, **settings)
+    elif spec.kind == "bar":
+        fig = px.bar(frame, x=spec.x, y=spec.y, color=spec.color, color_discrete_sequence=PALETTE, **settings)
+    elif spec.kind == "pie":
+        fig = px.pie(frame, names=spec.x, values=spec.y, color_discrete_sequence=PALETTE)
+        fig.update_traces(textposition="inside", textinfo="percent+label")
+    else:
+        raise ValueError(f"Неизвестный тип графика: {spec.kind}")
+    if spec.kind != "pie":
+        fig.update_layout(xaxis_title=spec.x_title or spec.x, yaxis_title=spec.y_title or spec.y)
+    return fig
+
+
 def build_figure(df: pd.DataFrame, spec: ChartSpec) -> Figure:
-    if spec.kind == "histogram":
+    if spec.data:
+        fig = _figure_from_data(spec)
+    elif spec.kind == "histogram":
         fig = px.histogram(df, x=spec.x, color_discrete_sequence=PALETTE)
     elif spec.kind == "bar":
         counts = df[spec.x].value_counts().head(15).rename_axis(spec.x).reset_index(name="count")

@@ -24,6 +24,11 @@ class Settings(BaseSettings):
     chroma_dir: Path = Field(default=PROJECT_ROOT / "data" / "chroma")
     workspace_dir: Path = Field(default=PROJECT_ROOT / "data" / "workspace")
 
+    # MCP: аналитический сервер запускается дочерним процессом (stdio)
+    mcp_server_module: str = "datastory.mcp_server.server"
+    mcp_startup_timeout: float = 30.0
+    mcp_call_timeout: float = 60.0
+
     langsmith_tracing: bool = False
     langsmith_api_key: str = ""
     langsmith_project: str = "datastory-ai"
