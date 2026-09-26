@@ -50,6 +50,15 @@ def _norm(text: str) -> str:
     return " ".join(text.casefold().replace("ё", "е").split())
 
 
+def find_definition(search: Callable[[str], object], query: str, terms: tuple[str, ...]) -> ContextFragment | None:
+    """Первый релевантный фрагмент, который называет показатель; иначе None (документации нет)."""
+    result = search(query)
+    for hit in result.hits:
+        if hit.relevant and any(_norm(term) in _norm(hit.text) for term in terms):
+            return ContextFragment(source=hit.source, text=hit.text[:MAX_QUOTE], score=hit.score)
+    return None
+
+
 def retrieve_business_context(
     analyses: list[str], search: Callable[[str], object]
 ) -> BusinessContext:
@@ -60,12 +69,9 @@ def retrieve_business_context(
             kind = BY_ID[analysis]
             if kind.metric in context.definitions:
                 continue
-            result = search(kind.doc_query)
-            context.provider = result.provider
-            for hit in result.hits:
-                if hit.relevant and any(_norm(term) in _norm(hit.text) for term in kind.doc_terms):
-                    context.definitions[kind.metric] = ContextFragment(source=hit.source, text=hit.text[:MAX_QUOTE], score=hit.score)
-                    break
+            found = find_definition(search, kind.doc_query, kind.doc_terms)
+            if found:
+                context.definitions[kind.metric] = found
         result = search(CONTEXT_QUERY)
         context.provider = result.provider
         taken = {f.chunk_id for f in context.definitions.values()}

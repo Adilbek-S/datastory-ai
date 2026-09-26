@@ -2,6 +2,7 @@
 import io
 
 import pymupdf
+import pytest
 from openpyxl import Workbook
 
 
@@ -92,3 +93,16 @@ class ScriptedLLM:
 
     def prompts(self, schema_name: str) -> list[tuple[str, str]]:
         return [(s, u) for name, s, u in self.calls if name == schema_name]
+
+
+def live_openai(model: str = "gpt-4o-mini"):
+    """Настоящая модель OpenAI для живых тестов (ключ из .env, а не из окружения теста)."""
+    from dotenv import dotenv_values
+
+    from datastory.config import PROJECT_ROOT
+    from datastory.llm.client import OpenAIStructuredLLM
+
+    key = (dotenv_values(PROJECT_ROOT / ".env").get("OPENAI_API_KEY") or "").strip()
+    if not key:
+        pytest.skip("OPENAI_API_KEY не задан в .env")
+    return OpenAIStructuredLLM(key, model, timeout=120.0)

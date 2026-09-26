@@ -18,6 +18,7 @@ class Settings(BaseSettings):
 
     openai_api_key: str = ""
     openai_model: str = "gpt-4o-mini"
+    vision_model: str = "gpt-4o-mini"  # распознавание таблиц на изображениях
     embedding_model: str = "text-embedding-3-small"
     embedding_provider: str = "auto"  # auto | openai | offline
 

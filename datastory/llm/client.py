@@ -6,6 +6,7 @@
 """
 from __future__ import annotations
 
+import base64
 import logging
 from typing import Protocol, TypeVar
 
@@ -30,14 +31,32 @@ class StructuredLLM(Protocol):
     def generate(self, schema: type[T], *, system: str, user: str) -> T: ...
 
 
+class VisionLLM(Protocol):
+    """Модель, читающая изображение: ответ по схеме на «инструкция + запрос + картинка»."""
+
+    name: str
+
+    def generate_from_image(self, schema: type[T], *, system: str, user: str, image: bytes, mime: str) -> T: ...
+
+
 class OpenAIStructuredLLM:
+    """Структурные ответы OpenAI; та же модель принимает изображения (gpt-4o-mini Vision)."""
+
     def __init__(self, api_key: str, model: str, *, timeout: float = 60.0, max_retries: int = 2, chat: ChatOpenAI | None = None):
         self.name = f"openai-{model}"
         self._chat = chat or ChatOpenAI(model=model, api_key=api_key, temperature=0, timeout=timeout, max_retries=max_retries)
 
     def generate(self, schema: type[T], *, system: str, user: str) -> T:
+        return self._invoke(schema, [SystemMessage(system), HumanMessage(user)])
+
+    def generate_from_image(self, schema: type[T], *, system: str, user: str, image: bytes, mime: str) -> T:
+        url = f"data:{mime};base64,{base64.b64encode(image).decode('ascii')}"
+        content = [{"type": "text", "text": user}, {"type": "image_url", "image_url": {"url": url, "detail": "high"}}]
+        return self._invoke(schema, [SystemMessage(system), HumanMessage(content)])
+
+    def _invoke(self, schema: type[T], messages: list) -> T:
         try:
-            answer = self._chat.with_structured_output(schema).invoke([SystemMessage(system), HumanMessage(user)])
+            answer = self._chat.with_structured_output(schema).invoke(messages)
         except openai.AuthenticationError:
             raise LLMError("OpenAI отклонил ключ API. Проверьте OPENAI_API_KEY в файле .env.") from None
         except openai.RateLimitError:
@@ -60,3 +79,11 @@ def get_llm(settings: Settings | None = None) -> StructuredLLM:
     if not settings.has_openai_key:
         raise LLMUnavailableError("Ключ OpenAI не задан (OPENAI_API_KEY): используются детерминированные правила.")
     return OpenAIStructuredLLM(settings.openai_api_key, settings.openai_model)
+
+
+def get_vision_llm(settings: Settings | None = None) -> OpenAIStructuredLLM:
+    """Модель для распознавания таблиц на изображениях. Без ключа бросает LLMUnavailableError."""
+    settings = settings or get_settings()
+    if not settings.has_openai_key:
+        raise LLMUnavailableError("Для распознавания изображений нужен ключ OpenAI: задайте OPENAI_API_KEY в файле .env.")
+    return OpenAIStructuredLLM(settings.openai_api_key, settings.vision_model, timeout=120.0)

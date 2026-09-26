@@ -14,6 +14,7 @@ from datastory.evaluation.pipeline import evaluate_result
 from datastory.mcp_client.analytics_client import TOOLS
 from datastory.storage.store import DatasetStore
 from datastory.ui.theme import kpi_row
+from datastory.ui.views.chat_panel import render_chat
 from datastory.ui.workflow import get_runner
 from datastory.visualization.engine import build_figure, suggest_charts
 from datastory.workflow.catalog import BY_ID
@@ -54,7 +55,7 @@ def render_analysis(dataset_id: str) -> None:
     if snapshot.phase == "awaiting_approval":
         _approval(runner, snapshot)
     elif snapshot.phase == "completed":
-        _dashboard(snapshot.result)
+        _dashboard(snapshot.result, snapshot.thread_id)
     elif snapshot.phase == "empty":
         _empty(snapshot, dataset_id)
     elif snapshot.phase == "cancelled":
@@ -141,7 +142,7 @@ def _approval(runner, snapshot: WorkflowSnapshot) -> None:
 
 
 # --------------------------------------------------------------------------- результат
-def _dashboard(result: AnalysisResult) -> None:
+def _dashboard(result: AnalysisResult, thread_id: str) -> None:
     dashboard = result.dashboard
     st.markdown("#### Дашборд")
     kpi_row(dashboard.kpis)
@@ -180,6 +181,8 @@ def _dashboard(result: AnalysisResult) -> None:
                         st.markdown(f"**Источник бизнес-контекста:** {insight.context_source}")
                     st.caption("Текст: " + ("языковая модель, проверена на достоверность" if insight.generated_by == "llm" else "детерминированные правила"))
     st.caption("Значок калькулятора — результат вычисления по данным, а не предположение модели. Причины изменений по данным не определяются.")
+
+    render_chat(result, thread_id)
 
     with st.expander("Проверка результата (Evaluation)"):
         for case in evaluate_result(result):

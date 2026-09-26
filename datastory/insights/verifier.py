@@ -116,16 +116,18 @@ def _data_months(labels: list[str]) -> set[int]:
 
 
 def check_insight(
-    insight: Insight, facts: list[NumericEvidence], mask: list[str], labels: list[str] | None = None
+    insight: Insight, facts: list[NumericEvidence], mask: list[str], labels: list[str] | None = None,
+    require_evidence: bool = True,
 ) -> list[Violation]:
     """Проверки текста вывода (название, краткий вывод, ограничение) относительно набора доказательств.
 
+    require_evidence=False — для ответов без чисел (определение показателя, события из документации).
     labels — подписи групп графика (периоды, категории): названия месяцев в тексте должны соответствовать этим периодам.
     """
     violations: list[Violation] = []
     text = " ".join(filter(None, [insight.title, insight.text, insight.limitation]))
 
-    if not insight.evidence:
+    if require_evidence and not insight.evidence:  # ответ об определении или событиях может обойтись без чисел
         violations.append(Violation(EVIDENCE_REQUIRED, "вывод не ссылается ни на одно числовое доказательство"))
     known = {f.id for f in facts}
     for item in insight.evidence:

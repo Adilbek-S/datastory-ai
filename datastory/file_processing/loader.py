@@ -29,6 +29,7 @@ __all__ = [
     "UnsupportedFileError",
     "detect_format",
     "file_kind",
+    "clean_frame",
     "list_sheets",
     "load_table",
     "read_table",
@@ -51,8 +52,8 @@ def detect_format(filename: str, data: bytes) -> str:
     ext = Path(filename).suffix.lower()
     if ext in IMAGE_EXTENSIONS:
         raise UnsupportedFileError(
-            "Распознавание таблиц на изображениях будет добавлено на следующем этапе. "
-            "Сейчас загрузите файл XLSX или CSV."
+            "Таблицы на изображениях читает Vision-модель (datastory.file_processing.image_loader.recognize_table), "
+            "а не табличный загрузчик: загрузите файл XLSX или CSV либо используйте распознавание изображения."
         )
     if ext not in TABLE_EXTENSIONS:
         shown = ext or "без расширения"
@@ -93,7 +94,7 @@ def read_table(data: bytes, filename: str, sheet_name: str | None = None) -> pd.
     """Читает CSV или лист XLSX в DataFrame и убирает пустые строки/колонки."""
     fmt = detect_format(filename, data)
     frame = _read_xlsx(data, sheet_name) if fmt == "xlsx" else _read_csv(data)
-    return _clean_frame(frame)
+    return clean_frame(frame)
 
 
 def load_table(data: bytes, filename: str, sheet_name: str | None = None) -> pd.DataFrame:
@@ -148,7 +149,7 @@ def _read_csv(data: bytes) -> pd.DataFrame:
 
 
 # --------------------------------------------------------------------------- общее
-def _clean_frame(frame: pd.DataFrame) -> pd.DataFrame:
+def clean_frame(frame: pd.DataFrame) -> pd.DataFrame:
     frame = frame.copy()
     names = [str(c).strip() for c in frame.columns]
     frame.columns = [n if n else f"Unnamed: {i}" for i, n in enumerate(names)]

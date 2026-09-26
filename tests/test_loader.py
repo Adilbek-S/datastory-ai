@@ -27,7 +27,7 @@ def test_unsupported_format(name):
     assert "XLSX или CSV" in exc.value.user_message
 
 
-def test_image_is_reported_as_not_supported_yet():
+def test_table_loader_does_not_read_images():
     with pytest.raises(UnsupportedFileError, match="изображениях"):
         read_table(b"\x89PNG", "table.png")
 

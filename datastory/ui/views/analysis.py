@@ -1,6 +1,8 @@
 """Страница «Анализ данных»: загрузка → предпросмотр → профиль → качество → подтверждение → анализ."""
 from __future__ import annotations
 
+import hashlib
+
 import pandas as pd
 import streamlit as st
 
@@ -14,6 +16,7 @@ from datastory.rag.pdf_parser import PdfError
 from datastory.ui.kb import get_kb, index_profile_safely
 from datastory.ui.theme import kpi_row
 from datastory.ui.views.analysis_run import render_analysis
+from datastory.ui.views.image_table import render_image_table
 
 KIND_LABELS = {
     ColumnKind.NUMERIC: "Число",
@@ -39,11 +42,12 @@ def _read(data: bytes, filename: str, sheet: str | None) -> pd.DataFrame:
 
 @st.cache_data(show_spinner=False, max_entries=16)
 def _profile(
-    data: bytes, filename: str, sheet: str | None,
+    raw: pd.DataFrame, filename: str, sheet: str | None,
     type_overrides: tuple, sensitive_overrides: tuple,
 ) -> tuple[DatasetProfile, pd.DataFrame]:
+    # Единая точка для всех форматов: XLSX, CSV и распознанное изображение приходят сюда как DataFrame.
     return build_profile(
-        _read(data, filename, sheet), filename, sheet,
+        raw, filename, sheet,
         type_overrides={n: ColumnKind(k) for n, k in type_overrides},
         sensitive_overrides=dict(sensitive_overrides),
         dataset_id="000000000000",  # ID присваивается при сохранении; так кэш не зависит от случайного значения
@@ -58,8 +62,8 @@ def render() -> None:
     # Формат проверяет detect_format(): так пользователь видит понятное сообщение на русском,
     # а не английскую ошибку фильтра Streamlit.
     table_file = left.file_uploader(
-        "Таблица с данными (XLSX или CSV)",
-        help="Поддерживаются XLSX и CSV. Изображения с таблицами появятся на следующем этапе.",
+        "Таблица с данными (XLSX, CSV, PNG или JPG)",
+        help="XLSX и CSV читаются напрямую. На изображении (PNG/JPG) таблицу распознаёт Vision-модель, вы проверите результат до анализа.",
     )
     pdf_file = right.file_uploader(
         "PDF с описанием бизнес-показателей (необязательно)", type=["pdf"],
@@ -72,40 +76,39 @@ def render() -> None:
 
     data = table_file.getvalue()
     if file_kind(table_file.name) == "image":
-        st.warning("Распознавание таблиц на изображениях будет добавлено на следующем этапе.")
+        raw = render_image_table(data, table_file.name)  # None, пока пользователь не подтвердил распознанную таблицу
+        if raw is None:
+            return
+        fmt, sheet = "изображение (Vision)", None
+        content = hashlib.sha1(raw.to_json(orient="split", force_ascii=False).encode("utf-8")).hexdigest()[:12]
+        signature = f"{table_file.name}|{len(data)}|image|{content}"  # правка ячейки меняет подпись: старое подтверждение не действует
+    else:
         try:
-            st.image(data, caption=table_file.name)
-        except Exception:  # noqa: BLE001 — повреждённая картинка не должна ронять страницу
-            st.error("Не удалось открыть изображение: файл повреждён.")
-        return
-
-    try:
-        fmt = detect_format(table_file.name, data)
-        sheet = None
-        if fmt == "xlsx":
-            sheets = _sheets(data)
-            sheet = sheets[0] if len(sheets) == 1 else st.selectbox("Лист Excel", sheets)
-        raw = _read(data, table_file.name, sheet)
-    except DataLoadError as exc:
-        st.error(exc.user_message, icon=":material/error:")
-        return
-
-    signature = f"{table_file.name}|{len(data)}|{sheet}"
+            fmt = detect_format(table_file.name, data)
+            sheet = None
+            if fmt == "xlsx":
+                sheets = _sheets(data)
+                sheet = sheets[0] if len(sheets) == 1 else st.selectbox("Лист Excel", sheets)
+            raw = _read(data, table_file.name, sheet)
+        except DataLoadError as exc:
+            st.error(exc.user_message, icon=":material/error:")
+            return
+        signature = f"{table_file.name}|{len(data)}|{sheet}"
 
     st.subheader("1. Предпросмотр")
     st.caption(f"Формат: {fmt.upper()}" + (f" · лист «{sheet}»" if sheet else "") + f" · показаны первые {min(PREVIEW_ROWS, len(raw))} строк")
     st.dataframe(raw.head(PREVIEW_ROWS), width="stretch")
 
-    profile, typed, type_overrides, sensitive_overrides = _profile_section(data, table_file.name, sheet, signature)
+    profile, typed, type_overrides, sensitive_overrides = _profile_section(raw, table_file.name, sheet, signature)
     _quality_section(profile)
     _confirm_section(profile, typed, signature, type_overrides, sensitive_overrides, pdf_file)
     _saved_datasets()
 
 
 # --------------------------------------------------------------------------- 2. профиль
-def _profile_section(data: bytes, filename: str, sheet: str | None, signature: str):
+def _profile_section(raw: pd.DataFrame, filename: str, sheet: str | None, signature: str):
     st.subheader("2. Профиль датасета")
-    base, _ = _profile(data, filename, sheet, (), ())
+    base, _ = _profile(raw, filename, sheet, (), ())
     kpi_slot = st.container()
 
     st.markdown("**Типы колонок.** Если тип определён неверно, выберите правильный — профиль пересчитается.")
@@ -139,7 +142,7 @@ def _profile_section(data: bytes, filename: str, sheet: str | None, signature: s
         for name, flag, col in zip(edited["Колонка"], edited["Персональные данные"], base.columns)
         if bool(flag) != col.is_sensitive
     )
-    profile, typed = _profile(data, filename, sheet, type_overrides, sensitive_overrides)
+    profile, typed = _profile(raw, filename, sheet, type_overrides, sensitive_overrides)
 
     with kpi_slot:
         kpi_row(

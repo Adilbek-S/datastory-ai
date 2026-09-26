@@ -123,7 +123,7 @@ def generate_insights(summary) -> list[Insight]:
 
 
 # --------------------------------------------------------------------------- правила (без LLM)
-def _material_drop(inp: ChartInsightInput, fact: NumericEvidence | None) -> bool:
+def material_drop(inp: ChartInsightInput, fact: NumericEvidence | None) -> bool:
     if fact is None or fact.value >= 0:
         return False
     if inp.result.unit == "%":
@@ -132,7 +132,7 @@ def _material_drop(inp: ChartInsightInput, fact: NumericEvidence | None) -> bool
     return top is not None and top.value != 0 and abs(fact.value) / abs(top.value) >= DROP_THRESHOLD_REL
 
 
-def _rules_time_series(inp: ChartInsightInput) -> tuple[str, str, list[str]]:
+def rules_time_series(inp: ChartInsightInput) -> tuple[str, str, list[str]]:
     facts, label = _by_id(inp.facts), inp.result.label
     first, last = facts.get("first"), facts.get("last")
     if first is None:
@@ -158,14 +158,14 @@ def _rules_time_series(inp: ChartInsightInput) -> tuple[str, str, list[str]]:
     cited += ["min", "max"]
     severity = "info"
     drop = facts.get("drop")
-    if _material_drop(inp, drop):
+    if material_drop(inp, drop):
         severity = "warning"
         sentences.append(_sentence(f"Наибольшее падение между соседними периодами: {drop.group}, на {drop.formatted}"))
         cited.append("drop")
     return severity, " ".join(sentences), cited
 
 
-def _rules_category(inp: ChartInsightInput) -> tuple[str, str, list[str]]:
+def rules_category(inp: ChartInsightInput) -> tuple[str, str, list[str]]:
     facts, label = _by_id(inp.facts), inp.result.label
     shares = sorted((f for f in inp.facts if f.kind == "share"), key=lambda f: f.value, reverse=True)
     total = facts.get("overall")
@@ -186,7 +186,7 @@ def _rules_category(inp: ChartInsightInput) -> tuple[str, str, list[str]]:
 
 
 def rules_insight(inp: ChartInsightInput) -> Insight:
-    severity, text, cited = _rules_time_series(inp) if inp.role == "time" else _rules_category(inp)
+    severity, text, cited = rules_time_series(inp) if inp.role == "time" else rules_category(inp)
     facts = _by_id(inp.facts)
     limits = system_limitations(inp, event_used=False)
     return Insight(
@@ -225,6 +225,15 @@ def insight_prompt(inp: ChartInsightInput) -> str:
     return "\n\n".join(parts)
 
 
+def quote_is_verbatim(fragment: ContextFragment, quote: str) -> bool:
+    """Цитата из документа допустима, только если она дословно есть во фрагменте (правило A7)."""
+    checked = validate_evidence(
+        [EvidenceItem(type=EvidenceType.DOCUMENT_FACT, statement=quote, sources=[fragment.source], quote=quote)],
+        {fragment.chunk_id: fragment.text},
+    )[0]
+    return checked.type is EvidenceType.DOCUMENT_FACT
+
+
 def assemble(draft: InsightDraft, inp: ChartInsightInput) -> tuple[Insight, list[Violation]]:
     """Собирает Insight из ответа LLM: доказательства и источники берутся из кода, а не из текста модели."""
     issues: list[Violation] = []
@@ -245,11 +254,7 @@ def assemble(draft: InsightDraft, inp: ChartInsightInput) -> tuple[Insight, list
         if fragment is None:
             issues.append(Violation(CONTEXT_NOT_IN_SOURCE, f"фрагмент {draft.context_chunk_id!r} не был найден в базе знаний"))
         else:
-            checked = validate_evidence(
-                [EvidenceItem(type=EvidenceType.DOCUMENT_FACT, statement=quote, sources=[fragment.source], quote=quote)],
-                {fragment.chunk_id: fragment.text},
-            )[0]
-            if checked.type is EvidenceType.DOCUMENT_FACT:
+            if quote_is_verbatim(fragment, quote):
                 event = fragment
             else:
                 issues.append(Violation(CONTEXT_NOT_IN_SOURCE, "цитата не найдена дословно в указанном фрагменте документа"))

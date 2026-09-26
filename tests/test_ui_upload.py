@@ -127,18 +127,18 @@ def test_unsupported_formats_get_plain_message(workspace, name):
     assert not at.subheader
 
 
-def test_image_upload_explains_it_is_not_available_yet(workspace):
+def test_image_upload_without_a_vision_key_explains_what_to_do(workspace):
     screenshot = (gen.DEFAULT_OUT / "transactions_screenshot.png").read_bytes()
     at = upload(open_page(), "transactions_screenshot.png", screenshot)
     assert not at.exception
-    assert "изображениях" in texts(at.warning)
-    assert not at.error
+    assert "OPENAI_API_KEY" in texts(at.error) and "XLSX или CSV" in texts(at.error)
+    assert not [s for s in at.subheader if s.value.startswith("2.")]
 
 
 def test_corrupt_image_does_not_crash_page(workspace):
     at = upload(open_page(), "shot.png", PNG_HEADER)
     assert not at.exception
-    assert "изображениях" in texts(at.warning) and "повреждён" in texts(at.error)
+    assert "повреждён" in texts(at.error)
 
 
 def test_quality_problems_are_displayed(workspace):

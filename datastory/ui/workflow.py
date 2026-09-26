@@ -7,6 +7,7 @@ from __future__ import annotations
 
 import streamlit as st
 
+from datastory.chat.graph import ChatService
 from datastory.config import get_settings
 from datastory.errors import LLMUnavailableError
 from datastory.llm.client import get_llm
@@ -37,3 +38,14 @@ def _cached_runner(openai_model: str, has_key: bool, server_module: str, workspa
 def get_runner() -> AnalysisRunner:
     s = get_settings()
     return _cached_runner(s.openai_model, s.has_openai_key, s.mcp_server_module, str(s.workspace_dir), str(s.chroma_dir))
+
+
+@st.cache_resource(show_spinner=False)
+def _cached_chat(_runner: AnalysisRunner, runner_id: int) -> ChatService:
+    # runner_id — ключ кэша: новый воркфлоу (смена настроек) получает новый чат; сам runner не хешируется
+    return ChatService(_runner.deps)  # те же зависимости, что у воркфлоу: MCP, LLM, база знаний, Skill
+
+
+def get_chat_service() -> ChatService:
+    runner = get_runner()
+    return _cached_chat(runner, id(runner))

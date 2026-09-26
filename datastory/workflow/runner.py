@@ -47,6 +47,7 @@ def new_thread_id() -> str:
 
 class AnalysisRunner:
     def __init__(self, deps: WorkflowDeps, checkpointer=None, max_threads: int = MAX_THREADS):
+        self.deps = deps
         self.checkpointer = checkpointer or make_checkpointer()
         self.graph = build_graph(deps, self.checkpointer)
         self.max_threads = max_threads

@@ -125,7 +125,13 @@ def test_each_llm_stage_gets_only_its_own_sections(skill):
     assert "**V4.**" in plan and "**V4.**" not in insights  # правила визуализации нужны плану, а не выводам
     for prompt in (plan, insights):
         assert "**A3.**" in prompt and SKILL_NAME in prompt  # правила анализа — на обоих этапах
-    assert set(STAGE_SECTIONS) == {"plan", "insights"}
+    chat = methodology_prompt(skill, "chat")  # ответ на вопрос: определения, расчёты, изменения, выводы, проверка
+    for step in ("Шаг 3.", "Шаг 5.", "Шаг 6.", "Шаг 7.", "Шаг 8."):
+        assert step in chat
+    for step in ("Шаг 1.", "Шаг 2.", "Шаг 4."):
+        assert step not in chat
+    assert "**V4.**" not in chat and "**A7.**" in chat
+    assert set(STAGE_SECTIONS) == {"plan", "insights", "chat"}
 
 
 # ================================================================== методика реально используется воркфлоу
