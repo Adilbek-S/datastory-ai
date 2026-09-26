@@ -67,7 +67,7 @@ def test_full_flow_with_demo_file(workspace):
     refs = workspace.list()
     assert len(refs) == 1 and refs[0].row_count == 18 and refs[0].filename == "transactions_2026.xlsx"
     assert refs[0].dataset_id in texts(at.success)
-    assert "5. Результаты анализа" in [s.value for s in at.subheader]
+    assert "5. Анализ" in [s.value for s in at.subheader]
     stored = workspace.load_profile(refs[0].dataset_id)
     assert stored.detected_date_columns == ["Month"] and stored.description.startswith("Таблица: 18 строк")
 

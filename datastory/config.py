@@ -23,6 +23,7 @@ class Settings(BaseSettings):
 
     chroma_dir: Path = Field(default=PROJECT_ROOT / "data" / "chroma")
     workspace_dir: Path = Field(default=PROJECT_ROOT / "data" / "workspace")
+    skills_dir: Path = Field(default=PROJECT_ROOT / ".claude" / "skills")  # Skill методики анализа (datastory-analysis)
 
     # MCP: аналитический сервер запускается дочерним процессом (stdio)
     mcp_server_module: str = "datastory.mcp_server.server"
@@ -41,7 +42,7 @@ class Settings(BaseSettings):
 @lru_cache
 def get_settings() -> Settings:
     settings = Settings()
-    for name in ("chroma_dir", "workspace_dir"):
+    for name in ("chroma_dir", "workspace_dir", "skills_dir"):
         path = getattr(settings, name)
         if not path.is_absolute():
             setattr(settings, name, PROJECT_ROOT / path)

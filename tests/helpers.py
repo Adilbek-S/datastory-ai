@@ -71,3 +71,24 @@ def make_pdf(blocks: list[tuple[str, str]], *, page_footer: bool = False) -> byt
     if page_footer:
         footer()
     return doc.tobytes()
+
+
+class ScriptedLLM:
+    """Языковая модель для тестов: ответы задаются функциями по типу схемы; все обращения записываются."""
+
+    name = "scripted"
+
+    def __init__(self, **responders):
+        self.responders = responders  # имя схемы -> функция (system, user, n) -> модель или исключение
+        self.calls: list[tuple[str, str, str]] = []
+
+    def generate(self, schema, *, system, user):
+        self.calls.append((schema.__name__, system, user))
+        n = sum(1 for c in self.calls if c[0] == schema.__name__)
+        answer = self.responders[schema.__name__](system, user, n)
+        if isinstance(answer, Exception):
+            raise answer
+        return answer
+
+    def prompts(self, schema_name: str) -> list[tuple[str, str]]:
+        return [(s, u) for name, s, u in self.calls if name == schema_name]

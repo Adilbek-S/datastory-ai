@@ -15,5 +15,6 @@ pyarrow==25.0.1
 pydantic==2.13.5
 pydantic-settings==2.15.0
 python-dotenv==1.2.3
+pyyaml==6.0.3
 langsmith==0.14.0
 pytest==9.1.1

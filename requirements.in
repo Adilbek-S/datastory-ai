@@ -16,3 +16,4 @@ pydantic-settings
 python-dotenv
 langsmith
 pytest
+pyyaml

@@ -4,19 +4,16 @@ from __future__ import annotations
 import pandas as pd
 import streamlit as st
 
-from datastory.errors import DataLoadError, DatasetNotFoundError
-from datastory.evaluation.pipeline import evaluate_result
+from datastory.errors import DataLoadError
 from datastory.file_processing.loader import detect_format, file_kind, list_sheets, read_table
 from datastory.models import ColumnKind, DatasetProfile, KPI, Severity
 from datastory.profiler.profiler import build_profile, new_dataset_id
 from datastory.storage.store import DatasetStore
-from datastory.mcp_client.analytics_client import TOOLS
-from datastory.mcp_client.connection import McpConnectionError, McpToolError
-from datastory.ui.kb import index_profile_safely
-from datastory.ui.mcp import get_analytics_client
+from datastory.rag.embeddings import EmbeddingError
+from datastory.rag.pdf_parser import PdfError
+from datastory.ui.kb import get_kb, index_profile_safely
 from datastory.ui.theme import kpi_row
-from datastory.visualization.engine import build_figure, suggest_charts
-from datastory.workflow.graph import run_analysis_for_dataset
+from datastory.ui.views.analysis_run import render_analysis
 
 KIND_LABELS = {
     ColumnKind.NUMERIC: "Число",
@@ -27,7 +24,6 @@ KIND_LABELS = {
 }
 LABEL_TO_KIND = {label: kind for kind, label in KIND_LABELS.items()}
 SEVERITY_ICONS = {Severity.ERROR: ":material/error:", Severity.WARNING: ":material/warning:", Severity.INFO: ":material/info:"}
-INSIGHT_RENDERERS = {"warning": st.warning, "positive": st.success, "info": st.info}
 PREVIEW_ROWS = 100
 
 
@@ -65,9 +61,9 @@ def render() -> None:
         "Таблица с данными (XLSX или CSV)",
         help="Поддерживаются XLSX и CSV. Изображения с таблицами появятся на следующем этапе.",
     )
-    right.file_uploader(
+    pdf_file = right.file_uploader(
         "PDF с описанием бизнес-показателей (необязательно)", type=["pdf"],
-        help="Используется как контекст для анализа (появится на следующем этапе)",
+        help="Индексируется в базе знаний при подтверждении структуры и служит бизнес-контекстом анализа: определения показателей и события.",
     )
 
     if table_file is None:
@@ -102,7 +98,7 @@ def render() -> None:
 
     profile, typed, type_overrides, sensitive_overrides = _profile_section(data, table_file.name, sheet, signature)
     _quality_section(profile)
-    _confirm_section(profile, typed, signature, type_overrides, sensitive_overrides)
+    _confirm_section(profile, typed, signature, type_overrides, sensitive_overrides, pdf_file)
     _saved_datasets()
 
 
@@ -203,7 +199,7 @@ def _quality_section(profile: DatasetProfile) -> None:
 
 
 # --------------------------------------------------------------------------- 4. подтверждение
-def _confirm_section(profile, typed, signature, type_overrides, sensitive_overrides) -> None:
+def _confirm_section(profile, typed, signature, type_overrides, sensitive_overrides, pdf_file=None) -> None:
     st.subheader("4. Подтверждение структуры")
     state_key = repr((signature, type_overrides, sensitive_overrides))
     description = st.text_area(
@@ -222,6 +218,7 @@ def _confirm_section(profile, typed, signature, type_overrides, sensitive_overri
         indexed, index_message = index_profile_safely(final)  # семантическое описание для RAG
         st.session_state["confirmed"] = {
             "key": state_key, "dataset_id": reference.dataset_id, "indexed": indexed, "index_message": index_message,
+            "document": _index_pdf(pdf_file, reference.dataset_id),
         }
 
     confirmed = st.session_state.get("confirmed")
@@ -236,65 +233,22 @@ def _confirm_section(profile, typed, signature, type_overrides, sensitive_overri
         st.caption(f":material/database: База знаний: {confirmed['index_message']}")
     else:
         st.warning(confirmed.get("index_message", ""), icon=":material/warning:")
-    _analysis_section(confirmed["dataset_id"])
+    document = confirmed.get("document")
+    if document:
+        (st.caption if document[0] else st.warning)(f":material/description: {document[1]}")
+    render_analysis(confirmed["dataset_id"])
 
 
-# --------------------------------------------------------------------------- 5. результаты
-def _analysis_section(dataset_id: str) -> None:
-    st.subheader("5. Результаты анализа")
+def _index_pdf(pdf_file, dataset_id: str) -> tuple[bool, str] | None:
+    """PDF с описанием показателей — в базу знаний, с привязкой к датасету. Сбой не мешает сохранению датасета."""
+    if pdf_file is None:
+        return None
     try:
-        with st.spinner("Считаем метрики на MCP-сервере…"):
-            result = run_analysis_for_dataset(dataset_id, get_analytics_client())
-    except McpConnectionError as exc:
-        st.error(exc.user_message, icon=":material/cable:")
-        if exc.details:
-            with st.expander("Технические подробности"):
-                st.code(exc.details)
-        st.caption("Датасет сохранён. Расчёты будут доступны, когда подключение к MCP-серверу заработает.")
-        return
-    except McpToolError as exc:
-        st.error(f"Инструмент {exc.tool} отклонил запрос: {exc.message}", icon=":material/error:")
-        return
-
-    kpi_row(result.kpis)
-    st.caption(
-        f"Расчёты выполнил MCP-сервер аналитики (stdio, инструменты {', '.join(TOOLS)}): числа считает Python-код сервера, а не модель."
-    )
-
-    st.markdown("#### Визуализации")
-    if result.charts:
-        for col, spec in zip(st.columns(2) * len(result.charts), result.charts):
-            col.plotly_chart(build_figure(pd.DataFrame(), spec), width="stretch")
-    else:
-        _overview_charts(dataset_id)
-
-    st.markdown("#### Выводы")
-    for insight in result.insights:
-        INSIGHT_RENDERERS.get(insight.severity, st.info)(
-            f"**{insight.title}.** {insight.text}", icon=":material/calculate:"
-        )
-    st.caption("Значок калькулятора — результат вычисления по данным, а не предположение модели.")
-
-    with st.expander("Проверка результата (Evaluation)"):
-        for case in evaluate_result(result):
-            st.write(("✅ " if case.passed else "❌ ") + case.name + (f" — {case.details}" if case.details else ""))
-
-
-def _overview_charts(dataset_id: str) -> None:
-    """Обзорные графики для датасетов без метрик платёжной системы (строятся по таблице, без расчётов метрик)."""
-    store = DatasetStore()
-    try:
-        specs = suggest_charts(store.load_profile(dataset_id))
-        frame = store.load_dataframe(dataset_id)
-    except DatasetNotFoundError as exc:
-        st.error(str(exc))
-        return
-    if not specs:
-        st.caption("Для этих данных пока нет подходящих графиков.")
-        return
-    st.caption("В датасете нет колонок Transactions / Successful / Failed / Amount_KZT, поэтому показаны обзорные графики.")
-    for col, spec in zip(st.columns(2) * len(specs), specs):
-        col.plotly_chart(build_figure(frame, spec), width="stretch")
+        return True, get_kb().index_document(pdf_file.getvalue(), pdf_file.name, dataset_id).message
+    except PdfError as exc:
+        return False, f"Документ не проиндексирован: {exc.user_message}"
+    except EmbeddingError as exc:
+        return False, f"Документ не проиндексирован: {exc.user_message}"
 
 
 def _saved_datasets() -> None:

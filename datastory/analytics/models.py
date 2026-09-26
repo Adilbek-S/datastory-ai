@@ -6,8 +6,6 @@ from typing import Any
 
 from pydantic import BaseModel, Field
 
-from datastory.models import KPI, ChartSpec, Insight
-
 Scalar = str | int | float | bool | None
 
 
@@ -88,13 +86,3 @@ class DatasetSummary(BaseModel):
     duplicate_row_count: int = 0
     missing_by_column: dict[str, MissingInfo] = Field(default_factory=dict)
     available_metrics: list[str] = Field(default_factory=list, description="Метрики, для которых в датасете есть нужные колонки")
-
-
-# --------------------------------------------------------------------------- итог анализа
-class AnalysisResult(BaseModel):
-    dataset_id: str
-    summary: DatasetSummary
-    kpis: list[KPI] = Field(default_factory=list)
-    metrics: list[MetricResult] = Field(default_factory=list)
-    charts: list[ChartSpec] = Field(default_factory=list)
-    insights: list[Insight] = Field(default_factory=list)

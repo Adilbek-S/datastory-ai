@@ -3,7 +3,7 @@ from __future__ import annotations
 
 from datetime import datetime
 from enum import Enum
-from typing import Any
+from typing import Any, Literal
 
 from pydantic import BaseModel, Field
 
@@ -142,11 +142,41 @@ class ChartSpec(BaseModel):
     source_metric: str | None = None
 
 
+class NumericEvidence(BaseModel):
+    """Число, на которое опирается вывод.
+
+    Значение либо возвращено MCP-инструментом calculate_metrics (kind = value), либо получено из таких значений
+    простым сравнением (разность, доля, количество групп) — способ получения записан в computation.
+    """
+
+    id: str
+    label: str
+    value: float
+    formatted: str
+    unit: str = ""
+    kind: Literal["value", "difference", "share", "count"] = "value"
+    computation: str = ""
+    group: str | None = None  # период, категория или пара периодов, к которым относится число
+
+
 class Insight(BaseModel):
+    """Аналитический вывод по одному графику.
+
+    title — название, text — краткий вывод, evidence — числовые доказательства, data_source — откуда числа,
+    context_source — источник бизнес-контекста (если использован), limitation — ограничение интерпретации.
+    """
+
     title: str
     text: str
     severity: str = "info"  # info | warning | positive
     evidence_type: EvidenceType = EvidenceType.COMPUTED
+    chart_id: str | None = None
+    chart_title: str | None = None
+    evidence: list[NumericEvidence] = Field(default_factory=list)
+    data_source: str = ""
+    context_source: str | None = None
+    limitation: str | None = None
+    generated_by: str = "rules"  # llm | rules
 
 
 class EvalCase(BaseModel):

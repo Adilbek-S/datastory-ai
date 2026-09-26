@@ -41,3 +41,23 @@ class AnalyticsError(ValueError):
     def __init__(self, user_message: str):
         super().__init__(user_message)
         self.user_message = user_message
+
+
+class LLMError(RuntimeError):
+    """Сбой обращения к языковой модели (сеть, ключ, лимиты, невалидный структурированный ответ)."""
+
+    def __init__(self, user_message: str):
+        super().__init__(user_message)
+        self.user_message = user_message
+
+
+class LLMUnavailableError(LLMError):
+    """Языковая модель не настроена (нет ключа OpenAI)."""
+
+
+class WorkflowError(RuntimeError):
+    """Некорректное обращение к workflow (неизвестная сессия, анализ не ждёт подтверждения)."""
+
+    def __init__(self, user_message: str):
+        super().__init__(user_message)
+        self.user_message = user_message

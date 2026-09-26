@@ -4,8 +4,8 @@
 """
 from __future__ import annotations
 
-from datastory.analytics.models import AnalysisResult
 from datastory.models import EvalCase
+from datastory.workflow.models import MAX_CHARTS, AnalysisResult
 
 
 def evaluate_result(result: AnalysisResult) -> list[EvalCase]:
@@ -22,5 +22,16 @@ def evaluate_result(result: AnalysisResult) -> list[EvalCase]:
             name="charts_carry_their_data",
             passed=all(chart.data for chart in result.charts),
             details=f"графиков: {len(result.charts)}",
+        ),
+        EvalCase(name="at_most_four_charts", passed=len(result.charts) <= MAX_CHARTS, details=f"графиков: {len(result.charts)}"),
+        EvalCase(
+            name="every_insight_has_numeric_evidence",
+            passed=all(i.evidence and i.data_source for i in result.insights),
+            details=f"выводов: {len(result.insights)}",
+        ),
+        EvalCase(
+            name="insights_passed_verification",
+            passed=all(c.passed for c in result.insight_checks),
+            details=f"проверено: {len(result.insight_checks)}",
         ),
     ]
