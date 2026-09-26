@@ -10,7 +10,7 @@ from dataclasses import dataclass, field
 from typing import Callable
 
 from datastory.analytics.formatting import format_metric_value
-from datastory.analytics.metrics import METRICS
+from datastory.analytics.metrics import get_metric
 from datastory.analytics.models import MetricResult
 from datastory.chat.models import ChatAnswer, ChatIntent
 from datastory.insights.facts import build_facts, group_labels
@@ -75,7 +75,7 @@ class Bundle:
         names = [x for i in self.inputs.values() for x in i.mask()]
         quotes = [s for f in self.fragments.values() for s in sentences(f.text)]  # цитаты из документа — не «числа вывода»
         cites = [f.citation for f in self.fragments.values()]  # «стр. 1, раздел «5. …»» — номера страниц и разделов
-        formulas = [x for m in self.metrics for x in (METRICS[m].formula, METRICS[m].label)]
+        formulas = [x for m in self.metrics for x in (get_metric(m).formula, get_metric(m).label)]
         years = [y for label in self.labels for y in re.findall(r"20\d\d", label)]  # «в марте 2026 года» — год из подписи периода
         return [*names, *quotes, *cites, *formulas, *self.labels, *years]
 
@@ -90,12 +90,17 @@ def sentences(text: str) -> list[str]:
 
 def definition_terms(metric: str) -> tuple[str, ...]:
     kind = next((a for a in ANALYSES if a.metric == metric), None)
-    return kind.doc_terms if kind else EXTRA_TERMS[metric]
+    if kind:
+        return kind.doc_terms
+    if metric in EXTRA_TERMS:
+        return EXTRA_TERMS[metric]
+    definition = get_metric(metric)  # универсальный показатель: сумма колонки называется по колонке
+    return (definition.label.casefold(), definition.columns[0].casefold())
 
 
 def definition_query(metric: str) -> str:
     kind = next((a for a in ANALYSES if a.metric == metric), None)
-    return kind.doc_query if kind else f"{METRICS[metric].label} определение формула"
+    return kind.doc_query if kind else f"{get_metric(metric).label} определение формула"
 
 
 # --------------------------------------------------------------------------- расчёты (дашборд или новый вызов MCP)
@@ -180,7 +185,7 @@ def gather(intent: ChatIntent, metric: str | None, question: str, deps: ChatDeps
     if intent == "metric_definition":
         targets = [metric] if metric else list(dict.fromkeys([*dashboard_metrics(result, "time"), *dashboard_metrics(result, "category")]))
         if not targets:
-            bundle.clarification = "Уточните, определение какого показателя нужно: " + ", ".join(METRICS[m].label for m in available) + "."
+            bundle.clarification = "Уточните, определение какого показателя нужно: " + ", ".join(get_metric(m).label for m in available) + "."
             return bundle
         bundle.metrics = targets
         _search_definitions(deps, targets, bundle)
@@ -206,7 +211,7 @@ def gather(intent: ChatIntent, metric: str | None, question: str, deps: ChatDeps
         bundle.clarification = "В датасете нет колонки с датой или периодом, поэтому динамику и максимум по месяцам показать нельзя."
         return bundle
     if not targets:
-        bundle.clarification = "Уточните показатель: " + ", ".join(METRICS[m].label for m in available) + "."
+        bundle.clarification = "Уточните показатель: " + ", ".join(get_metric(m).label for m in available) + "."
         return bundle
     for target in targets:
         _add(bundle, _metric_input(deps, target, "time", dimension, bundle))
@@ -226,7 +231,7 @@ def chat_limitations(bundle: Bundle, event_used: bool) -> list[str]:
     if bundle.intent == "metric_definition":
         for metric, fragment in bundle.definitions.items():
             if fragment is None:
-                limits.append(NO_DEFINITION.format(formula=METRICS[metric].formula))
+                limits.append(NO_DEFINITION.format(formula=get_metric(metric).formula))
     if bundle.intent == "cause_question" or (
         bundle.intent in ("metric_change", "notable_changes") and any(_changes(i) for i in bundle.inputs.values())
     ):
@@ -282,7 +287,7 @@ def rules_answer(question: str, bundle: Bundle) -> tuple[str, list[str], list[Co
 
     if intent == "metric_definition":
         for metric in bundle.metrics:
-            fragment, definition = bundle.definitions.get(metric), METRICS[metric]
+            fragment, definition = bundle.definitions.get(metric), get_metric(metric)
             if fragment:
                 quotes = _relevant_sentences(fragment, definition_terms(metric))[:MAX_DEFINITION_SENTENCES] or sentences(fragment.text)[:1]
                 parts.append(f"«{definition.label}» — по документации ({fragment.citation}): «{' '.join(quotes)}» Формула расчёта в системе: {definition.formula}.")

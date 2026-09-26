@@ -34,6 +34,8 @@ class Settings(BaseSettings):
     langsmith_tracing: bool = False
     langsmith_api_key: str = ""
     langsmith_project: str = "datastory-ai"
+    langsmith_endpoint: str = ""  # пусто — облако LangSmith по умолчанию; для EU и self-hosted укажите свой URL
+    langsmith_workspace_id: str = ""  # нужен только для ключей, привязанных к нескольким рабочим пространствам
 
     @property
     def has_openai_key(self) -> bool:
@@ -47,13 +49,12 @@ def get_settings() -> Settings:
         path = getattr(settings, name)
         if not path.is_absolute():
             setattr(settings, name, PROJECT_ROOT / path)
-    _configure_langsmith(settings)
+    _configure_tracing(settings)
     return settings
 
 
-def _configure_langsmith(settings: Settings) -> None:
-    """LangSmith читает настройки из переменных окружения — выставляем их из .env."""
-    if settings.langsmith_tracing and settings.langsmith_api_key:
-        os.environ["LANGSMITH_TRACING"] = "true"
-        os.environ["LANGSMITH_API_KEY"] = settings.langsmith_api_key
-        os.environ["LANGSMITH_PROJECT"] = settings.langsmith_project
+def _configure_tracing(settings: Settings) -> None:
+    """LangSmith читает настройки из переменных окружения: выставляем их из .env и сообщаем, включена ли трассировка."""
+    from datastory.observability import configure_tracing  # локальный импорт: observability импортирует этот модуль
+
+    configure_tracing(settings)

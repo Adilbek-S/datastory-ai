@@ -12,7 +12,7 @@ from pydantic import BaseModel, Field
 
 from datastory.rag.knowledge_base import KnowledgeBase
 from datastory.rag.models import SourceReference
-from datastory.workflow.catalog import BY_ID
+from datastory.workflow.catalog import BY_ID, doc_query, doc_terms
 
 logger = logging.getLogger("datastory.workflow")
 
@@ -60,18 +60,19 @@ def find_definition(search: Callable[[str], object], query: str, terms: tuple[st
 
 
 def retrieve_business_context(
-    analyses: list[str], search: Callable[[str], object]
+    analyses: list[str], search: Callable[[str], object], metrics: dict[str, str] | None = None
 ) -> BusinessContext:
     """search(query) -> ContextSearchResult. Ошибки поиска не роняют анализ: контекст помечается недоступным."""
     context = BusinessContext()
     try:
         for analysis in analyses:
             kind = BY_ID[analysis]
-            if kind.metric in context.definitions:
+            metric = (metrics or {}).get(analysis) or kind.metric  # у универсальных анализов показатель зависит от набора данных
+            if metric in context.definitions:
                 continue
-            found = find_definition(search, kind.doc_query, kind.doc_terms)
+            found = find_definition(search, doc_query(kind, metric), doc_terms(kind, metric))
             if found:
-                context.definitions[kind.metric] = found
+                context.definitions[metric] = found
         result = search(CONTEXT_QUERY)
         context.provider = result.provider
         taken = {f.chunk_id for f in context.definitions.values()}

@@ -3,7 +3,7 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING
 
-from datastory.analytics.metrics import METRICS
+from datastory.analytics.metrics import get_metric
 from datastory.skills import Skill
 from datastory.workflow.methodology import methodology_prompt
 from datastory.workflow.models import AnalysisResult
@@ -40,8 +40,14 @@ INTENT_HINTS = {
 }
 
 
+def _metric_line(metric: str) -> str:
+    definition = get_metric(metric)
+    unit = definition.unit or "без единицы"
+    return f"{metric} — «{definition.label}», формула {definition.formula}, единица {unit}"
+
+
 def classify_prompt(question: str, result: AnalysisResult) -> str:
-    metrics = "\n".join(f"- {m}: {METRICS[m].label}" for m in result.summary.available_metrics)
+    metrics = "\n".join(f"- {m}: {get_metric(m).label}" for m in result.summary.available_metrics)
     return f"Вопрос: «{question}»\n\nДоступные показатели:\n{metrics}"
 
 
@@ -54,7 +60,7 @@ def chat_prompt(question: str, bundle: "Bundle", feedback: list[str] | None = No
     if bundle.intent in INTENT_HINTS:
         parts.append(INTENT_HINTS[bundle.intent])
     if bundle.metrics:
-        parts.append("Показатели: " + "; ".join(f"{m} — «{METRICS[m].label}», формула {METRICS[m].formula}, единица {METRICS[m].unit}" for m in bundle.metrics) + ".")
+        parts.append("Показатели: " + "; ".join(_metric_line(m) for m in bundle.metrics) + ".")
     if bundle.labels and bundle.inputs:
         parts.append("Периоды и категории в данных: " + ", ".join(dict.fromkeys(bundle.labels)) + ". Не упоминай других.")
     if bundle.intent == "metric_definition":

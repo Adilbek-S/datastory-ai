@@ -40,7 +40,7 @@ def render_chat(result: AnalysisResult, thread_id: str) -> None:
     question = st.chat_input(INPUT_PLACEHOLDER, key=f"chat-input::{thread_id}") or pending
     if question:
         with st.spinner("Ищем ответ в результатах расчётов и документации…"):
-            answer = get_chat_service().ask(question, result)
+            answer = get_chat_service().ask(question, result, thread_id)
         history.append({"role": "user", "content": question})
         history.append({"role": "assistant", "content": answer.answer, "answer": answer.model_dump(mode="json")})
         del history[:-MAX_HISTORY]

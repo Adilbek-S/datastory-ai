@@ -1,7 +1,7 @@
 """Чат на странице готового дашборда: история в session_state, вызовы MCP и RAG, границы MVP."""
 from datastory.chat.models import SUPPORTED_QUESTIONS
 from datastory.ui.mcp import get_analytics_client
-from tests.test_ui_workflow import DEMO_PDF, approved, button, everything, texts
+from tests.test_ui_workflow import DEMO_PDF, DEMO_XLSX, approved, button, everything, texts
 
 Q_DEFINITION, Q_CHANGE, Q_EXTREME, Q_TOP, Q_NOTABLE, Q_EVENTS = SUPPORTED_QUESTIONS
 
@@ -94,7 +94,10 @@ def test_history_can_be_cleared():
 def test_a_new_analysis_session_starts_with_an_empty_chat():
     at = ask(dashboard(), Q_CHANGE)
     first = at.session_state["analysis_session"]["thread_id"]
-    at = button(at, "Запустить анализ").click().run()
+    at = button(at, "Начать заново").click().run()  # экран загрузки: старой сессии больше нет
+    at.file_uploader[0].upload("transactions_2026.xlsx", DEMO_XLSX)
+    at = button(at.run(), "Предложить анализ автоматически").click().run()
+    at = button(at, "Построить аналитику").click().run()
     second = at.session_state["analysis_session"]["thread_id"]
     assert first != second and not at.chat_message
     assert len(at.session_state[f"chat::{first}"]) == 2  # прежняя история сохранена под прежним thread_id

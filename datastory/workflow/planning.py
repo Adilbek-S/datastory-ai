@@ -8,9 +8,9 @@ from __future__ import annotations
 from dataclasses import dataclass
 from typing import Callable
 
-from datastory.analytics.metrics import METRICS
+from datastory.analytics.metrics import get_metric
 from datastory.analytics.models import DatasetSummary
-from datastory.workflow.catalog import ALL_IDS, ANALYSES, BY_ID, AnalysisKind, fit_chart_type, metric_columns, unique_count
+from datastory.workflow.catalog import BY_ID, EVERY_ANALYSIS, AnalysisKind, fit_chart_type, metric_columns, unique_count
 from datastory.workflow.context import BusinessContext
 from datastory.workflow.models import (
     MAX_CHARTS,
@@ -35,13 +35,13 @@ def rules_draft(candidates: list[AnalysisCandidate], selected: list[str]) -> Pla
     by_id = {c.id: c for c in candidates}
     charts = [
         ChartDraft(
-            analysis=kind.id, title=kind.label, chart_type=kind.default_chart,
+            analysis=kind.id, title=by_id[kind.id].label, chart_type=kind.default_chart,
             # без модели предложить колонку некому: при нескольких кандидатах выбор остаётся за пользователем
             x_column=by_id[kind.id].dimension_candidates[0] if len(by_id[kind.id].dimension_candidates) == 1 else "",
-            rationale="Стандартный график для этого показателя.",
+            rationale=kind.purpose,
         )
-        for kind in ANALYSES
-        if kind.id in selected and by_id[kind.id].available
+        for kind in EVERY_ANALYSIS
+        if kind.id in selected and kind.id in by_id and by_id[kind.id].available
     ]
     return PlanDraft(goal="Динамика и структура операций", charts=charts)
 
@@ -72,7 +72,7 @@ def resolve_mapping(
 
 
 def _metric_definition(metric: str, context: BusinessContext) -> MetricDefinition:
-    definition = METRICS[metric]
+    definition = get_metric(metric)
     fragment = context.definitions.get(metric)
     return MetricDefinition(
         metric=metric, label=definition.label, unit=definition.unit, formula=definition.formula,
@@ -115,12 +115,12 @@ def finalize_plan(
 
     charts: list[PlannedChart] = []
     excluded: list[ExcludedItem] = []
-    for kind in ANALYSES:  # порядок каталога, а не порядок ответа модели
-        if kind.id not in selected:
+    for kind in EVERY_ANALYSIS:  # порядок каталога, а не порядок ответа модели
+        if kind.id not in selected or kind.id not in by_id:
             continue
         candidate = by_id[kind.id]
         if not candidate.available:
-            excluded.append(ExcludedItem(analysis=kind.id, label=kind.label, reason="; ".join(candidate.reasons)))
+            excluded.append(ExcludedItem(analysis=kind.id, label=candidate.label, reason="; ".join(candidate.reasons)))
             continue
         proposal = proposals.get(kind.id)
         mapping = resolve_mapping(
@@ -131,13 +131,13 @@ def finalize_plan(
             counts = [unique_count(summary, c) for c in ([mapping.column] if mapping.column else mapping.candidates)]
             categories = max(counts, default=None)
         chart_type, note = fit_chart_type(kind, proposal.chart_type if proposal else None, categories)
-        title = ((proposal.title if proposal else "") or kind.label).strip()[:MAX_TITLE]
+        title = ((proposal.title if proposal else "") or candidate.label).strip()[:MAX_TITLE]
         if note:
             notes.append(f"График «{title}»: {note}.")
         charts.append(
             PlannedChart(
-                chart_id=kind.id, analysis=kind.id, title=title, metric=kind.metric, chart_type=chart_type,
-                x_column=mapping.column, mapping=mapping, rationale=(proposal.rationale if proposal else "").strip(),
+                chart_id=kind.id, analysis=kind.id, title=title, metric=candidate.metric, chart_type=chart_type,
+                x_column=mapping.column, mapping=mapping, rationale=((proposal.rationale if proposal else "").strip() or kind.purpose),
             )
         )
     if len(charts) > MAX_CHARTS:
@@ -231,5 +231,5 @@ def apply_decision(plan: AnalysisPlan, decision: ApprovalDecision, summary: Data
 
 def normalize_selection(requested: list[str] | None, default: list[str]) -> list[str]:
     """Оставляет только известные анализы; пустой выбор означает «выбор по умолчанию»."""
-    chosen = [a for a in (requested or []) if a in ALL_IDS]
+    chosen = [a for a in (requested or []) if a in BY_ID]
     return chosen or default

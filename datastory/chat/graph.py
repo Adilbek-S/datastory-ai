@@ -23,6 +23,7 @@ from datastory.errors import LLMError
 from datastory.insights.generator import quote_is_verbatim
 from datastory.insights.verifier import Violation, check_insight
 from datastory.mcp_client.connection import McpConnectionError, McpToolError
+from datastory.observability import clip, trace_config
 from datastory.models import EvidenceType, Insight
 from datastory.rag.api import search_business_context
 from datastory.skills import SkillError
@@ -217,14 +218,17 @@ class ChatService:
     def __init__(self, deps: WorkflowDeps):
         self.graph = build_chat_graph(deps)
 
-    def ask(self, question: str, result: AnalysisResult) -> ChatAnswer:
+    def ask(self, question: str, result: AnalysisResult, thread_id: str | None = None) -> ChatAnswer:
         question = (question or "").strip()
         if not question:
             return _unsupported(question, "Введите вопрос.", "rules", supported=True)
         if len(question) > MAX_QUESTION:
             return _unsupported(question, f"Вопрос слишком длинный: не более {MAX_QUESTION} символов.", "rules", supported=True)
         try:
-            return self.graph.invoke({"question": question, "result": result})["answer"]
+            config = trace_config(
+                "datastory.chat.ask", thread_id=thread_id, dataset_id=result.dataset_id, tags=("chat",), metadata={"question": clip(question)}
+            )
+            return self.graph.invoke({"question": question, "result": result}, config)["answer"]
         except McpConnectionError as exc:
             return _error(question, f"Не удалось выполнить расчёт: {exc.user_message}")
         except McpToolError as exc:

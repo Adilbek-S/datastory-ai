@@ -17,6 +17,7 @@ from abc import ABC, abstractmethod
 from typing import Callable
 
 from datastory.config import Settings, get_settings
+from datastory.observability import traced
 
 
 class EmbeddingError(RuntimeError):
@@ -67,6 +68,10 @@ class OpenAIEmbeddings(EmbeddingProvider):
             client = OpenAI(api_key=api_key)
         self._client = client
 
+    @traced(
+        "openai.embeddings", run_type="embedding", tags=("rag", "embeddings"),
+        inputs=lambda a: {"texts": len(a["texts"])}, outputs=lambda v: {"vectors": len(v)},  # тексты в трассу не отправляются
+    )
     def embed(self, texts: list[str]) -> list[list[float]]:
         vectors: list[list[float]] = []
         for start in range(0, len(texts), self.batch_size):

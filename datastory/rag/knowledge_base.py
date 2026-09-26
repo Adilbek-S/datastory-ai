@@ -17,6 +17,7 @@ import chromadb
 
 from datastory.config import get_settings
 from datastory.models import DatasetProfile
+from datastory.observability import clip, traced
 from datastory.rag.dataset_descriptions import build_dataset_records, content_hash
 from datastory.rag.embeddings import EmbeddingProvider, get_embedding_provider
 from datastory.rag.models import (
@@ -50,6 +51,27 @@ class SourceNotFoundError(LookupError):
 def _slug(name: str) -> str:
     return re.sub(r"[^a-zA-Z0-9]+", "_", name).strip("_")
 
+
+
+def _search_inputs(arguments: dict) -> dict:
+    return {"query": clip(arguments.get("query")), **{k: v for k, v in arguments.items() if k != "query" and v is not None}}
+
+
+def _documents(hits, text_of) -> dict:
+    """Формат, который LangSmith показывает для retriever: список документов с содержимым и метаданными."""
+    return {"documents": [{"page_content": clip(text_of(h), 1200), "type": "Document", "metadata": {"score": h.score, "relevant": h.relevant, "source": h.source.citation}} for h in hits]}
+
+
+def _context_outputs(result) -> dict:
+    return {**_documents(result.hits, lambda h: h.text), "found": result.found, "provider": result.provider}
+
+
+def _metadata_outputs(result) -> dict:
+    return {**_documents(result.hits, lambda h: h.text), "found": result.found, "provider": result.provider}
+
+
+def _resolution_outputs(result) -> dict:
+    return {"status": result.status, "chosen": result.chosen.column_name if result.chosen else None, "candidates": [h.column_name for h in result.candidates]}
 
 
 class KnowledgeBase:
@@ -200,6 +222,7 @@ class KnowledgeBase:
         return len(found)
 
     # ------------------------------------------------------------------ поиск
+    @traced("rag.search_business_context", run_type="retriever", tags=("rag",), inputs=_search_inputs, outputs=_context_outputs)
     def search_business_context(
         self,
         query: str,
@@ -233,6 +256,7 @@ class KnowledgeBase:
         message = "" if found else "В базе знаний нет достаточно релевантных фрагментов: ответ нельзя опирать на документы."
         return ContextSearchResult(query=query, provider=provider, hits=hits, found=found, message=message)
 
+    @traced("rag.search_dataset_metadata", run_type="retriever", tags=("rag",), inputs=_search_inputs, outputs=_metadata_outputs)
     def search_dataset_metadata(
         self,
         query: str,
@@ -270,6 +294,7 @@ class KnowledgeBase:
             message="" if found else "Подходящих датасетов или колонок не найдено.",
         )
 
+    @traced("rag.resolve_column", tags=("rag",), inputs=_search_inputs, outputs=_resolution_outputs)
     def resolve_column(self, query: str, *, dataset_id: str | None = None, top_k: int = DEFAULT_TOP_K) -> ColumnResolution:
         """Сопоставляет фразу («количество операций») с колонкой.
 

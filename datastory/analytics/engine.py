@@ -29,9 +29,16 @@ def basic_kpis(summary: DatasetSummary) -> list[KPI]:
 
 
 def metric_kpis(overall: dict[str, MetricResult]) -> list[KPI]:
-    """Карточки по итоговым значениям метрик (значение по всем строкам, а не среднее по группам)."""
-    return [
+    """Карточки по итоговым значениям метрик (значение по всем строкам, а не среднее по группам).
+
+    Для наборов без показателей платёжной системы — итоги по суммам числовых колонок («sum:<колонка>»).
+    """
+    kpis = [
         KPI(label=r.label, value=format_metric_value(r.overall.value, r.unit), hint=KPI_HINTS.get(name, r.formula))
         for name in KPI_METRICS
         if (r := overall.get(name)) is not None
+    ]
+    return kpis or [
+        KPI(label=f"{r.label}: итог", value=format_metric_value(r.overall.value, r.unit), hint=r.formula)
+        for name, r in overall.items() if name.startswith("sum:")
     ]

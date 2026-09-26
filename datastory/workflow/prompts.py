@@ -3,18 +3,21 @@ from __future__ import annotations
 
 from datastory.analytics.models import DatasetSummary
 from datastory.skills import Skill
-from datastory.workflow.catalog import ANALYSES
 from datastory.workflow.context import BusinessContext
 from datastory.workflow.methodology import methodology_prompt
 from datastory.workflow.models import MAX_CHARTS, AnalysisCandidate
 
-INTENT_SYSTEM = (
-    "Ты определяешь, какие из поддерживаемых анализов запросил пользователь. Поддерживаются только:\n"
-    + "\n".join(f"- {a.id}: {a.label}" for a in ANALYSES)
-    + "\nВ analyses верни идентификаторы запрошенных анализов из этого списка. Всё, что запрошено сверх списка "
-    "(прогноз, причины, другие показатели), перечисли в unsupported. Если запрос общий («проанализируй данные»), "
-    "верни все анализы."
-)
+def intent_system(candidates: list[AnalysisCandidate]) -> str:
+    """Список поддерживаемых анализов зависит от набора данных: платёжные показатели или суммы числовых колонок."""
+    return (
+        "Ты определяешь, какие из поддерживаемых анализов запросил пользователь. Поддерживаются только:\n"
+        + "\n".join(f"- {c.id}: {c.label}" for c in candidates)
+        + "\nВ analyses верни идентификаторы запрошенных анализов из этого списка. Всё, что запрошено сверх списка "
+        "(прогноз, причины, другие показатели), перечисли в unsupported. Если запрос общий («проанализируй данные»), "
+        "верни все анализы."
+    )
+
+
 
 PLAN_TASK = (
     f"Ты составляешь план анализа данных: не более {MAX_CHARTS} графиков, по одному на каждый выбранный анализ. "

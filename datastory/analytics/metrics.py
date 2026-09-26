@@ -75,7 +75,22 @@ def _quoted(names: list[str], limit: int = 20) -> str:
     return shown + (f" и ещё {len(names) - limit}" if len(names) > limit else "")
 
 
+SUM_PREFIX = "sum:"
+_CURRENCY_SUFFIX = re.compile(r"[_ ](KZT|USD|EUR|RUB|UZS)$", re.IGNORECASE)
+
+
+def sum_metric(column: str) -> MetricDefinition:
+    """Универсальный показатель «сумма числовой колонки»: для наборов данных без колонок платёжной системы (например, продаж)."""
+    currency = _CURRENCY_SUFFIX.search(column)
+    label = _CURRENCY_SUFFIX.sub("", column).replace("_", " ").strip() or column
+    return MetricDefinition(
+        f"{SUM_PREFIX}{column}", label, currency.group(1).upper() if currency else "", f"SUM({column})", (column,), lambda s: s[column]
+    )
+
+
 def get_metric(name: Any) -> MetricDefinition:
+    if isinstance(name, str) and name.startswith(SUM_PREFIX) and len(name) > len(SUM_PREFIX):
+        return sum_metric(name[len(SUM_PREFIX):])
     if not isinstance(name, str) or name not in METRICS:
         raise AnalyticsError(f"Неизвестная метрика {name!r}. Поддерживаются: {', '.join(METRICS)}.")
     return METRICS[name]
@@ -424,9 +439,10 @@ def calculate_metric(
 
 
 def available_metrics(numeric_columns: list[str]) -> list[str]:
-    """Метрики, для которых в датасете есть все нужные числовые колонки."""
+    """Метрики, для которых в датасете есть все нужные числовые колонки.
+
+    Если нет ни одной метрики платёжной системы, доступны суммы числовых колонок («sum:<колонка>»).
+    """
     numeric = {c.casefold() for c in numeric_columns}
-    return [
-        name for name, d in METRICS.items()
-        if all(canonical.casefold() in numeric for canonical in d.columns)
-    ]
+    found = [name for name, d in METRICS.items() if all(canonical.casefold() in numeric for canonical in d.columns)]
+    return found or [f"{SUM_PREFIX}{column}" for column in numeric_columns]

@@ -26,7 +26,7 @@ _INTENT_PATTERNS: tuple[tuple[ChatIntent, str], ...] = (
     ),
     (
         "top_category",
-        r"какой канал|какая категор|какой из каналов|по каналам|канал\w*.*(больш|наиболь|лидир|меньш|наименьш)|"
+        r"какой (?:канал|регион|город|филиал|магазин|отдел)|какая категор|какой из каналов|по каналам|канал\w*.*(больш|наиболь|лидир|меньш|наименьш)|"
         r"(больш|наиболь|лидир|меньш|наименьш)\w*.*канал",
     ),
     ("metric_definition", r"что означает|что значит|что такое|определени|как считается|как рассчитывается|формула|что показывает"),
@@ -68,10 +68,33 @@ def classify_by_rules(question: str) -> tuple[ChatIntent, str]:
     return "unsupported", "Не удалось отнести вопрос ни к одному из поддерживаемых типов."
 
 
+# слова вопроса -> части названия колонки: «выручка» → Revenue_KZT
+_COLUMN_SYNONYMS: tuple[tuple[str, str], ...] = (
+    (r"выруч|доход|продаж|оборот|revenue|sales", r"revenue|sales|amount|income|turnover|выруч|продаж|доход"),
+    (r"заказ|orders?", r"order|заказ"),
+    (r"количеств|штук|quantity|qty", r"quantity|qty|units|количеств"),
+    (r"затрат|расход|cost|expense", r"cost|expense|затрат|расход"),
+    (r"прибыл|profit|margin", r"profit|margin|прибыл"),
+)
+
+
+def _detect_sum_metric(text: str, available: list[str]) -> str | None:
+    """Универсальный показатель «sum:<колонка>»: колонка названа в вопросе прямо или синонимом."""
+    for metric in available:
+        if not metric.startswith("sum:"):
+            continue
+        column = metric[4:].casefold()
+        if column in text or column.replace("_", " ") in text:
+            return metric
+        if any(re.search(word, text) and re.search(part, column) for word, part in _COLUMN_SYNONYMS):
+            return metric
+    return None
+
+
 def detect_metric(question: str, available: list[str]) -> str | None:
     """Показатель, названный в вопросе, если он доступен в датасете."""
     text = _norm(question)
     for metric, pattern in _METRIC_PATTERNS:
         if metric in available and re.search(pattern, text):
             return metric
-    return None
+    return _detect_sum_metric(text, available)

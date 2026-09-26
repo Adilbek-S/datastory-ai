@@ -39,11 +39,11 @@ def _time_series_facts(result: MetricResult) -> list[NumericEvidence]:
                             kind="value", computation=_source(result, detail), group=group)
         )
 
-    def diff(fid: str, a: tuple[str, float], b: tuple[str, float], prefix: str = "") -> None:
+    def diff(fid: str, a: tuple[str, float], b: tuple[str, float], scope: str) -> None:
         delta = b[1] - a[1]
         facts.append(
             NumericEvidence(
-                id=fid, label=f"{prefix}{_direction(delta)} «{label}»: {a[0]} → {b[0]}", value=delta,
+                id=fid, label=f"{_direction(delta)} «{label}» {scope}: {a[0]} → {b[0]}", value=delta,
                 formatted=_diff_text(delta, unit), unit="п.п." if unit == "%" else unit, kind="difference", group=f"{a[0]} → {b[0]}",
                 computation=f"значение({b[0]}) − значение({a[0]}) по результату calculate_metrics",
             )
@@ -60,7 +60,7 @@ def _time_series_facts(result: MetricResult) -> list[NumericEvidence]:
         value("last", f"{label} в последнем периоде ({last[0]})", last[1], f" → строка {axis}={last[0]}", last[0])
         value("min", f"Минимум {label}: период {lowest[0]}", lowest[1], f" → строка {axis}={lowest[0]}", lowest[0])
         value("max", f"Максимум {label}: период {highest[0]}", highest[1], f" → строка {axis}={highest[0]}", highest[0])
-        diff("change", first, last, "Общее изменение за весь ряд: ")
+        diff("change", first, last, "за весь ряд")
         if unit != "%" and first[1]:
             pct = (last[1] - first[1]) / first[1] * 100
             facts.append(
@@ -74,9 +74,9 @@ def _time_series_facts(result: MetricResult) -> list[NumericEvidence]:
         drop = min(steps, key=lambda s: s[1][1] - s[0][1])
         rise = max(steps, key=lambda s: s[1][1] - s[0][1])
         if drop[1][1] - drop[0][1] < 0 and len(points) > 2:
-            diff("drop", *drop, prefix="Наибольшее падение между соседними периодами: ")
+            diff("drop", *drop, scope="(наибольшее падение между соседними периодами)")
         if rise[1][1] - rise[0][1] > 0 and len(points) > 2:
-            diff("rise", *rise, prefix="Наибольший рост между соседними периодами: ")
+            diff("rise", *rise, scope="(наибольший рост между соседними периодами)")
     facts.append(
         NumericEvidence(id="periods", label="Число периодов в ряду", value=len(points), formatted=str(len(points)), kind="count",
                         computation="число строк результата calculate_metrics")

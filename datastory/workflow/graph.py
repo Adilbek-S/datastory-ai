@@ -37,7 +37,7 @@ from datastory.analytics.engine import basic_kpis, metric_kpis
 from datastory.analytics.models import DatasetSummary, MetricResult
 from datastory.errors import LLMError
 from datastory.insights.facts import build_facts
-from datastory.insights.generator import ChartInsightInput, generate_insights as data_quality_notes, llm_insight, rules_insight
+from datastory.insights.generator import ChartInsightInput, generate_insights as data_quality_notes, llm_insight, material_drop, rules_insight
 from datastory.insights.verifier import Violation, check_insight
 from datastory.llm.client import StructuredLLM
 from datastory.mcp_client.analytics_client import AnalyticsMcpClient
@@ -45,7 +45,7 @@ from datastory.mcp_client.connection import McpToolError
 from datastory.models import ChartSpec, Insight
 from datastory.rag.knowledge_base import KnowledgeBase
 from datastory.skills import Skill, SkillError, load_skill
-from datastory.workflow.catalog import ALL_IDS, evaluate_candidates
+from datastory.workflow.catalog import evaluate_candidates
 from datastory.workflow.context import BusinessContext, make_searcher, retrieve_business_context
 from datastory.workflow.models import (
     AnalysisCandidate,
@@ -54,6 +54,8 @@ from datastory.workflow.models import (
     AnalysisResult,
     ApprovalDecision,
     ApprovalRequest,
+    AUTO_GOAL,
+    ContextSource,
     DashboardSection,
     DashboardSpec,
     InsightCheck,
@@ -62,8 +64,9 @@ from datastory.workflow.models import (
     PlanDraft,
 )
 from datastory.workflow.planning import apply_decision, finalize_plan, normalize_selection, rules_draft
+from datastory.observability import clip, span
 from datastory.workflow.methodology import SKILL_NAME, STAGE_TITLES, methodology_info
-from datastory.workflow.prompts import INTENT_SYSTEM, insight_system, intent_prompt, plan_prompt, plan_system
+from datastory.workflow.prompts import insight_system, intent_prompt, intent_system, plan_prompt, plan_system
 
 logger = logging.getLogger("datastory.workflow")
 
@@ -155,19 +158,38 @@ def _record_stage(deps: WorkflowDeps, state: WorkflowState, stage: str) -> Metho
     return methodology_info(skill, stages)
 
 
+def _context_sources(context: BusinessContext, plan: AnalysisPlan, insights: list) -> list[ContextSource]:
+    """Фрагменты базы знаний, найденные при анализе, и выводы, которые на них ссылаются."""
+    found: list[tuple[str, str, str, str | None]] = []  # (кто, цитата, текст, показатель)
+    for metric, fragment in context.definitions.items():
+        definition = plan.metric_definition(metric)
+        if definition is not None:  # определение показателя, которого нет в плане, пользователю не показывается
+            found.append(("definition", fragment.citation, fragment.text, definition.label))
+    found += [("event", f.citation, f.text, None) for f in context.events]
+    sources: dict[str, ContextSource] = {}
+    for kind, citation, text, label in found:
+        used = [i.title for i in insights if i.context_source and citation in i.context_source]
+        if citation in sources:  # один фрагмент может быть и определением, и контекстом
+            sources[citation].used_in = list(dict.fromkeys([*sources[citation].used_in, *used]))
+            continue
+        sources[citation] = ContextSource(citation=citation, text=text, kind=kind, metric_label=label, used_in=used)
+    return list(sources.values())
+
+
 def build_graph(deps: WorkflowDeps, checkpointer=None):
     def analyze_intent(state: WorkflowState) -> WorkflowState:
         summary = deps.client().profile_dataset(state["dataset_id"])  # MCP profile_dataset: доступные колонки и метрики
         candidates = evaluate_candidates(summary)
         request, llm, warnings = (state.get("user_request") or "").strip(), deps.llm(), state.get("warnings")
-        intent = AnalysisIntent(analyses=list(ALL_IDS))
+        default_analyses = [c.id for c in candidates]
+        intent = AnalysisIntent(analyses=default_analyses)
         if llm is None:
             warnings = _merge(warnings, LLM_OFF)
-        elif request:
+        elif request and request != AUTO_GOAL:  # автоматический анализ: сужать нечего, берутся все доступные анализы
             try:
-                draft = llm.generate(IntentDraft, system=INTENT_SYSTEM, user=intent_prompt(request, summary))
+                draft = llm.generate(IntentDraft, system=intent_system(candidates), user=intent_prompt(request, summary))
                 intent = AnalysisIntent(
-                    analyses=normalize_selection(list(draft.analyses), list(ALL_IDS)), source="llm",
+                    analyses=normalize_selection([a for a in draft.analyses if a in default_analyses], default_analyses), source="llm",
                     unsupported=draft.unsupported, comment=draft.comment,
                 )
             except LLMError as exc:
@@ -177,7 +199,7 @@ def build_graph(deps: WorkflowDeps, checkpointer=None):
     def retrieve_context(state: WorkflowState) -> WorkflowState:
         available = [c.id for c in state["candidates"] if c.available]
         searcher = make_searcher(deps.kb(), state["dataset_id"])
-        context = retrieve_business_context(available, searcher)
+        context = retrieve_business_context(available, searcher, {c.id: c.metric for c in state["candidates"]})
         warnings = state.get("warnings")
         if context.error:
             warnings = _merge(warnings, context.error)
@@ -186,19 +208,24 @@ def build_graph(deps: WorkflowDeps, checkpointer=None):
     def build_analysis_plan(state: WorkflowState) -> WorkflowState:
         selected = normalize_selection(state.get("selected_analyses"), state["intent"].analyses)
         llm = deps.llm()
-        system, warnings = _with_methodology(deps, "plan", plan_system, state) if llm is not None else (None, state.get("warnings"))
-        draft, planner, methodology = None, "rules", state.get("methodology")
-        if llm is not None and system is not None:
-            try:
-                draft = llm.generate(
-                    PlanDraft, system=system,
-                    user=plan_prompt(state["summary"], state["candidates"], selected, state["context"], state.get("user_request", "")),
-                )
-                planner, methodology = "llm", _record_stage(deps, state, "plan")
-            except LLMError as exc:
-                warnings = _merge(warnings, f"План составлен по правилам: {exc.user_message}")
-        if draft is None:
-            draft = rules_draft(state["candidates"], selected)
+        with span(
+            "analysis_plan.generate", tags=("plan",),
+            inputs={"goal": clip(state.get("user_request", "")), "selected_analyses": selected, "llm": llm is not None},
+        ) as sp:
+            system, warnings = _with_methodology(deps, "plan", plan_system, state) if llm is not None else (None, state.get("warnings"))
+            draft, planner, methodology = None, "rules", state.get("methodology")
+            if llm is not None and system is not None:
+                try:
+                    draft = llm.generate(
+                        PlanDraft, system=system,
+                        user=plan_prompt(state["summary"], state["candidates"], selected, state["context"], state.get("user_request", "")),
+                    )
+                    planner, methodology = "llm", _record_stage(deps, state, "plan")
+                except LLMError as exc:
+                    warnings = _merge(warnings, f"План составлен по правилам: {exc.user_message}")
+            if draft is None:
+                draft = rules_draft(state["candidates"], selected)
+            sp.outputs({"planner": planner, "steps": [f"{c.analysis}:{c.chart_type}:{c.x_column}" for c in draft.charts], "goal": clip(draft.goal)})
         update = {"plan_draft": draft, "planner": planner, "selected_analyses": selected, "warnings": warnings or []}
         return {**update, "methodology": methodology} if methodology else update
 
@@ -291,11 +318,15 @@ def build_graph(deps: WorkflowDeps, checkpointer=None):
         plan, context = state["plan"], state["context"]
         chart = next(c for c in plan.charts if c.chart_id == chart_id)
         result = state["metric_results"][chart_id]
-        return ChartInsightInput(
+        inp = ChartInsightInput(
             chart=chart, result=result, facts=build_facts(result, chart.mapping.role),
-            definition=plan.metric_definition(chart.metric), events=context.events, filename=state["summary"].filename,
+            definition=plan.metric_definition(chart.metric), events=[], filename=state["summary"].filename,
             definition_fragment=context.definitions.get(chart.metric), feedback=feedback or [],
         )
+        # событие из документации предлагается модели только там, где есть существенное падение, с которым оно могло совпасть по времени
+        if material_drop(inp, next((f for f in inp.facts if f.id == "drop"), None)):
+            inp.events = context.events
+        return inp
 
     def generate_insights(state: WorkflowState) -> WorkflowState:
         llm = deps.llm()
@@ -310,15 +341,20 @@ def build_graph(deps: WorkflowDeps, checkpointer=None):
                 continue
             inp = _input(state, cid, feedback.get(cid))
             found: list[Violation] = []
-            if llm is not None and system is not None:
-                try:
-                    insights[cid], found = llm_insight(llm, inp, system)
-                    used_skill = True
-                except LLMError as exc:
-                    warnings = _merge(warnings, f"Вывод «{chart.title}» составлен по правилам: {exc.user_message}")
+            with span(
+                "insight.generate", tags=("insight",), metadata={"chart_id": cid, "metric": chart.metric, "attempt": state.get("insight_attempt", 0) + 1},
+                inputs={"chart": chart.title, "facts": len(inp.facts), "retry_feedback": len(inp.feedback)},
+            ) as sp:
+                if llm is not None and system is not None:
+                    try:
+                        insights[cid], found = llm_insight(llm, inp, system)
+                        used_skill = True
+                    except LLMError as exc:
+                        warnings = _merge(warnings, f"Вывод «{chart.title}» составлен по правилам: {exc.user_message}")
+                        insights[cid] = rules_insight(inp)
+                else:
                     insights[cid] = rules_insight(inp)
-            else:
-                insights[cid] = rules_insight(inp)
+                sp.outputs({"generated_by": insights[cid].generated_by, "title": insights[cid].title, "evidence": len(insights[cid].evidence), "assembly_issues": len(found)})
             issues[cid] = [str(v) for v in found]
         if used_skill:
             methodology = _record_stage(deps, state, "insights")
@@ -336,7 +372,9 @@ def build_graph(deps: WorkflowDeps, checkpointer=None):
         feedback: dict[str, list[str]] = {}
         for cid, insight in state["insights"].items():
             inp = _input(state, cid)
-            found = state.get("insight_issues", {}).get(cid, []) + [str(v) for v in check_insight(insight, inp.facts, inp.mask(), inp.labels())]
+            with span("insight.verify", tags=("insight", "verification"), metadata={"chart_id": cid, "attempt": attempt}, inputs={"generated_by": insight.generated_by}) as sp:
+                found = state.get("insight_issues", {}).get(cid, []) + [str(v) for v in check_insight(insight, inp.facts, inp.mask(), inp.labels())]
+                sp.outputs({"passed": not found, "violations": [clip(v, 200) for v in found]})
             if not found:
                 checks[cid] = InsightCheck(chart_id=cid, passed=True, attempts=attempt, violations=history.get(cid, []))
                 continue
@@ -361,6 +399,7 @@ def build_graph(deps: WorkflowDeps, checkpointer=None):
 
     def prepare_dashboard(state: WorkflowState) -> WorkflowState:
         plan, summary = state["plan"], state["summary"]
+        context: BusinessContext = state["context"]
         results, specs, insights = state["metric_results"], state["chart_specs"], state["insights"]
         charts = [c for c in plan.charts if c.chart_id in specs]
         kpis = metric_kpis({r.metric: r for r in results.values()}) or basic_kpis(summary)
@@ -378,11 +417,13 @@ def build_graph(deps: WorkflowDeps, checkpointer=None):
             documentation_gaps=plan.documentation_gaps, warnings=warnings,
         )
         result = AnalysisResult(
-            dataset_id=state["dataset_id"], summary=summary, plan=plan, kpis=kpis,
+            dataset_id=state["dataset_id"], goal=state.get("user_request", ""), summary=summary, plan=plan, kpis=kpis,
             metrics=[results[c.chart_id] for c in charts], charts=[specs[c.chart_id] for c in charts],
             insights=[insights[c.chart_id] for c in charts if c.chart_id in insights],
             insight_checks=[state["insight_checks"][c.chart_id] for c in charts if c.chart_id in state["insight_checks"]],
-            dashboard=dashboard, methodology=state.get("methodology"), warnings=warnings,
+            dashboard=dashboard, methodology=state.get("methodology"),
+            context_sources=_context_sources(context, plan, [insights[c.chart_id] for c in charts if c.chart_id in insights]),
+            warnings=warnings,
         )
         return {"dashboard": dashboard, "result": result, "status": "completed", "warnings": warnings}
 

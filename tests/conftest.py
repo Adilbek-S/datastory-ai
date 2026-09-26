@@ -29,6 +29,8 @@ def _clear_caches() -> None:
 def isolated_environment(tmp_path, monkeypatch):
     monkeypatch.setenv("OPENAI_API_KEY", "")
     monkeypatch.setenv("EMBEDDING_PROVIDER", "offline")
+    monkeypatch.setenv("LANGSMITH_TRACING", "false")  # тесты не отправляют трассы в облако, даже если в .env настоящий ключ
+    monkeypatch.setenv("LANGSMITH_API_KEY", "")
     monkeypatch.setenv("CHROMA_DIR", str(tmp_path / "chroma"))
     monkeypatch.setenv("WORKSPACE_DIR", str(tmp_path / "workspace"))
     _clear_caches()

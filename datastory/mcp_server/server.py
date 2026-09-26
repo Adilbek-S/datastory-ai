@@ -82,7 +82,8 @@ def calculate_metrics(
             description="Метрика: transaction_count = SUM(Transactions); successful_count = SUM(Successful); "
             "failed_count = SUM(Failed); transaction_volume = SUM(Amount_KZT); "
             "success_rate = SUM(Successful) / SUM(Transactions) × 100; "
-            "average_transaction_amount = SUM(Amount_KZT) / SUM(Transactions)",
+            "average_transaction_amount = SUM(Amount_KZT) / SUM(Transactions); "
+            "sum:<колонка> = SUM(<числовая колонка>) для наборов данных без колонок платёжной системы",
             json_schema_extra={"enum": list(METRICS)},
         ),
     ],

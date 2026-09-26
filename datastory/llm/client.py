@@ -8,6 +8,7 @@ from __future__ import annotations
 
 import base64
 import logging
+from contextlib import nullcontext
 from typing import Protocol, TypeVar
 
 import openai
@@ -18,6 +19,7 @@ from pydantic import BaseModel, ValidationError
 
 from datastory.config import Settings, get_settings
 from datastory.errors import LLMError, LLMUnavailableError
+from datastory.observability import trace_config, untraced
 
 logger = logging.getLogger("datastory.llm")
 T = TypeVar("T", bound=BaseModel)
@@ -47,16 +49,22 @@ class OpenAIStructuredLLM:
         self._chat = chat or ChatOpenAI(model=model, api_key=api_key, temperature=0, timeout=timeout, max_retries=max_retries)
 
     def generate(self, schema: type[T], *, system: str, user: str) -> T:
-        return self._invoke(schema, [SystemMessage(system), HumanMessage(user)])
+        return self._invoke(schema, [SystemMessage(system), HumanMessage(user)], traced=True)
 
     def generate_from_image(self, schema: type[T], *, system: str, user: str, image: bytes, mime: str) -> T:
         url = f"data:{mime};base64,{base64.b64encode(image).decode('ascii')}"
         content = [{"type": "text", "text": user}, {"type": "image_url", "image_url": {"url": url, "detail": "high"}}]
-        return self._invoke(schema, [SystemMessage(system), HumanMessage(content)])
+        # Изображение в LangSmith не отправляется: вызов исключён из трассировки, а запись о нём делает span распознавания.
+        return self._invoke(schema, [SystemMessage(system), HumanMessage(content)], traced=False)
 
-    def _invoke(self, schema: type[T], messages: list) -> T:
+    def _invoke(self, schema: type[T], messages: list, traced: bool) -> T:
+        config = trace_config(
+            f"llm.{schema.__name__}", tags=("llm", "structured-output"),
+            metadata={"ls_provider": "openai", "ls_model_name": self.name.removeprefix("openai-"), "schema": schema.__name__},
+        )
         try:
-            answer = self._chat.with_structured_output(schema).invoke(messages)
+            with nullcontext() if traced else untraced():
+                answer = self._chat.with_structured_output(schema).invoke(messages, config=config)
         except openai.AuthenticationError:
             raise LLMError("OpenAI отклонил ключ API. Проверьте OPENAI_API_KEY в файле .env.") from None
         except openai.RateLimitError:

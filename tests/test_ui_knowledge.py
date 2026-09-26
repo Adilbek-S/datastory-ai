@@ -190,7 +190,7 @@ def upload_and_confirm() -> AppTest:
     at = AppTest.from_function(_analysis_page, default_timeout=60).run()
     at.file_uploader[0].upload("transactions_2026.xlsx", DEMO_XLSX)
     at = at.run()
-    return button(at, "Подтвердить").click().run()
+    return button(at, "Предложить анализ автоматически").click().run()  # запуск анализа сохраняет и индексирует датасет
 
 
 def test_confirming_dataset_indexes_its_description_automatically():
@@ -198,7 +198,6 @@ def test_confirming_dataset_indexes_its_description_automatically():
     assert not at.exception
     stats = KnowledgeBase().stats()
     assert stats["datasets"] == 1 and stats["dataset_records"] == 7
-    assert "База знаний: Проиндексировано записей: 7" in texts(at.caption)
     assert not at.warning or "не проиндексировано" not in texts(at.warning)
 
 

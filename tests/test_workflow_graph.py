@@ -172,7 +172,9 @@ def test_dataset_without_any_supported_chart_ends_without_plan(client, datasets)
     runner = make_runner(client)
     client.calls.clear()
     snapshot = runner.start(datasets["generic"])
-    assert snapshot.phase == "empty" and snapshot.plan.charts == [] and len(snapshot.plan.excluded) == 4
+    assert snapshot.phase == "empty" and snapshot.plan.charts == []
+    # нет колонок платёжной системы: предлагаются универсальные анализы суммы «score», но нет ни даты, ни подходящей категории
+    assert {e.analysis for e in snapshot.plan.excluded} == {"measure_dynamics", "measure_comparison"}
     assert client.calls == ["profile_dataset"]
 
 
@@ -534,3 +536,13 @@ def test_llm_context_is_accepted_only_with_a_verbatim_quote(client, datasets, kb
     result = fake.resume(snapshot.thread_id, approve(snapshot)).result
     check = next(c for c in result.insight_checks if c.chart_id == "success_dynamics")
     assert check.fallback and any("[context-not-in-source]" in v for v in check.violations)
+
+
+def test_document_events_are_offered_only_to_charts_with_a_material_drop(client, datasets, kb_with_docs):
+    llm = llm_for()
+    runner = make_runner(client, llm, kb_with_docs)
+    snapshot = runner.start(datasets["demo"])
+    runner.resume(snapshot.thread_id, approve(snapshot))
+    prompts = [u for _, u in llm.prompts("InsightDraft")]
+    assert len(prompts) == 4 and sum("плановое обновление" in u for u in prompts) == 1  # только график успешности с мартовским падением
+    assert "плановое обновление" in next(u for u in prompts if "Успешность по месяцам" in u)

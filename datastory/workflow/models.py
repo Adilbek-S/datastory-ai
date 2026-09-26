@@ -13,8 +13,15 @@ from datastory.analytics.models import DatasetSummary, MetricResult
 from datastory.models import KPI, ChartSpec, Insight
 
 MAX_CHARTS = 4  # для MVP в плане не больше четырёх графиков
+AUTO_GOAL = (
+    "Найди наиболее значимые тенденции, сравнения и аномалии в наборе данных "
+    "и предложи не более четырёх полезных визуализаций"
+)  # цель пользователя для кнопки «Предложить анализ автоматически»
 
-AnalysisId = Literal["count_dynamics", "volume_dynamics", "success_dynamics", "channel_distribution"]
+AnalysisId = Literal[
+    "count_dynamics", "volume_dynamics", "success_dynamics", "channel_distribution",  # показатели платёжной системы
+    "measure_dynamics", "measure_comparison",  # универсальные: сумма числовой колонки (продажи и т. п.)
+]
 ChartType = Literal["line", "bar", "pie"]
 MappingStatus = Literal["confident", "confirmed", "ambiguous"]
 Phase = Literal["awaiting_approval", "completed", "empty", "cancelled", "failed"]
@@ -62,7 +69,9 @@ class ColumnMapping(BaseModel):
     basis: str = ""
 
 
-class PlannedChart(BaseModel):
+class AnalysisStep(BaseModel):
+    """Шаг плана анализа: один график с показателем, группировкой и обоснованием (карточка на экране плана)."""
+
     chart_id: str
     analysis: AnalysisId
     title: str
@@ -71,6 +80,9 @@ class PlannedChart(BaseModel):
     x_column: str | None = None
     mapping: ColumnMapping
     rationale: str = ""
+
+
+PlannedChart = AnalysisStep  # прежнее название
 
 
 class ExcludedItem(BaseModel):
@@ -89,7 +101,7 @@ class AnalysisPlan(BaseModel):
     dataset_id: str
     goal: str = ""
     planner: Literal["llm", "rules"] = "rules"
-    charts: list[PlannedChart] = Field(default_factory=list, max_length=MAX_CHARTS)
+    charts: list[AnalysisStep] = Field(default_factory=list, max_length=MAX_CHARTS)
     metrics: list[MetricDefinition] = Field(default_factory=list)
     excluded: list[ExcludedItem] = Field(default_factory=list)
     clarifications: list[Clarification] = Field(default_factory=list)
@@ -157,8 +169,19 @@ class MethodologyInfo(BaseModel):
     rules: list[str] = Field(default_factory=list, description="Идентификаторы правил, объявленных в Skill")
 
 
+class ContextSource(BaseModel):
+    """Фрагмент базы знаний (RAG), найденный при анализе: определение показателя или контекст."""
+
+    citation: str
+    text: str
+    kind: Literal["definition", "event"]
+    metric_label: str | None = None
+    used_in: list[str] = Field(default_factory=list, description="Названия выводов, которые ссылаются на этот источник")
+
+
 class AnalysisResult(BaseModel):
     dataset_id: str
+    goal: str = ""
     summary: DatasetSummary
     plan: AnalysisPlan | None = None
     kpis: list[KPI] = Field(default_factory=list)
@@ -168,6 +191,7 @@ class AnalysisResult(BaseModel):
     insight_checks: list[InsightCheck] = Field(default_factory=list)
     dashboard: DashboardSpec | None = None
     methodology: MethodologyInfo | None = None
+    context_sources: list[ContextSource] = Field(default_factory=list)
     warnings: list[str] = Field(default_factory=list)
 
 

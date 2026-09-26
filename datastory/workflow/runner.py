@@ -16,6 +16,7 @@ from pydantic import BaseModel, Field
 
 from datastory.errors import WorkflowError
 from datastory.mcp_client.connection import McpConnectionError, McpToolError
+from datastory.observability import clip, trace_config
 from datastory.workflow.graph import WorkflowDeps, build_graph, make_checkpointer
 from datastory.workflow.models import AnalysisPlan, AnalysisResult, ApprovalDecision, ApprovalRequest, Phase
 
@@ -63,14 +64,20 @@ class AnalysisRunner:
             old, _ = self._threads.popitem(last=False)
             self.checkpointer.delete_thread(old)
             self._failures.pop(old, None)
-        self._run({"dataset_id": dataset_id, "user_request": request, "revision": 0, "approval_round": 0}, thread_id)
+        self._run(
+            {"dataset_id": dataset_id, "user_request": request, "revision": 0, "approval_round": 0}, thread_id,
+            "datastory.analysis.plan", dataset_id, {"goal": clip(request)},
+        )
         return self.snapshot(thread_id)
 
     def resume(self, thread_id: str, decision: ApprovalDecision) -> WorkflowSnapshot:
         """Ответ пользователя на запрос подтверждения. Граф продолжает с точки interrupt."""
         if self.snapshot(thread_id).phase != "awaiting_approval":
             raise WorkflowError("Этот анализ сейчас не ожидает подтверждения: возможно, он уже выполнен или отменён.")
-        self._run(Command(resume=decision.model_dump(mode="json")), thread_id)
+        self._run(
+            Command(resume=decision.model_dump(mode="json")), thread_id, f"datastory.analysis.{decision.action}", None,
+            {"approved_steps": len(decision.approved_chart_ids)},
+        )
         return self.snapshot(thread_id)
 
     def retry(self, thread_id: str) -> WorkflowSnapshot:
@@ -78,7 +85,7 @@ class AnalysisRunner:
         if thread_id not in self._failures:
             raise WorkflowError("У этого анализа нет сбоя, который можно повторить.")
         self._failures.pop(thread_id)
-        self._run(None, thread_id)
+        self._run(None, thread_id, "datastory.analysis.retry", None, {})
         return self.snapshot(thread_id)
 
     def forget(self, thread_id: str) -> None:
@@ -116,9 +123,11 @@ class AnalysisRunner:
     def _config(thread_id: str) -> dict:
         return {"configurable": {"thread_id": thread_id}}
 
-    def _run(self, payload, thread_id: str) -> None:
+    def _run(self, payload, thread_id: str, run_name: str, dataset_id: str | None, metadata: dict) -> None:
+        """Один запуск графа = один корневой run в LangSmith; все запуски сессии связаны метаданными thread_id."""
+        config = trace_config(run_name, thread_id=thread_id, dataset_id=dataset_id or self._threads.get(thread_id), tags=("analysis",), metadata=metadata)
         try:
-            self.graph.invoke(payload, self._config(thread_id))
+            self.graph.invoke(payload, config)
         except McpConnectionError as exc:
             self._failures[thread_id] = Failure(message=exc.user_message, details=exc.details or "", kind="connection")
         except McpToolError as exc:

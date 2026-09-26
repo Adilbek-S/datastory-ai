@@ -39,7 +39,8 @@ def texts(elements) -> str:
 
 
 def confirm_button(at: AppTest):
-    return next(b for b in at.button if "Подтвердить" in b.label)
+    """Кнопка запуска: анализ автоматически (структура подтверждается неявно, датасет сохраняется)."""
+    return next(b for b in at.button if b.label == "Предложить анализ автоматически")
 
 
 def test_empty_state(workspace):
@@ -52,32 +53,21 @@ def test_empty_state(workspace):
 def test_full_flow_with_demo_file(workspace):
     at = upload(open_page(), "transactions_2026.xlsx", DEMO_XLSX)
     assert not at.exception
-    assert [s.value for s in at.subheader] == [
-        "1. Предпросмотр", "2. Профиль датасета", "3. Качество данных", "4. Подтверждение структуры",
-    ]
+    assert [s.value for s in at.subheader] == ["Предпросмотр", "Качество данных", "Что дальше"]
     assert "Проблем не найдено" in texts(at.success)
     assert "Числовые:** Transactions, Successful, Failed, Amount_KZT" in texts(at.markdown)
     assert "Временные:** Month" in texts(at.markdown)
     assert "Категориальные:** Channel" in texts(at.markdown)
-    assert workspace.list() == []  # до подтверждения ничего не сохраняется
+    assert workspace.list() == []  # до действия пользователя ничего не сохраняется
 
     at = confirm_button(at).click().run()
     assert not at.exception
 
     refs = workspace.list()
     assert len(refs) == 1 and refs[0].row_count == 18 and refs[0].filename == "transactions_2026.xlsx"
-    assert refs[0].dataset_id in texts(at.success)
-    assert "5. Анализ" in [s.value for s in at.subheader]
+    assert [s.value for s in at.subheader] == ["План анализа"]  # экран 2
     stored = workspace.load_profile(refs[0].dataset_id)
     assert stored.detected_date_columns == ["Month"] and stored.description.startswith("Таблица: 18 строк")
-
-
-def test_custom_description_is_saved(workspace):
-    at = upload(open_page(), "transactions_2026.xlsx", DEMO_XLSX)
-    at.text_area[0].set_value("Статистика DemoPay за полугодие").run()
-    confirm_button(at).click().run()
-    ref = workspace.list()[0]
-    assert workspace.load_profile(ref.dataset_id).description == "Статистика DemoPay за полугодие"
 
 
 def test_excel_sheet_selection(workspace):
@@ -91,14 +81,6 @@ def test_excel_sheet_selection(workspace):
     assert "Числовые:** x, y, z" in texts(at.markdown)
     confirm_button(at).click().run()
     assert workspace.list()[0].sheet_name == "Second"
-
-
-def test_structure_change_after_confirmation_requires_reconfirmation(workspace):
-    at = upload(open_page(), "transactions_2026.xlsx", DEMO_XLSX)
-    confirm_button(at).click().run()
-    at = upload(at, "other.csv", b"a,b\n1,2\n3,4\n")
-    assert "Подтвердите структуру ещё раз" in texts(at.info)
-    assert not at.exception
 
 
 @pytest.mark.parametrize(

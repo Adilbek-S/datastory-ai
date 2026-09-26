@@ -17,6 +17,7 @@ from pydantic import BaseModel, Field
 from datastory.errors import CorruptFileError, DataLoadError, EmptyFileError, LLMError, LLMUnavailableError, NoDataError, UnsupportedFileError
 from datastory.file_processing.loader import IMAGE_EXTENSIONS, clean_frame
 from datastory.llm.client import VisionLLM
+from datastory.observability import span
 
 logger = logging.getLogger("datastory.vision")
 
@@ -132,7 +133,17 @@ def frame_from_extraction(extraction: TableExtraction) -> tuple[pd.DataFrame, li
 
 
 def recognize_table(data: bytes, filename: str, vision: VisionLLM | None) -> RecognizedTable:
-    """Изображение → Vision-модель → DataFrame. Все сбои превращаются в DataLoadError с понятным сообщением."""
+    """Изображение → Vision-модель → DataFrame. Все сбои превращаются в DataLoadError с понятным сообщением.
+
+    В LangSmith попадает только span со сводкой (имя файла, размер, число строк): само изображение не отправляется.
+    """
+    with span("vision.recognize_table", tags=("vision",), inputs={"filename": filename, "image_bytes": len(data)}) as sp:
+        table = _recognize_table(data, filename, vision)
+        sp.outputs({"rows": len(table.frame), "columns": len(table.frame.columns), "warnings": len(table.warnings), "model": table.model})
+        return table
+
+
+def _recognize_table(data: bytes, filename: str, vision: VisionLLM | None) -> RecognizedTable:
     ext = filename.rsplit(".", 1)[-1].lower() if "." in filename else ""
     if f".{ext}" not in IMAGE_EXTENSIONS:
         raise UnsupportedFileError("Ожидалось изображение PNG или JPG.")

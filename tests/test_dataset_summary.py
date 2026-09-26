@@ -82,7 +82,9 @@ def test_available_metrics_depend_on_columns():
     frame = pd.DataFrame({"Transactions": [10, 20], "Successful": [9, 18], "Region": ["a", "b"]})
     summary = build_dataset_summary(build_profile(frame, "partial.csv")[0])
     assert summary.available_metrics == ["transaction_count", "successful_count", "success_rate"]
-    assert build_dataset_summary(build_profile(pd.DataFrame({"x": [1, 2], "y": [3, 4]}), "none.csv")[0]).available_metrics == []
+    # нет колонок платёжной системы: доступны суммы числовых колонок; без числовых колонок — ничего
+    assert build_dataset_summary(build_profile(pd.DataFrame({"x": [1, 2], "y": [3, 4]}), "none.csv")[0]).available_metrics == ["sum:x", "sum:y"]
+    assert build_dataset_summary(build_profile(pd.DataFrame({"a": ["u", "v"], "b": ["p", "q"]}), "text.csv")[0]).available_metrics == []
 
 
 def test_non_numeric_metric_column_does_not_enable_metric():
