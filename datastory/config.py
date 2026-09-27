@@ -19,6 +19,9 @@ class Settings(BaseSettings):
     openai_api_key: str = ""
     openai_model: str = "gpt-4o-mini"
     vision_model: str = "gpt-4o-mini"  # распознавание таблиц на изображениях
+    # Параметры генерации структурных ответов. Значения по умолчанию выбраны экспериментом (EVALS.md, раздел «Выбор гиперпараметров LLM»)
+    llm_temperature: float = 0.0
+    llm_max_output_tokens: int = 1024
     embedding_model: str = "text-embedding-3-small"
     embedding_provider: str = "auto"  # auto | openai | offline
 

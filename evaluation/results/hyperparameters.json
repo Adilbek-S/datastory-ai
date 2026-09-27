@@ -1,0 +1,5714 @@
+{
+ "schema_version": 1,
+ "generated_at": "2026-09-27T03:38:37+00:00",
+ "duration_s": 216.9,
+ "config": {
+  "llm_model": "gpt-4o-mini",
+  "max_output_tokens": 1024,
+  "repeats": 5,
+  "case_ids": [
+   "mi-01",
+   "mi-03",
+   "ts-01",
+   "ts-04",
+   "cc-01",
+   "fl-01",
+   "rg-02",
+   "rg-04",
+   "iv-01",
+   "iv-04"
+  ],
+  "golden_sha256": "439851be597bd404f6ae65f382d61bc2e12f4c5815f66e635081b5e1f204b3f1",
+  "dataset": "data/demo/sales_2026.xlsx",
+  "embedding_provider": "openai-text-embedding-3-small",
+  "identical_system_prompt": true,
+  "system_prompt_sha": [
+   "15d4bc415fc5a887"
+  ],
+  "configs": {
+   "T0": {
+    "title": "Конфигурация 1: temperature = 0",
+    "temperature": 0.0
+   },
+   "T04": {
+    "title": "Конфигурация 2: temperature = 0.4",
+    "temperature": 0.4
+   }
+  },
+  "not_studied": "top_p, frequency/presence penalty и другие комбинации не исследовались: ограниченный эксперимент для MVP"
+ },
+ "arms": {
+  "T0": {
+   "observations": 50,
+   "errors": 0,
+   "truncated": 0,
+   "valid_output_rate": 1.0,
+   "plan_accuracy": {
+    "hits": 32,
+    "total": 40,
+    "rate": 0.8
+   },
+   "behavior_accuracy": {
+    "hits": 41,
+    "total": 50,
+    "rate": 0.82
+   },
+   "structure_agreement": 0.94,
+   "behavior_agreement": 0.94,
+   "metric_agreement": 0.94,
+   "identical_cases": {
+    "cases": 8,
+    "total": 10
+   },
+   "answer_cases_identical": {
+    "cases": 7,
+    "total": 8
+   },
+   "distinct_structures_per_case": {
+    "cc-01": 1,
+    "fl-01": 1,
+    "iv-01": 1,
+    "iv-04": 2,
+    "mi-01": 1,
+    "mi-03": 1,
+    "rg-02": 1,
+    "rg-04": 2,
+    "ts-01": 1,
+    "ts-04": 1
+   },
+   "plan_latency_ms": {
+    "mean": 2065.2,
+    "median": 2000.7,
+    "p95": 3030.1,
+    "max": 3178.2
+   },
+   "llm_tokens": {
+    "input_mean": 7341.4,
+    "output_mean": 142.4,
+    "output_max": 229,
+    "total_mean": 7483.9,
+    "llm_calls_mean": 1.4
+   },
+   "repeats": 5
+  },
+  "T04": {
+   "observations": 50,
+   "errors": 1,
+   "truncated": 1,
+   "valid_output_rate": 0.98,
+   "plan_accuracy": {
+    "hits": 35,
+    "total": 40,
+    "rate": 0.875
+   },
+   "behavior_accuracy": {
+    "hits": 45,
+    "total": 50,
+    "rate": 0.9
+   },
+   "structure_agreement": 0.84,
+   "behavior_agreement": 0.92,
+   "metric_agreement": 0.92,
+   "identical_cases": {
+    "cases": 5,
+    "total": 10
+   },
+   "answer_cases_identical": {
+    "cases": 3,
+    "total": 8
+   },
+   "distinct_structures_per_case": {
+    "cc-01": 2,
+    "fl-01": 1,
+    "iv-01": 1,
+    "iv-04": 1,
+    "mi-01": 2,
+    "mi-03": 2,
+    "rg-02": 1,
+    "rg-04": 2,
+    "ts-01": 3,
+    "ts-04": 1
+   },
+   "plan_latency_ms": {
+    "mean": 2212.2,
+    "median": 2003.2,
+    "p95": 3019.4,
+    "max": 8504.0
+   },
+   "llm_tokens": {
+    "input_mean": 6499.5,
+    "output_mean": 143.4,
+    "output_max": 239,
+    "total_mean": 6642.9,
+    "llm_calls_mean": 1.24
+   },
+   "repeats": 5
+  }
+ },
+ "comparison": {
+  "plan_accuracy": {
+   "observations": 40,
+   "cases": 8,
+   "T0": {
+    "hits": 32,
+    "rate": 0.8
+   },
+   "T04": {
+    "hits": 35,
+    "rate": 0.875
+   },
+   "difference_pp": 7.5,
+   "ci95_pp": [
+    -5.0,
+    20.0
+   ],
+   "discordant": {
+    "both": 31,
+    "only_a": 1,
+    "only_b": 4,
+    "neither": 4
+   },
+   "sign_test_p": 0.375,
+   "verdict": "not_confirmed"
+  },
+  "behavior_accuracy": {
+   "observations": 50,
+   "cases": 10,
+   "T0": {
+    "hits": 41,
+    "rate": 0.82
+   },
+   "T04": {
+    "hits": 45,
+    "rate": 0.9
+   },
+   "difference_pp": 8.0,
+   "ci95_pp": [
+    -2.0,
+    20.0
+   ],
+   "discordant": {
+    "both": 40,
+    "only_a": 1,
+    "only_b": 5,
+    "neither": 4
+   },
+   "sign_test_p": 0.2188,
+   "verdict": "not_confirmed"
+  },
+  "structure_agreement": {
+   "T0": 0.94,
+   "T04": 0.84,
+   "difference_pp": -10.0,
+   "ci95_pp": [
+    -26.0,
+    4.0
+   ],
+   "verdict": "not_confirmed"
+  },
+  "latency_ms": {
+   "cases": 10,
+   "T0": 2065.2,
+   "T04": 2212.2,
+   "difference": 147.0,
+   "ci95": [
+    -114.2,
+    446.4
+   ],
+   "verdict": "not_confirmed"
+  },
+  "llm_tokens_total": {
+   "cases": 10,
+   "T0": 7483.9,
+   "T04": 6642.9,
+   "difference": -841.0,
+   "ci95": [
+    -1485.1,
+    -198.4
+   ],
+   "verdict": "confirmed_better"
+  },
+  "llm_tokens_output": {
+   "cases": 10,
+   "T0": 142.4,
+   "T04": 143.4,
+   "difference": 0.9,
+   "ci95": [
+    -14.6,
+    16.1
+   ],
+   "verdict": "not_confirmed"
+  }
+ },
+ "decision": {
+  "selected": "T0",
+  "temperature": 0.0,
+  "rule_step": 2,
+  "reasons": [
+   "Analysis Plan Accuracy не различает конфигурации: T0 80.0% (32/40), T0.4 87.5% (35/40), разница +7.5 п.п., 95% ДИ [-5.0; +20.0] п.п. включает ноль.",
+   "Стабильность структуры вывода (совпадение повторов с типичной структурой случая): T0 94.0%, T0.4 84.0% (разница T0.4 − T0 -10.0 п.п., 95% ДИ [-26.0; +4.0]); выбрана более стабильная.",
+   "Запросов без пригодного структурного ответа модели: T0 — 0, T0.4 — 1 из 50 в каждой (обрезано лимитом токенов: 0 и 1).",
+   "Задержка: T0 2 065.2  T0.4 2 212.2 (разница T0.4 − T0 +147.0; 95% ДИ [-114.2; +446.4]) — различие не подтверждено.",
+   "Токены LLM: T0 7 483.9  T0.4 6 642.9 (разница T0.4 − T0 -841.0; 95% ДИ [-1 485.1; -198.4]) — T0.4 подтверждённо меньше."
+  ],
+  "caveats": [
+   "Выбор сделан по разнице стабильности, чей 95% ДИ включает ноль: конфигурации на этих данных практически равноценны, а выбор опирается на точечную оценку (число запросов без пригодного ответа и различающиеся структуры). Его стоит перепроверить на большем числе повторов (`--hyperparams --repeats 10`).",
+   "Выбранная конфигурация (T0) подтверждённо хуже по показателю «число токенов»: T0.4 экономнее на 841.0 на запрос."
+  ]
+ },
+ "max_output_tokens_choice": {
+  "max_output_tokens": 1024,
+  "observed_max_output_tokens": 239,
+  "share_of_cap": 0.233,
+  "errors": 1,
+  "truncated": 1,
+  "reason": "Максимум, который модель потратила на ответ планировщика в запросах, где usage удалось получить, — 239 токенов при лимите 1024 (23% лимита); ответов, обрезанных лимитом, — 1 из 100, запросов без пригодного ответа модели — 1. Нормальные ответы укладываются в лимит с запасом; лимит ограничивает только вырожденные ответы (они по-прежнему приводят к плану по правилам с предупреждением, а не к сбою)."
+ },
+ "final": {
+  "llm_model": "gpt-4o-mini",
+  "temperature": 0.0,
+  "max_output_tokens": 1024
+ },
+ "observations": [
+  {
+   "arm": "T0",
+   "repeat": 0,
+   "position": 0,
+   "case_id": "mi-01",
+   "group": "metric_interpretation",
+   "expected_behavior": "answer",
+   "predicted_behavior": "answer",
+   "predicted_metric": "ratio:Revenue_KZT/Orders",
+   "behavior_ok": true,
+   "plan_ok": true,
+   "metric_ok": true,
+   "chart_ok": true,
+   "signature": "[\"answer\", \"ratio:Revenue_KZT/Orders\", [\"Channel\"], [], \"bar\", 1]",
+   "planner": "llm",
+   "llm_fallback": false,
+   "truncated": false,
+   "plan_latency_ms": 2146.7,
+   "tokens": {
+    "llm_calls": 1,
+    "input": 5258,
+    "output": 127,
+    "total": 5385
+   },
+   "embedding_tokens": 42,
+   "context": {
+    "documents": [
+     {
+      "document": "sales_metrics.pdf",
+      "section": "4. Средний чек (Average Order Value, AOV)",
+      "score": 0.5045
+     },
+     {
+      "document": "sales_channels_regions.pdf",
+      "section": "3. Категории товаров",
+      "score": 0.3789
+     },
+     {
+      "document": "sales_metrics.pdf",
+      "section": "2. Выручка (Revenue)",
+      "score": 0.3115
+     }
+    ],
+    "hit_at_3": true,
+    "hit_at_5": true,
+    "section_hit_at_3": true
+   },
+   "prompt": {
+    "calls": 1,
+    "system_sha": "15d4bc415fc5a887",
+    "system_chars": 4858,
+    "user_chars": 2203,
+    "user_has_documents": true
+   },
+   "error": null
+  },
+  {
+   "arm": "T04",
+   "repeat": 0,
+   "position": 1,
+   "case_id": "mi-01",
+   "group": "metric_interpretation",
+   "expected_behavior": "answer",
+   "predicted_behavior": "answer",
+   "predicted_metric": "ratio:Revenue_KZT/Orders",
+   "behavior_ok": true,
+   "plan_ok": true,
+   "metric_ok": true,
+   "chart_ok": true,
+   "signature": "[\"answer\", \"ratio:Revenue_KZT/Orders\", [\"Channel\"], [], \"bar\", 1]",
+   "planner": "llm",
+   "llm_fallback": false,
+   "truncated": false,
+   "plan_latency_ms": 1854.1,
+   "tokens": {
+    "llm_calls": 1,
+    "input": 5258,
+    "output": 128,
+    "total": 5386
+   },
+   "embedding_tokens": 42,
+   "context": {
+    "documents": [
+     {
+      "document": "sales_metrics.pdf",
+      "section": "4. Средний чек (Average Order Value, AOV)",
+      "score": 0.5045
+     },
+     {
+      "document": "sales_channels_regions.pdf",
+      "section": "3. Категории товаров",
+      "score": 0.3789
+     },
+     {
+      "document": "sales_metrics.pdf",
+      "section": "2. Выручка (Revenue)",
+      "score": 0.3115
+     }
+    ],
+    "hit_at_3": true,
+    "hit_at_5": true,
+    "section_hit_at_3": true
+   },
+   "prompt": {
+    "calls": 1,
+    "system_sha": "15d4bc415fc5a887",
+    "system_chars": 4858,
+    "user_chars": 2203,
+    "user_has_documents": true
+   },
+   "error": null
+  },
+  {
+   "arm": "T04",
+   "repeat": 0,
+   "position": 0,
+   "case_id": "mi-03",
+   "group": "metric_interpretation",
+   "expected_behavior": "answer",
+   "predicted_behavior": "answer",
+   "predicted_metric": "rate:Cancelled_Orders/Orders",
+   "behavior_ok": true,
+   "plan_ok": true,
+   "metric_ok": true,
+   "chart_ok": true,
+   "signature": "[\"answer\", \"rate:Cancelled_Orders/Orders\", [\"Region\"], [], \"bar\", 2]",
+   "planner": "llm",
+   "llm_fallback": false,
+   "truncated": false,
+   "plan_latency_ms": 2689.6,
+   "tokens": {
+    "llm_calls": 1,
+    "input": 5118,
+    "output": 217,
+    "total": 5335
+   },
+   "embedding_tokens": 47,
+   "context": {
+    "documents": [
+     {
+      "document": "sales_metrics.pdf",
+      "section": "5. Доля отмен (Cancellation Rate)",
+      "score": 0.5517
+     },
+     {
+      "document": "sales_metrics.pdf",
+      "section": "3. Заказы и отмены",
+      "score": 0.3555
+     }
+    ],
+    "hit_at_3": true,
+    "hit_at_5": true,
+    "section_hit_at_3": true
+   },
+   "prompt": {
+    "calls": 1,
+    "system_sha": "15d4bc415fc5a887",
+    "system_chars": 4858,
+    "user_chars": 1733,
+    "user_has_documents": true
+   },
+   "error": null
+  },
+  {
+   "arm": "T0",
+   "repeat": 0,
+   "position": 1,
+   "case_id": "mi-03",
+   "group": "metric_interpretation",
+   "expected_behavior": "answer",
+   "predicted_behavior": "answer",
+   "predicted_metric": "rate:Cancelled_Orders/Orders",
+   "behavior_ok": true,
+   "plan_ok": true,
+   "metric_ok": true,
+   "chart_ok": true,
+   "signature": "[\"answer\", \"rate:Cancelled_Orders/Orders\", [\"Region\"], [], \"bar\", 1]",
+   "planner": "llm",
+   "llm_fallback": false,
+   "truncated": false,
+   "plan_latency_ms": 1774.9,
+   "tokens": {
+    "llm_calls": 1,
+    "input": 5118,
+    "output": 123,
+    "total": 5241
+   },
+   "embedding_tokens": 43,
+   "context": {
+    "documents": [
+     {
+      "document": "sales_metrics.pdf",
+      "section": "5. Доля отмен (Cancellation Rate)",
+      "score": 0.5517
+     },
+     {
+      "document": "sales_metrics.pdf",
+      "section": "3. Заказы и отмены",
+      "score": 0.3555
+     }
+    ],
+    "hit_at_3": true,
+    "hit_at_5": true,
+    "section_hit_at_3": true
+   },
+   "prompt": {
+    "calls": 1,
+    "system_sha": "15d4bc415fc5a887",
+    "system_chars": 4858,
+    "user_chars": 1733,
+    "user_has_documents": true
+   },
+   "error": null
+  },
+  {
+   "arm": "T0",
+   "repeat": 0,
+   "position": 0,
+   "case_id": "ts-01",
+   "group": "time_series",
+   "expected_behavior": "answer",
+   "predicted_behavior": "reject",
+   "predicted_metric": null,
+   "behavior_ok": false,
+   "plan_ok": false,
+   "metric_ok": false,
+   "chart_ok": false,
+   "signature": "[\"reject\", null, [], [], null, 0]",
+   "planner": "llm",
+   "llm_fallback": false,
+   "truncated": false,
+   "plan_latency_ms": 2406.9,
+   "tokens": {
+    "llm_calls": 2,
+    "input": 10577,
+    "output": 167,
+    "total": 10744
+   },
+   "embedding_tokens": 18,
+   "context": {
+    "documents": [
+     {
+      "document": "sales_metrics.pdf",
+      "section": "2. Выручка (Revenue)",
+      "score": 0.4533
+     },
+     {
+      "document": "sales_metrics.pdf",
+      "section": "1. Набор данных sales_2026.xlsx",
+      "score": 0.4212
+     },
+     {
+      "document": "sales_metrics.pdf",
+      "section": "6. Показатели без данных",
+      "score": 0.3513
+     }
+    ],
+    "hit_at_3": true,
+    "hit_at_5": true,
+    "section_hit_at_3": true
+   },
+   "prompt": {
+    "calls": 2,
+    "system_sha": "15d4bc415fc5a887",
+    "system_chars": 4858,
+    "user_chars": 2291,
+    "user_has_documents": true
+   },
+   "error": null
+  },
+  {
+   "arm": "T04",
+   "repeat": 0,
+   "position": 1,
+   "case_id": "ts-01",
+   "group": "time_series",
+   "expected_behavior": "answer",
+   "predicted_behavior": "answer",
+   "predicted_metric": "sum:Revenue_KZT",
+   "behavior_ok": true,
+   "plan_ok": true,
+   "metric_ok": true,
+   "chart_ok": true,
+   "signature": "[\"answer\", \"sum:Revenue_KZT\", [\"Month\"], [], \"line\", 1]",
+   "planner": "llm",
+   "llm_fallback": false,
+   "truncated": false,
+   "plan_latency_ms": 2807.1,
+   "tokens": {
+    "llm_calls": 2,
+    "input": 10577,
+    "output": 204,
+    "total": 10781
+   },
+   "embedding_tokens": 37,
+   "context": {
+    "documents": [
+     {
+      "document": "sales_metrics.pdf",
+      "section": "2. Выручка (Revenue)",
+      "score": 0.4533
+     },
+     {
+      "document": "sales_metrics.pdf",
+      "section": "1. Набор данных sales_2026.xlsx",
+      "score": 0.4212
+     },
+     {
+      "document": "sales_metrics.pdf",
+      "section": "6. Показатели без данных",
+      "score": 0.3513
+     }
+    ],
+    "hit_at_3": true,
+    "hit_at_5": true,
+    "section_hit_at_3": true
+   },
+   "prompt": {
+    "calls": 2,
+    "system_sha": "15d4bc415fc5a887",
+    "system_chars": 4858,
+    "user_chars": 2291,
+    "user_has_documents": true
+   },
+   "error": null
+  },
+  {
+   "arm": "T04",
+   "repeat": 0,
+   "position": 0,
+   "case_id": "ts-04",
+   "group": "time_series",
+   "expected_behavior": "answer",
+   "predicted_behavior": "answer",
+   "predicted_metric": "ratio:Revenue_KZT/Orders",
+   "behavior_ok": true,
+   "plan_ok": true,
+   "metric_ok": true,
+   "chart_ok": true,
+   "signature": "[\"answer\", \"ratio:Revenue_KZT/Orders\", [\"Month\"], [], \"line\", 1]",
+   "planner": "llm",
+   "llm_fallback": false,
+   "truncated": false,
+   "plan_latency_ms": 1952.0,
+   "tokens": {
+    "llm_calls": 1,
+    "input": 5249,
+    "output": 147,
+    "total": 5396
+   },
+   "embedding_tokens": 48,
+   "context": {
+    "documents": [
+     {
+      "document": "sales_metrics.pdf",
+      "section": "4. Средний чек (Average Order Value, AOV)",
+      "score": 0.4554
+     },
+     {
+      "document": "sales_calendar_2026.pdf",
+      "section": "2. Как читать события",
+      "score": 0.3625
+     },
+     {
+      "document": "sales_metrics.pdf",
+      "section": "1. Набор данных sales_2026.xlsx",
+      "score": 0.3612
+     }
+    ],
+    "hit_at_3": true,
+    "hit_at_5": true,
+    "section_hit_at_3": true
+   },
+   "prompt": {
+    "calls": 1,
+    "system_sha": "15d4bc415fc5a887",
+    "system_chars": 4858,
+    "user_chars": 2214,
+    "user_has_documents": true
+   },
+   "error": null
+  },
+  {
+   "arm": "T0",
+   "repeat": 0,
+   "position": 1,
+   "case_id": "ts-04",
+   "group": "time_series",
+   "expected_behavior": "answer",
+   "predicted_behavior": "answer",
+   "predicted_metric": "ratio:Revenue_KZT/Orders",
+   "behavior_ok": true,
+   "plan_ok": true,
+   "metric_ok": true,
+   "chart_ok": true,
+   "signature": "[\"answer\", \"ratio:Revenue_KZT/Orders\", [\"Month\"], [], \"line\", 1]",
+   "planner": "llm",
+   "llm_fallback": false,
+   "truncated": false,
+   "plan_latency_ms": 1871.6,
+   "tokens": {
+    "llm_calls": 1,
+    "input": 5249,
+    "output": 133,
+    "total": 5382
+   },
+   "embedding_tokens": 48,
+   "context": {
+    "documents": [
+     {
+      "document": "sales_metrics.pdf",
+      "section": "4. Средний чек (Average Order Value, AOV)",
+      "score": 0.4554
+     },
+     {
+      "document": "sales_calendar_2026.pdf",
+      "section": "2. Как читать события",
+      "score": 0.3625
+     },
+     {
+      "document": "sales_metrics.pdf",
+      "section": "1. Набор данных sales_2026.xlsx",
+      "score": 0.3612
+     }
+    ],
+    "hit_at_3": true,
+    "hit_at_5": true,
+    "section_hit_at_3": true
+   },
+   "prompt": {
+    "calls": 1,
+    "system_sha": "15d4bc415fc5a887",
+    "system_chars": 4858,
+    "user_chars": 2214,
+    "user_has_documents": true
+   },
+   "error": null
+  },
+  {
+   "arm": "T0",
+   "repeat": 0,
+   "position": 0,
+   "case_id": "cc-01",
+   "group": "category_comparison",
+   "expected_behavior": "answer",
+   "predicted_behavior": "answer",
+   "predicted_metric": "sum:Revenue_KZT",
+   "behavior_ok": true,
+   "plan_ok": true,
+   "metric_ok": true,
+   "chart_ok": true,
+   "signature": "[\"answer\", \"sum:Revenue_KZT\", [\"Region\"], [], \"bar\", 1]",
+   "planner": "llm",
+   "llm_fallback": false,
+   "truncated": false,
+   "plan_latency_ms": 2964.0,
+   "tokens": {
+    "llm_calls": 2,
+    "input": 10277,
+    "output": 217,
+    "total": 10494
+   },
+   "embedding_tokens": 32,
+   "context": {
+    "documents": [
+     {
+      "document": "sales_metrics.pdf",
+      "section": "2. Выручка (Revenue)",
+      "score": 0.3742
+     },
+     {
+      "document": "sales_channels_regions.pdf",
+      "section": "2. Регионы",
+      "score": 0.3594
+     }
+    ],
+    "hit_at_3": true,
+    "hit_at_5": true,
+    "section_hit_at_3": true
+   },
+   "prompt": {
+    "calls": 2,
+    "system_sha": "15d4bc415fc5a887",
+    "system_chars": 4858,
+    "user_chars": 1693,
+    "user_has_documents": true
+   },
+   "error": null
+  },
+  {
+   "arm": "T04",
+   "repeat": 0,
+   "position": 1,
+   "case_id": "cc-01",
+   "group": "category_comparison",
+   "expected_behavior": "answer",
+   "predicted_behavior": "answer",
+   "predicted_metric": "sum:Revenue_KZT",
+   "behavior_ok": true,
+   "plan_ok": true,
+   "metric_ok": true,
+   "chart_ok": true,
+   "signature": "[\"answer\", \"sum:Revenue_KZT\", [\"Region\"], [], \"bar\", 1]",
+   "planner": "llm",
+   "llm_fallback": false,
+   "truncated": false,
+   "plan_latency_ms": 1794.1,
+   "tokens": {
+    "llm_calls": 1,
+    "input": 5126,
+    "output": 129,
+    "total": 5255
+   },
+   "embedding_tokens": 32,
+   "context": {
+    "documents": [
+     {
+      "document": "sales_metrics.pdf",
+      "section": "2. Выручка (Revenue)",
+      "score": 0.3742
+     },
+     {
+      "document": "sales_channels_regions.pdf",
+      "section": "2. Регионы",
+      "score": 0.3594
+     }
+    ],
+    "hit_at_3": true,
+    "hit_at_5": true,
+    "section_hit_at_3": true
+   },
+   "prompt": {
+    "calls": 1,
+    "system_sha": "15d4bc415fc5a887",
+    "system_chars": 4858,
+    "user_chars": 1693,
+    "user_has_documents": true
+   },
+   "error": null
+  },
+  {
+   "arm": "T04",
+   "repeat": 0,
+   "position": 0,
+   "case_id": "fl-01",
+   "group": "filters",
+   "expected_behavior": "answer",
+   "predicted_behavior": "answer",
+   "predicted_metric": "sum:Revenue_KZT",
+   "behavior_ok": true,
+   "plan_ok": true,
+   "metric_ok": true,
+   "chart_ok": true,
+   "signature": "[\"answer\", \"sum:Revenue_KZT\", [\"Channel\"], [[\"Channel\", \"in\", \"[\\\"Web\\\", \\\"Mobile\\\"]\"]], \"bar\", 1]",
+   "planner": "llm",
+   "llm_fallback": false,
+   "truncated": false,
+   "plan_latency_ms": 2175.2,
+   "tokens": {
+    "llm_calls": 1,
+    "input": 5262,
+    "output": 154,
+    "total": 5416
+   },
+   "embedding_tokens": 29,
+   "context": {
+    "documents": [
+     {
+      "document": "sales_channels_regions.pdf",
+      "section": "1. Каналы продаж",
+      "score": 0.3977
+     },
+     {
+      "document": "sales_channels_regions.pdf",
+      "section": "3. Категории товаров",
+      "score": 0.3482
+     },
+     {
+      "document": "sales_metrics.pdf",
+      "section": "6. Показатели без данных",
+      "score": 0.3149
+     }
+    ],
+    "hit_at_3": true,
+    "hit_at_5": true,
+    "section_hit_at_3": false
+   },
+   "prompt": {
+    "calls": 1,
+    "system_sha": "15d4bc415fc5a887",
+    "system_chars": 4858,
+    "user_chars": 2312,
+    "user_has_documents": true
+   },
+   "error": null
+  },
+  {
+   "arm": "T0",
+   "repeat": 0,
+   "position": 1,
+   "case_id": "fl-01",
+   "group": "filters",
+   "expected_behavior": "answer",
+   "predicted_behavior": "answer",
+   "predicted_metric": "sum:Revenue_KZT",
+   "behavior_ok": true,
+   "plan_ok": true,
+   "metric_ok": true,
+   "chart_ok": true,
+   "signature": "[\"answer\", \"sum:Revenue_KZT\", [\"Channel\"], [[\"Channel\", \"in\", \"[\\\"Web\\\", \\\"Mobile\\\"]\"]], \"bar\", 1]",
+   "planner": "llm",
+   "llm_fallback": false,
+   "truncated": false,
+   "plan_latency_ms": 2242.7,
+   "tokens": {
+    "llm_calls": 1,
+    "input": 5262,
+    "output": 154,
+    "total": 5416
+   },
+   "embedding_tokens": 29,
+   "context": {
+    "documents": [
+     {
+      "document": "sales_channels_regions.pdf",
+      "section": "1. Каналы продаж",
+      "score": 0.3977
+     },
+     {
+      "document": "sales_channels_regions.pdf",
+      "section": "3. Категории товаров",
+      "score": 0.3482
+     },
+     {
+      "document": "sales_metrics.pdf",
+      "section": "6. Показатели без данных",
+      "score": 0.3149
+     }
+    ],
+    "hit_at_3": true,
+    "hit_at_5": true,
+    "section_hit_at_3": false
+   },
+   "prompt": {
+    "calls": 1,
+    "system_sha": "15d4bc415fc5a887",
+    "system_chars": 4858,
+    "user_chars": 2312,
+    "user_has_documents": true
+   },
+   "error": null
+  },
+  {
+   "arm": "T0",
+   "repeat": 0,
+   "position": 0,
+   "case_id": "rg-02",
+   "group": "rag_terminology",
+   "expected_behavior": "answer",
+   "predicted_behavior": "answer",
+   "predicted_metric": "ratio:Revenue_KZT/Orders",
+   "behavior_ok": true,
+   "plan_ok": true,
+   "metric_ok": true,
+   "chart_ok": true,
+   "signature": "[\"answer\", \"ratio:Revenue_KZT/Orders\", [\"Region\"], [], \"bar\", 1]",
+   "planner": "llm",
+   "llm_fallback": false,
+   "truncated": false,
+   "plan_latency_ms": 1795.8,
+   "tokens": {
+    "llm_calls": 1,
+    "input": 5233,
+    "output": 118,
+    "total": 5351
+   },
+   "embedding_tokens": 35,
+   "context": {
+    "documents": [
+     {
+      "document": "sales_metrics.pdf",
+      "section": "4. Средний чек (Average Order Value, AOV)",
+      "score": 0.4032
+     },
+     {
+      "document": "sales_channels_regions.pdf",
+      "section": "SalesDemo KZ — каналы, регионы и категории",
+      "score": 0.3731
+     },
+     {
+      "document": "sales_metrics.pdf",
+      "section": "1. Набор данных sales_2026.xlsx",
+      "score": 0.3491
+     }
+    ],
+    "hit_at_3": true,
+    "hit_at_5": true,
+    "section_hit_at_3": true
+   },
+   "prompt": {
+    "calls": 1,
+    "system_sha": "15d4bc415fc5a887",
+    "system_chars": 4858,
+    "user_chars": 2129,
+    "user_has_documents": true
+   },
+   "error": null
+  },
+  {
+   "arm": "T04",
+   "repeat": 0,
+   "position": 1,
+   "case_id": "rg-02",
+   "group": "rag_terminology",
+   "expected_behavior": "answer",
+   "predicted_behavior": "answer",
+   "predicted_metric": "ratio:Revenue_KZT/Orders",
+   "behavior_ok": true,
+   "plan_ok": true,
+   "metric_ok": true,
+   "chart_ok": true,
+   "signature": "[\"answer\", \"ratio:Revenue_KZT/Orders\", [\"Region\"], [], \"bar\", 1]",
+   "planner": "llm",
+   "llm_fallback": false,
+   "truncated": false,
+   "plan_latency_ms": 2702.4,
+   "tokens": {
+    "llm_calls": 1,
+    "input": 5233,
+    "output": 118,
+    "total": 5351
+   },
+   "embedding_tokens": 35,
+   "context": {
+    "documents": [
+     {
+      "document": "sales_metrics.pdf",
+      "section": "4. Средний чек (Average Order Value, AOV)",
+      "score": 0.4032
+     },
+     {
+      "document": "sales_channels_regions.pdf",
+      "section": "SalesDemo KZ — каналы, регионы и категории",
+      "score": 0.3731
+     },
+     {
+      "document": "sales_metrics.pdf",
+      "section": "1. Набор данных sales_2026.xlsx",
+      "score": 0.3491
+     }
+    ],
+    "hit_at_3": true,
+    "hit_at_5": true,
+    "section_hit_at_3": true
+   },
+   "prompt": {
+    "calls": 1,
+    "system_sha": "15d4bc415fc5a887",
+    "system_chars": 4858,
+    "user_chars": 2129,
+    "user_has_documents": true
+   },
+   "error": null
+  },
+  {
+   "arm": "T04",
+   "repeat": 0,
+   "position": 0,
+   "case_id": "rg-04",
+   "group": "rag_terminology",
+   "expected_behavior": "answer",
+   "predicted_behavior": "reject",
+   "predicted_metric": null,
+   "behavior_ok": false,
+   "plan_ok": false,
+   "metric_ok": false,
+   "chart_ok": false,
+   "signature": "[\"reject\", null, [], [], null, 0]",
+   "planner": "llm",
+   "llm_fallback": false,
+   "truncated": false,
+   "plan_latency_ms": 1978.0,
+   "tokens": {
+    "llm_calls": 2,
+    "input": 10569,
+    "output": 134,
+    "total": 10703
+   },
+   "embedding_tokens": 10,
+   "context": {
+    "documents": [
+     {
+      "document": "sales_metrics.pdf",
+      "section": "2. Выручка (Revenue)",
+      "score": 0.5156
+     },
+     {
+      "document": "sales_metrics.pdf",
+      "section": "1. Набор данных sales_2026.xlsx",
+      "score": 0.4973
+     },
+     {
+      "document": "sales_metrics.pdf",
+      "section": "6. Показатели без данных",
+      "score": 0.4829
+     }
+    ],
+    "hit_at_3": true,
+    "hit_at_5": true,
+    "section_hit_at_3": true
+   },
+   "prompt": {
+    "calls": 2,
+    "system_sha": "15d4bc415fc5a887",
+    "system_chars": 4858,
+    "user_chars": 2285,
+    "user_has_documents": true
+   },
+   "error": null
+  },
+  {
+   "arm": "T0",
+   "repeat": 0,
+   "position": 1,
+   "case_id": "rg-04",
+   "group": "rag_terminology",
+   "expected_behavior": "answer",
+   "predicted_behavior": "reject",
+   "predicted_metric": null,
+   "behavior_ok": false,
+   "plan_ok": false,
+   "metric_ok": false,
+   "chart_ok": false,
+   "signature": "[\"reject\", null, [], [], null, 0]",
+   "planner": "llm",
+   "llm_fallback": false,
+   "truncated": false,
+   "plan_latency_ms": 2004.0,
+   "tokens": {
+    "llm_calls": 2,
+    "input": 10569,
+    "output": 133,
+    "total": 10702
+   },
+   "embedding_tokens": 10,
+   "context": {
+    "documents": [
+     {
+      "document": "sales_metrics.pdf",
+      "section": "2. Выручка (Revenue)",
+      "score": 0.5156
+     },
+     {
+      "document": "sales_metrics.pdf",
+      "section": "1. Набор данных sales_2026.xlsx",
+      "score": 0.4973
+     },
+     {
+      "document": "sales_metrics.pdf",
+      "section": "6. Показатели без данных",
+      "score": 0.4829
+     }
+    ],
+    "hit_at_3": true,
+    "hit_at_5": true,
+    "section_hit_at_3": true
+   },
+   "prompt": {
+    "calls": 2,
+    "system_sha": "15d4bc415fc5a887",
+    "system_chars": 4858,
+    "user_chars": 2285,
+    "user_has_documents": true
+   },
+   "error": null
+  },
+  {
+   "arm": "T0",
+   "repeat": 0,
+   "position": 0,
+   "case_id": "iv-01",
+   "group": "invalid_ambiguous",
+   "expected_behavior": "reject",
+   "predicted_behavior": "reject",
+   "predicted_metric": null,
+   "behavior_ok": true,
+   "plan_ok": null,
+   "metric_ok": null,
+   "chart_ok": null,
+   "signature": "[\"reject\", null, [], [], null, 0]",
+   "planner": "llm",
+   "llm_fallback": false,
+   "truncated": false,
+   "plan_latency_ms": 825.5,
+   "tokens": {
+    "llm_calls": 1,
+    "input": 5271,
+    "output": 26,
+    "total": 5297
+   },
+   "embedding_tokens": 7,
+   "context": {
+    "documents": [
+     {
+      "document": "sales_metrics.pdf",
+      "section": "SalesDemo KZ — определения показателей продаж",
+      "score": 0.3849
+     },
+     {
+      "document": "sales_metrics.pdf",
+      "section": "6. Показатели без данных",
+      "score": 0.3706
+     },
+     {
+      "document": "sales_metrics.pdf",
+      "section": "4. Средний чек (Average Order Value, AOV)",
+      "score": 0.313
+     }
+    ]
+   },
+   "prompt": {
+    "calls": 1,
+    "system_sha": "15d4bc415fc5a887",
+    "system_chars": 4858,
+    "user_chars": 2323,
+    "user_has_documents": true
+   },
+   "error": null
+  },
+  {
+   "arm": "T04",
+   "repeat": 0,
+   "position": 1,
+   "case_id": "iv-01",
+   "group": "invalid_ambiguous",
+   "expected_behavior": "reject",
+   "predicted_behavior": "reject",
+   "predicted_metric": null,
+   "behavior_ok": true,
+   "plan_ok": null,
+   "metric_ok": null,
+   "chart_ok": null,
+   "signature": "[\"reject\", null, [], [], null, 0]",
+   "planner": "llm",
+   "llm_fallback": false,
+   "truncated": false,
+   "plan_latency_ms": 1292.3,
+   "tokens": {
+    "llm_calls": 1,
+    "input": 5271,
+    "output": 27,
+    "total": 5298
+   },
+   "embedding_tokens": 7,
+   "context": {
+    "documents": [
+     {
+      "document": "sales_metrics.pdf",
+      "section": "SalesDemo KZ — определения показателей продаж",
+      "score": 0.3849
+     },
+     {
+      "document": "sales_metrics.pdf",
+      "section": "6. Показатели без данных",
+      "score": 0.3706
+     },
+     {
+      "document": "sales_metrics.pdf",
+      "section": "4. Средний чек (Average Order Value, AOV)",
+      "score": 0.313
+     }
+    ]
+   },
+   "prompt": {
+    "calls": 1,
+    "system_sha": "15d4bc415fc5a887",
+    "system_chars": 4858,
+    "user_chars": 2323,
+    "user_has_documents": true
+   },
+   "error": null
+  },
+  {
+   "arm": "T04",
+   "repeat": 0,
+   "position": 0,
+   "case_id": "iv-04",
+   "group": "invalid_ambiguous",
+   "expected_behavior": "clarify",
+   "predicted_behavior": "clarify",
+   "predicted_metric": "sum:Revenue_KZT",
+   "behavior_ok": true,
+   "plan_ok": null,
+   "metric_ok": null,
+   "chart_ok": null,
+   "signature": "[\"clarify\", \"sum:Revenue_KZT\", [], [], \"bar\", 1]",
+   "planner": "llm",
+   "llm_fallback": false,
+   "truncated": false,
+   "plan_latency_ms": 3079.9,
+   "tokens": {
+    "llm_calls": 2,
+    "input": 10573,
+    "output": 217,
+    "total": 10790
+   },
+   "embedding_tokens": 31,
+   "context": {
+    "documents": [
+     {
+      "document": "sales_metrics.pdf",
+      "section": "2. Выручка (Revenue)",
+      "score": 0.4347
+     },
+     {
+      "document": "sales_metrics.pdf",
+      "section": "1. Набор данных sales_2026.xlsx",
+      "score": 0.3245
+     },
+     {
+      "document": "sales_metrics.pdf",
+      "section": "6. Показатели без данных",
+      "score": 0.318
+     }
+    ]
+   },
+   "prompt": {
+    "calls": 2,
+    "system_sha": "15d4bc415fc5a887",
+    "system_chars": 4858,
+    "user_chars": 2282,
+    "user_has_documents": true
+   },
+   "error": null
+  },
+  {
+   "arm": "T0",
+   "repeat": 0,
+   "position": 1,
+   "case_id": "iv-04",
+   "group": "invalid_ambiguous",
+   "expected_behavior": "clarify",
+   "predicted_behavior": "reject",
+   "predicted_metric": null,
+   "behavior_ok": false,
+   "plan_ok": null,
+   "metric_ok": null,
+   "chart_ok": null,
+   "signature": "[\"reject\", null, [], [], null, 0]",
+   "planner": "llm",
+   "llm_fallback": false,
+   "truncated": false,
+   "plan_latency_ms": 2214.1,
+   "tokens": {
+    "llm_calls": 2,
+    "input": 10573,
+    "output": 149,
+    "total": 10722
+   },
+   "embedding_tokens": 12,
+   "context": {
+    "documents": [
+     {
+      "document": "sales_metrics.pdf",
+      "section": "2. Выручка (Revenue)",
+      "score": 0.4347
+     },
+     {
+      "document": "sales_metrics.pdf",
+      "section": "1. Набор данных sales_2026.xlsx",
+      "score": 0.3245
+     },
+     {
+      "document": "sales_metrics.pdf",
+      "section": "6. Показатели без данных",
+      "score": 0.318
+     }
+    ]
+   },
+   "prompt": {
+    "calls": 2,
+    "system_sha": "15d4bc415fc5a887",
+    "system_chars": 4858,
+    "user_chars": 2282,
+    "user_has_documents": true
+   },
+   "error": null
+  },
+  {
+   "arm": "T04",
+   "repeat": 1,
+   "position": 0,
+   "case_id": "mi-01",
+   "group": "metric_interpretation",
+   "expected_behavior": "answer",
+   "predicted_behavior": "answer",
+   "predicted_metric": "ratio:Revenue_KZT/Orders",
+   "behavior_ok": true,
+   "plan_ok": true,
+   "metric_ok": true,
+   "chart_ok": true,
+   "signature": "[\"answer\", \"ratio:Revenue_KZT/Orders\", [\"Channel\"], [], \"bar\", 1]",
+   "planner": "llm",
+   "llm_fallback": false,
+   "truncated": false,
+   "plan_latency_ms": 1846.8,
+   "tokens": {
+    "llm_calls": 1,
+    "input": 5258,
+    "output": 122,
+    "total": 5380
+   },
+   "embedding_tokens": 42,
+   "context": {
+    "documents": [
+     {
+      "document": "sales_metrics.pdf",
+      "section": "4. Средний чек (Average Order Value, AOV)",
+      "score": 0.5045
+     },
+     {
+      "document": "sales_channels_regions.pdf",
+      "section": "3. Категории товаров",
+      "score": 0.3789
+     },
+     {
+      "document": "sales_metrics.pdf",
+      "section": "2. Выручка (Revenue)",
+      "score": 0.3115
+     }
+    ],
+    "hit_at_3": true,
+    "hit_at_5": true,
+    "section_hit_at_3": true
+   },
+   "prompt": {
+    "calls": 1,
+    "system_sha": "15d4bc415fc5a887",
+    "system_chars": 4858,
+    "user_chars": 2203,
+    "user_has_documents": true
+   },
+   "error": null
+  },
+  {
+   "arm": "T0",
+   "repeat": 1,
+   "position": 1,
+   "case_id": "mi-01",
+   "group": "metric_interpretation",
+   "expected_behavior": "answer",
+   "predicted_behavior": "answer",
+   "predicted_metric": "ratio:Revenue_KZT/Orders",
+   "behavior_ok": true,
+   "plan_ok": true,
+   "metric_ok": true,
+   "chart_ok": true,
+   "signature": "[\"answer\", \"ratio:Revenue_KZT/Orders\", [\"Channel\"], [], \"bar\", 1]",
+   "planner": "llm",
+   "llm_fallback": false,
+   "truncated": false,
+   "plan_latency_ms": 1779.8,
+   "tokens": {
+    "llm_calls": 1,
+    "input": 5258,
+    "output": 127,
+    "total": 5385
+   },
+   "embedding_tokens": 42,
+   "context": {
+    "documents": [
+     {
+      "document": "sales_metrics.pdf",
+      "section": "4. Средний чек (Average Order Value, AOV)",
+      "score": 0.5045
+     },
+     {
+      "document": "sales_channels_regions.pdf",
+      "section": "3. Категории товаров",
+      "score": 0.3789
+     },
+     {
+      "document": "sales_metrics.pdf",
+      "section": "2. Выручка (Revenue)",
+      "score": 0.3115
+     }
+    ],
+    "hit_at_3": true,
+    "hit_at_5": true,
+    "section_hit_at_3": true
+   },
+   "prompt": {
+    "calls": 1,
+    "system_sha": "15d4bc415fc5a887",
+    "system_chars": 4858,
+    "user_chars": 2203,
+    "user_has_documents": true
+   },
+   "error": null
+  },
+  {
+   "arm": "T0",
+   "repeat": 1,
+   "position": 0,
+   "case_id": "mi-03",
+   "group": "metric_interpretation",
+   "expected_behavior": "answer",
+   "predicted_behavior": "answer",
+   "predicted_metric": "rate:Cancelled_Orders/Orders",
+   "behavior_ok": true,
+   "plan_ok": true,
+   "metric_ok": true,
+   "chart_ok": true,
+   "signature": "[\"answer\", \"rate:Cancelled_Orders/Orders\", [\"Region\"], [], \"bar\", 1]",
+   "planner": "llm",
+   "llm_fallback": false,
+   "truncated": false,
+   "plan_latency_ms": 1786.9,
+   "tokens": {
+    "llm_calls": 1,
+    "input": 5118,
+    "output": 123,
+    "total": 5241
+   },
+   "embedding_tokens": 43,
+   "context": {
+    "documents": [
+     {
+      "document": "sales_metrics.pdf",
+      "section": "5. Доля отмен (Cancellation Rate)",
+      "score": 0.5517
+     },
+     {
+      "document": "sales_metrics.pdf",
+      "section": "3. Заказы и отмены",
+      "score": 0.3555
+     }
+    ],
+    "hit_at_3": true,
+    "hit_at_5": true,
+    "section_hit_at_3": true
+   },
+   "prompt": {
+    "calls": 1,
+    "system_sha": "15d4bc415fc5a887",
+    "system_chars": 4858,
+    "user_chars": 1733,
+    "user_has_documents": true
+   },
+   "error": null
+  },
+  {
+   "arm": "T04",
+   "repeat": 1,
+   "position": 1,
+   "case_id": "mi-03",
+   "group": "metric_interpretation",
+   "expected_behavior": "answer",
+   "predicted_behavior": "answer",
+   "predicted_metric": "rate:Cancelled_Orders/Orders",
+   "behavior_ok": true,
+   "plan_ok": true,
+   "metric_ok": true,
+   "chart_ok": true,
+   "signature": "[\"answer\", \"rate:Cancelled_Orders/Orders\", [\"Region\"], [], \"bar\", 1]",
+   "planner": "llm",
+   "llm_fallback": false,
+   "truncated": false,
+   "plan_latency_ms": 2210.1,
+   "tokens": {
+    "llm_calls": 1,
+    "input": 5118,
+    "output": 185,
+    "total": 5303
+   },
+   "embedding_tokens": 43,
+   "context": {
+    "documents": [
+     {
+      "document": "sales_metrics.pdf",
+      "section": "5. Доля отмен (Cancellation Rate)",
+      "score": 0.5517
+     },
+     {
+      "document": "sales_metrics.pdf",
+      "section": "3. Заказы и отмены",
+      "score": 0.3555
+     }
+    ],
+    "hit_at_3": true,
+    "hit_at_5": true,
+    "section_hit_at_3": true
+   },
+   "prompt": {
+    "calls": 1,
+    "system_sha": "15d4bc415fc5a887",
+    "system_chars": 4858,
+    "user_chars": 1733,
+    "user_has_documents": true
+   },
+   "error": null
+  },
+  {
+   "arm": "T04",
+   "repeat": 1,
+   "position": 0,
+   "case_id": "ts-01",
+   "group": "time_series",
+   "expected_behavior": "answer",
+   "predicted_behavior": "reject",
+   "predicted_metric": null,
+   "behavior_ok": false,
+   "plan_ok": false,
+   "metric_ok": false,
+   "chart_ok": false,
+   "signature": "[\"reject\", null, [], [], null, 0]",
+   "planner": "llm",
+   "llm_fallback": false,
+   "truncated": false,
+   "plan_latency_ms": 2271.2,
+   "tokens": {
+    "llm_calls": 2,
+    "input": 10577,
+    "output": 159,
+    "total": 10736
+   },
+   "embedding_tokens": 18,
+   "context": {
+    "documents": [
+     {
+      "document": "sales_metrics.pdf",
+      "section": "2. Выручка (Revenue)",
+      "score": 0.4533
+     },
+     {
+      "document": "sales_metrics.pdf",
+      "section": "1. Набор данных sales_2026.xlsx",
+      "score": 0.4212
+     },
+     {
+      "document": "sales_metrics.pdf",
+      "section": "6. Показатели без данных",
+      "score": 0.3513
+     }
+    ],
+    "hit_at_3": true,
+    "hit_at_5": true,
+    "section_hit_at_3": true
+   },
+   "prompt": {
+    "calls": 2,
+    "system_sha": "15d4bc415fc5a887",
+    "system_chars": 4858,
+    "user_chars": 2291,
+    "user_has_documents": true
+   },
+   "error": null
+  },
+  {
+   "arm": "T0",
+   "repeat": 1,
+   "position": 1,
+   "case_id": "ts-01",
+   "group": "time_series",
+   "expected_behavior": "answer",
+   "predicted_behavior": "reject",
+   "predicted_metric": null,
+   "behavior_ok": false,
+   "plan_ok": false,
+   "metric_ok": false,
+   "chart_ok": false,
+   "signature": "[\"reject\", null, [], [], null, 0]",
+   "planner": "llm",
+   "llm_fallback": false,
+   "truncated": false,
+   "plan_latency_ms": 2207.6,
+   "tokens": {
+    "llm_calls": 2,
+    "input": 10577,
+    "output": 159,
+    "total": 10736
+   },
+   "embedding_tokens": 18,
+   "context": {
+    "documents": [
+     {
+      "document": "sales_metrics.pdf",
+      "section": "2. Выручка (Revenue)",
+      "score": 0.4533
+     },
+     {
+      "document": "sales_metrics.pdf",
+      "section": "1. Набор данных sales_2026.xlsx",
+      "score": 0.4212
+     },
+     {
+      "document": "sales_metrics.pdf",
+      "section": "6. Показатели без данных",
+      "score": 0.3513
+     }
+    ],
+    "hit_at_3": true,
+    "hit_at_5": true,
+    "section_hit_at_3": true
+   },
+   "prompt": {
+    "calls": 2,
+    "system_sha": "15d4bc415fc5a887",
+    "system_chars": 4858,
+    "user_chars": 2291,
+    "user_has_documents": true
+   },
+   "error": null
+  },
+  {
+   "arm": "T0",
+   "repeat": 1,
+   "position": 0,
+   "case_id": "ts-04",
+   "group": "time_series",
+   "expected_behavior": "answer",
+   "predicted_behavior": "answer",
+   "predicted_metric": "ratio:Revenue_KZT/Orders",
+   "behavior_ok": true,
+   "plan_ok": true,
+   "metric_ok": true,
+   "chart_ok": true,
+   "signature": "[\"answer\", \"ratio:Revenue_KZT/Orders\", [\"Month\"], [], \"line\", 1]",
+   "planner": "llm",
+   "llm_fallback": false,
+   "truncated": false,
+   "plan_latency_ms": 1919.7,
+   "tokens": {
+    "llm_calls": 1,
+    "input": 5249,
+    "output": 145,
+    "total": 5394
+   },
+   "embedding_tokens": 48,
+   "context": {
+    "documents": [
+     {
+      "document": "sales_metrics.pdf",
+      "section": "4. Средний чек (Average Order Value, AOV)",
+      "score": 0.4554
+     },
+     {
+      "document": "sales_calendar_2026.pdf",
+      "section": "2. Как читать события",
+      "score": 0.3625
+     },
+     {
+      "document": "sales_metrics.pdf",
+      "section": "1. Набор данных sales_2026.xlsx",
+      "score": 0.3612
+     }
+    ],
+    "hit_at_3": true,
+    "hit_at_5": true,
+    "section_hit_at_3": true
+   },
+   "prompt": {
+    "calls": 1,
+    "system_sha": "15d4bc415fc5a887",
+    "system_chars": 4858,
+    "user_chars": 2214,
+    "user_has_documents": true
+   },
+   "error": null
+  },
+  {
+   "arm": "T04",
+   "repeat": 1,
+   "position": 1,
+   "case_id": "ts-04",
+   "group": "time_series",
+   "expected_behavior": "answer",
+   "predicted_behavior": "answer",
+   "predicted_metric": "ratio:Revenue_KZT/Orders",
+   "behavior_ok": true,
+   "plan_ok": true,
+   "metric_ok": true,
+   "chart_ok": true,
+   "signature": "[\"answer\", \"ratio:Revenue_KZT/Orders\", [\"Month\"], [], \"line\", 1]",
+   "planner": "llm",
+   "llm_fallback": false,
+   "truncated": false,
+   "plan_latency_ms": 1867.6,
+   "tokens": {
+    "llm_calls": 1,
+    "input": 5249,
+    "output": 131,
+    "total": 5380
+   },
+   "embedding_tokens": 48,
+   "context": {
+    "documents": [
+     {
+      "document": "sales_metrics.pdf",
+      "section": "4. Средний чек (Average Order Value, AOV)",
+      "score": 0.4554
+     },
+     {
+      "document": "sales_calendar_2026.pdf",
+      "section": "2. Как читать события",
+      "score": 0.3625
+     },
+     {
+      "document": "sales_metrics.pdf",
+      "section": "1. Набор данных sales_2026.xlsx",
+      "score": 0.3612
+     }
+    ],
+    "hit_at_3": true,
+    "hit_at_5": true,
+    "section_hit_at_3": true
+   },
+   "prompt": {
+    "calls": 1,
+    "system_sha": "15d4bc415fc5a887",
+    "system_chars": 4858,
+    "user_chars": 2214,
+    "user_has_documents": true
+   },
+   "error": null
+  },
+  {
+   "arm": "T04",
+   "repeat": 1,
+   "position": 0,
+   "case_id": "cc-01",
+   "group": "category_comparison",
+   "expected_behavior": "answer",
+   "predicted_behavior": "answer",
+   "predicted_metric": "sum:Revenue_KZT",
+   "behavior_ok": true,
+   "plan_ok": true,
+   "metric_ok": true,
+   "chart_ok": true,
+   "signature": "[\"answer\", \"sum:Revenue_KZT\", [\"Region\"], [], \"bar\", 1]",
+   "planner": "llm",
+   "llm_fallback": false,
+   "truncated": false,
+   "plan_latency_ms": 1595.0,
+   "tokens": {
+    "llm_calls": 1,
+    "input": 5126,
+    "output": 124,
+    "total": 5250
+   },
+   "embedding_tokens": 27,
+   "context": {
+    "documents": [
+     {
+      "document": "sales_metrics.pdf",
+      "section": "2. Выручка (Revenue)",
+      "score": 0.3742
+     },
+     {
+      "document": "sales_channels_regions.pdf",
+      "section": "2. Регионы",
+      "score": 0.3594
+     }
+    ],
+    "hit_at_3": true,
+    "hit_at_5": true,
+    "section_hit_at_3": true
+   },
+   "prompt": {
+    "calls": 1,
+    "system_sha": "15d4bc415fc5a887",
+    "system_chars": 4858,
+    "user_chars": 1693,
+    "user_has_documents": true
+   },
+   "error": null
+  },
+  {
+   "arm": "T0",
+   "repeat": 1,
+   "position": 1,
+   "case_id": "cc-01",
+   "group": "category_comparison",
+   "expected_behavior": "answer",
+   "predicted_behavior": "answer",
+   "predicted_metric": "sum:Revenue_KZT",
+   "behavior_ok": true,
+   "plan_ok": true,
+   "metric_ok": true,
+   "chart_ok": true,
+   "signature": "[\"answer\", \"sum:Revenue_KZT\", [\"Region\"], [], \"bar\", 1]",
+   "planner": "llm",
+   "llm_fallback": false,
+   "truncated": false,
+   "plan_latency_ms": 2850.0,
+   "tokens": {
+    "llm_calls": 2,
+    "input": 10277,
+    "output": 222,
+    "total": 10499
+   },
+   "embedding_tokens": 32,
+   "context": {
+    "documents": [
+     {
+      "document": "sales_metrics.pdf",
+      "section": "2. Выручка (Revenue)",
+      "score": 0.3742
+     },
+     {
+      "document": "sales_channels_regions.pdf",
+      "section": "2. Регионы",
+      "score": 0.3594
+     }
+    ],
+    "hit_at_3": true,
+    "hit_at_5": true,
+    "section_hit_at_3": true
+   },
+   "prompt": {
+    "calls": 2,
+    "system_sha": "15d4bc415fc5a887",
+    "system_chars": 4858,
+    "user_chars": 1693,
+    "user_has_documents": true
+   },
+   "error": null
+  },
+  {
+   "arm": "T0",
+   "repeat": 1,
+   "position": 0,
+   "case_id": "fl-01",
+   "group": "filters",
+   "expected_behavior": "answer",
+   "predicted_behavior": "answer",
+   "predicted_metric": "sum:Revenue_KZT",
+   "behavior_ok": true,
+   "plan_ok": true,
+   "metric_ok": true,
+   "chart_ok": true,
+   "signature": "[\"answer\", \"sum:Revenue_KZT\", [\"Channel\"], [[\"Channel\", \"in\", \"[\\\"Web\\\", \\\"Mobile\\\"]\"]], \"bar\", 1]",
+   "planner": "llm",
+   "llm_fallback": false,
+   "truncated": false,
+   "plan_latency_ms": 3000.2,
+   "tokens": {
+    "llm_calls": 2,
+    "input": 10549,
+    "output": 227,
+    "total": 10776
+   },
+   "embedding_tokens": 29,
+   "context": {
+    "documents": [
+     {
+      "document": "sales_channels_regions.pdf",
+      "section": "1. Каналы продаж",
+      "score": 0.3977
+     },
+     {
+      "document": "sales_channels_regions.pdf",
+      "section": "3. Категории товаров",
+      "score": 0.3482
+     },
+     {
+      "document": "sales_metrics.pdf",
+      "section": "6. Показатели без данных",
+      "score": 0.3149
+     }
+    ],
+    "hit_at_3": true,
+    "hit_at_5": true,
+    "section_hit_at_3": false
+   },
+   "prompt": {
+    "calls": 2,
+    "system_sha": "15d4bc415fc5a887",
+    "system_chars": 4858,
+    "user_chars": 2312,
+    "user_has_documents": true
+   },
+   "error": null
+  },
+  {
+   "arm": "T04",
+   "repeat": 1,
+   "position": 1,
+   "case_id": "fl-01",
+   "group": "filters",
+   "expected_behavior": "answer",
+   "predicted_behavior": "answer",
+   "predicted_metric": "sum:Revenue_KZT",
+   "behavior_ok": true,
+   "plan_ok": true,
+   "metric_ok": true,
+   "chart_ok": true,
+   "signature": "[\"answer\", \"sum:Revenue_KZT\", [\"Channel\"], [[\"Channel\", \"in\", \"[\\\"Web\\\", \\\"Mobile\\\"]\"]], \"bar\", 1]",
+   "planner": "llm",
+   "llm_fallback": false,
+   "truncated": false,
+   "plan_latency_ms": 2095.8,
+   "tokens": {
+    "llm_calls": 1,
+    "input": 5262,
+    "output": 160,
+    "total": 5422
+   },
+   "embedding_tokens": 29,
+   "context": {
+    "documents": [
+     {
+      "document": "sales_channels_regions.pdf",
+      "section": "1. Каналы продаж",
+      "score": 0.3977
+     },
+     {
+      "document": "sales_channels_regions.pdf",
+      "section": "3. Категории товаров",
+      "score": 0.3482
+     },
+     {
+      "document": "sales_metrics.pdf",
+      "section": "6. Показатели без данных",
+      "score": 0.3149
+     }
+    ],
+    "hit_at_3": true,
+    "hit_at_5": true,
+    "section_hit_at_3": false
+   },
+   "prompt": {
+    "calls": 1,
+    "system_sha": "15d4bc415fc5a887",
+    "system_chars": 4858,
+    "user_chars": 2312,
+    "user_has_documents": true
+   },
+   "error": null
+  },
+  {
+   "arm": "T04",
+   "repeat": 1,
+   "position": 0,
+   "case_id": "rg-02",
+   "group": "rag_terminology",
+   "expected_behavior": "answer",
+   "predicted_behavior": "answer",
+   "predicted_metric": "ratio:Revenue_KZT/Orders",
+   "behavior_ok": true,
+   "plan_ok": true,
+   "metric_ok": true,
+   "chart_ok": true,
+   "signature": "[\"answer\", \"ratio:Revenue_KZT/Orders\", [\"Region\"], [], \"bar\", 1]",
+   "planner": "llm",
+   "llm_fallback": false,
+   "truncated": false,
+   "plan_latency_ms": 1741.9,
+   "tokens": {
+    "llm_calls": 1,
+    "input": 5233,
+    "output": 120,
+    "total": 5353
+   },
+   "embedding_tokens": 35,
+   "context": {
+    "documents": [
+     {
+      "document": "sales_metrics.pdf",
+      "section": "4. Средний чек (Average Order Value, AOV)",
+      "score": 0.4032
+     },
+     {
+      "document": "sales_channels_regions.pdf",
+      "section": "SalesDemo KZ — каналы, регионы и категории",
+      "score": 0.3731
+     },
+     {
+      "document": "sales_metrics.pdf",
+      "section": "1. Набор данных sales_2026.xlsx",
+      "score": 0.3491
+     }
+    ],
+    "hit_at_3": true,
+    "hit_at_5": true,
+    "section_hit_at_3": true
+   },
+   "prompt": {
+    "calls": 1,
+    "system_sha": "15d4bc415fc5a887",
+    "system_chars": 4858,
+    "user_chars": 2129,
+    "user_has_documents": true
+   },
+   "error": null
+  },
+  {
+   "arm": "T0",
+   "repeat": 1,
+   "position": 1,
+   "case_id": "rg-02",
+   "group": "rag_terminology",
+   "expected_behavior": "answer",
+   "predicted_behavior": "answer",
+   "predicted_metric": "ratio:Revenue_KZT/Orders",
+   "behavior_ok": true,
+   "plan_ok": true,
+   "metric_ok": true,
+   "chart_ok": true,
+   "signature": "[\"answer\", \"ratio:Revenue_KZT/Orders\", [\"Region\"], [], \"bar\", 1]",
+   "planner": "llm",
+   "llm_fallback": false,
+   "truncated": false,
+   "plan_latency_ms": 1711.3,
+   "tokens": {
+    "llm_calls": 1,
+    "input": 5233,
+    "output": 118,
+    "total": 5351
+   },
+   "embedding_tokens": 35,
+   "context": {
+    "documents": [
+     {
+      "document": "sales_metrics.pdf",
+      "section": "4. Средний чек (Average Order Value, AOV)",
+      "score": 0.4032
+     },
+     {
+      "document": "sales_channels_regions.pdf",
+      "section": "SalesDemo KZ — каналы, регионы и категории",
+      "score": 0.3731
+     },
+     {
+      "document": "sales_metrics.pdf",
+      "section": "1. Набор данных sales_2026.xlsx",
+      "score": 0.3491
+     }
+    ],
+    "hit_at_3": true,
+    "hit_at_5": true,
+    "section_hit_at_3": true
+   },
+   "prompt": {
+    "calls": 1,
+    "system_sha": "15d4bc415fc5a887",
+    "system_chars": 4858,
+    "user_chars": 2129,
+    "user_has_documents": true
+   },
+   "error": null
+  },
+  {
+   "arm": "T0",
+   "repeat": 1,
+   "position": 0,
+   "case_id": "rg-04",
+   "group": "rag_terminology",
+   "expected_behavior": "answer",
+   "predicted_behavior": "answer",
+   "predicted_metric": "sum:Revenue_KZT",
+   "behavior_ok": true,
+   "plan_ok": true,
+   "metric_ok": true,
+   "chart_ok": true,
+   "signature": "[\"answer\", \"sum:Revenue_KZT\", [\"Category\"], [], \"bar\", 1]",
+   "planner": "llm",
+   "llm_fallback": false,
+   "truncated": false,
+   "plan_latency_ms": 2642.9,
+   "tokens": {
+    "llm_calls": 2,
+    "input": 10569,
+    "output": 185,
+    "total": 10754
+   },
+   "embedding_tokens": 24,
+   "context": {
+    "documents": [
+     {
+      "document": "sales_metrics.pdf",
+      "section": "2. Выручка (Revenue)",
+      "score": 0.5156
+     },
+     {
+      "document": "sales_metrics.pdf",
+      "section": "1. Набор данных sales_2026.xlsx",
+      "score": 0.4973
+     },
+     {
+      "document": "sales_metrics.pdf",
+      "section": "6. Показатели без данных",
+      "score": 0.4829
+     }
+    ],
+    "hit_at_3": true,
+    "hit_at_5": true,
+    "section_hit_at_3": true
+   },
+   "prompt": {
+    "calls": 2,
+    "system_sha": "15d4bc415fc5a887",
+    "system_chars": 4858,
+    "user_chars": 2285,
+    "user_has_documents": true
+   },
+   "error": null
+  },
+  {
+   "arm": "T04",
+   "repeat": 1,
+   "position": 1,
+   "case_id": "rg-04",
+   "group": "rag_terminology",
+   "expected_behavior": "answer",
+   "predicted_behavior": "answer",
+   "predicted_metric": "sum:Revenue_KZT",
+   "behavior_ok": true,
+   "plan_ok": true,
+   "metric_ok": true,
+   "chart_ok": true,
+   "signature": "[\"answer\", \"sum:Revenue_KZT\", [\"Category\"], [], \"bar\", 1]",
+   "planner": "llm",
+   "llm_fallback": false,
+   "truncated": false,
+   "plan_latency_ms": 1693.1,
+   "tokens": {
+    "llm_calls": 1,
+    "input": 5272,
+    "output": 130,
+    "total": 5402
+   },
+   "embedding_tokens": 24,
+   "context": {
+    "documents": [
+     {
+      "document": "sales_metrics.pdf",
+      "section": "2. Выручка (Revenue)",
+      "score": 0.5156
+     },
+     {
+      "document": "sales_metrics.pdf",
+      "section": "1. Набор данных sales_2026.xlsx",
+      "score": 0.4973
+     },
+     {
+      "document": "sales_metrics.pdf",
+      "section": "6. Показатели без данных",
+      "score": 0.4829
+     }
+    ],
+    "hit_at_3": true,
+    "hit_at_5": true,
+    "section_hit_at_3": true
+   },
+   "prompt": {
+    "calls": 1,
+    "system_sha": "15d4bc415fc5a887",
+    "system_chars": 4858,
+    "user_chars": 2285,
+    "user_has_documents": true
+   },
+   "error": null
+  },
+  {
+   "arm": "T04",
+   "repeat": 1,
+   "position": 0,
+   "case_id": "iv-01",
+   "group": "invalid_ambiguous",
+   "expected_behavior": "reject",
+   "predicted_behavior": "reject",
+   "predicted_metric": null,
+   "behavior_ok": true,
+   "plan_ok": null,
+   "metric_ok": null,
+   "chart_ok": null,
+   "signature": "[\"reject\", null, [], [], null, 0]",
+   "planner": "llm",
+   "llm_fallback": false,
+   "truncated": false,
+   "plan_latency_ms": 1140.6,
+   "tokens": {
+    "llm_calls": 1,
+    "input": 5271,
+    "output": 80,
+    "total": 5351
+   },
+   "embedding_tokens": 7,
+   "context": {
+    "documents": [
+     {
+      "document": "sales_metrics.pdf",
+      "section": "SalesDemo KZ — определения показателей продаж",
+      "score": 0.3849
+     },
+     {
+      "document": "sales_metrics.pdf",
+      "section": "6. Показатели без данных",
+      "score": 0.3706
+     },
+     {
+      "document": "sales_metrics.pdf",
+      "section": "4. Средний чек (Average Order Value, AOV)",
+      "score": 0.313
+     }
+    ]
+   },
+   "prompt": {
+    "calls": 1,
+    "system_sha": "15d4bc415fc5a887",
+    "system_chars": 4858,
+    "user_chars": 2323,
+    "user_has_documents": true
+   },
+   "error": null
+  },
+  {
+   "arm": "T0",
+   "repeat": 1,
+   "position": 1,
+   "case_id": "iv-01",
+   "group": "invalid_ambiguous",
+   "expected_behavior": "reject",
+   "predicted_behavior": "reject",
+   "predicted_metric": null,
+   "behavior_ok": true,
+   "plan_ok": null,
+   "metric_ok": null,
+   "chart_ok": null,
+   "signature": "[\"reject\", null, [], [], null, 0]",
+   "planner": "llm",
+   "llm_fallback": false,
+   "truncated": false,
+   "plan_latency_ms": 887.0,
+   "tokens": {
+    "llm_calls": 1,
+    "input": 5271,
+    "output": 26,
+    "total": 5297
+   },
+   "embedding_tokens": 7,
+   "context": {
+    "documents": [
+     {
+      "document": "sales_metrics.pdf",
+      "section": "SalesDemo KZ — определения показателей продаж",
+      "score": 0.3849
+     },
+     {
+      "document": "sales_metrics.pdf",
+      "section": "6. Показатели без данных",
+      "score": 0.3706
+     },
+     {
+      "document": "sales_metrics.pdf",
+      "section": "4. Средний чек (Average Order Value, AOV)",
+      "score": 0.313
+     }
+    ]
+   },
+   "prompt": {
+    "calls": 1,
+    "system_sha": "15d4bc415fc5a887",
+    "system_chars": 4858,
+    "user_chars": 2323,
+    "user_has_documents": true
+   },
+   "error": null
+  },
+  {
+   "arm": "T0",
+   "repeat": 1,
+   "position": 0,
+   "case_id": "iv-04",
+   "group": "invalid_ambiguous",
+   "expected_behavior": "clarify",
+   "predicted_behavior": "clarify",
+   "predicted_metric": "sum:Revenue_KZT",
+   "behavior_ok": true,
+   "plan_ok": null,
+   "metric_ok": null,
+   "chart_ok": null,
+   "signature": "[\"clarify\", \"sum:Revenue_KZT\", [], [], \"bar\", 1]",
+   "planner": "llm",
+   "llm_fallback": false,
+   "truncated": false,
+   "plan_latency_ms": 2538.5,
+   "tokens": {
+    "llm_calls": 2,
+    "input": 10573,
+    "output": 206,
+    "total": 10779
+   },
+   "embedding_tokens": 26,
+   "context": {
+    "documents": [
+     {
+      "document": "sales_metrics.pdf",
+      "section": "2. Выручка (Revenue)",
+      "score": 0.4347
+     },
+     {
+      "document": "sales_metrics.pdf",
+      "section": "1. Набор данных sales_2026.xlsx",
+      "score": 0.3245
+     },
+     {
+      "document": "sales_metrics.pdf",
+      "section": "6. Показатели без данных",
+      "score": 0.318
+     }
+    ]
+   },
+   "prompt": {
+    "calls": 2,
+    "system_sha": "15d4bc415fc5a887",
+    "system_chars": 4858,
+    "user_chars": 2282,
+    "user_has_documents": true
+   },
+   "error": null
+  },
+  {
+   "arm": "T04",
+   "repeat": 1,
+   "position": 1,
+   "case_id": "iv-04",
+   "group": "invalid_ambiguous",
+   "expected_behavior": "clarify",
+   "predicted_behavior": "clarify",
+   "predicted_metric": "sum:Revenue_KZT",
+   "behavior_ok": true,
+   "plan_ok": null,
+   "metric_ok": null,
+   "chart_ok": null,
+   "signature": "[\"clarify\", \"sum:Revenue_KZT\", [], [], \"bar\", 1]",
+   "planner": "llm",
+   "llm_fallback": false,
+   "truncated": false,
+   "plan_latency_ms": 2833.7,
+   "tokens": {
+    "llm_calls": 2,
+    "input": 10573,
+    "output": 206,
+    "total": 10779
+   },
+   "embedding_tokens": 31,
+   "context": {
+    "documents": [
+     {
+      "document": "sales_metrics.pdf",
+      "section": "2. Выручка (Revenue)",
+      "score": 0.4347
+     },
+     {
+      "document": "sales_metrics.pdf",
+      "section": "1. Набор данных sales_2026.xlsx",
+      "score": 0.3245
+     },
+     {
+      "document": "sales_metrics.pdf",
+      "section": "6. Показатели без данных",
+      "score": 0.318
+     }
+    ]
+   },
+   "prompt": {
+    "calls": 2,
+    "system_sha": "15d4bc415fc5a887",
+    "system_chars": 4858,
+    "user_chars": 2282,
+    "user_has_documents": true
+   },
+   "error": null
+  },
+  {
+   "arm": "T0",
+   "repeat": 2,
+   "position": 0,
+   "case_id": "mi-01",
+   "group": "metric_interpretation",
+   "expected_behavior": "answer",
+   "predicted_behavior": "answer",
+   "predicted_metric": "ratio:Revenue_KZT/Orders",
+   "behavior_ok": true,
+   "plan_ok": true,
+   "metric_ok": true,
+   "chart_ok": true,
+   "signature": "[\"answer\", \"ratio:Revenue_KZT/Orders\", [\"Channel\"], [], \"bar\", 1]",
+   "planner": "llm",
+   "llm_fallback": false,
+   "truncated": false,
+   "plan_latency_ms": 2160.2,
+   "tokens": {
+    "llm_calls": 1,
+    "input": 5258,
+    "output": 154,
+    "total": 5412
+   },
+   "embedding_tokens": 42,
+   "context": {
+    "documents": [
+     {
+      "document": "sales_metrics.pdf",
+      "section": "4. Средний чек (Average Order Value, AOV)",
+      "score": 0.5045
+     },
+     {
+      "document": "sales_channels_regions.pdf",
+      "section": "3. Категории товаров",
+      "score": 0.3789
+     },
+     {
+      "document": "sales_metrics.pdf",
+      "section": "2. Выручка (Revenue)",
+      "score": 0.3115
+     }
+    ],
+    "hit_at_3": true,
+    "hit_at_5": true,
+    "section_hit_at_3": true
+   },
+   "prompt": {
+    "calls": 1,
+    "system_sha": "15d4bc415fc5a887",
+    "system_chars": 4858,
+    "user_chars": 2203,
+    "user_has_documents": true
+   },
+   "error": null
+  },
+  {
+   "arm": "T04",
+   "repeat": 2,
+   "position": 1,
+   "case_id": "mi-01",
+   "group": "metric_interpretation",
+   "expected_behavior": "answer",
+   "predicted_behavior": "answer",
+   "predicted_metric": "ratio:Revenue_KZT/Orders",
+   "behavior_ok": true,
+   "plan_ok": true,
+   "metric_ok": true,
+   "chart_ok": true,
+   "signature": "[\"answer\", \"ratio:Revenue_KZT/Orders\", [\"Channel\"], [], \"bar\", 2]",
+   "planner": "llm",
+   "llm_fallback": false,
+   "truncated": false,
+   "plan_latency_ms": 2661.8,
+   "tokens": {
+    "llm_calls": 1,
+    "input": 5258,
+    "output": 235,
+    "total": 5493
+   },
+   "embedding_tokens": 48,
+   "context": {
+    "documents": [
+     {
+      "document": "sales_metrics.pdf",
+      "section": "4. Средний чек (Average Order Value, AOV)",
+      "score": 0.5045
+     },
+     {
+      "document": "sales_channels_regions.pdf",
+      "section": "3. Категории товаров",
+      "score": 0.3789
+     },
+     {
+      "document": "sales_metrics.pdf",
+      "section": "2. Выручка (Revenue)",
+      "score": 0.3115
+     }
+    ],
+    "hit_at_3": true,
+    "hit_at_5": true,
+    "section_hit_at_3": true
+   },
+   "prompt": {
+    "calls": 1,
+    "system_sha": "15d4bc415fc5a887",
+    "system_chars": 4858,
+    "user_chars": 2203,
+    "user_has_documents": true
+   },
+   "error": null
+  },
+  {
+   "arm": "T04",
+   "repeat": 2,
+   "position": 0,
+   "case_id": "mi-03",
+   "group": "metric_interpretation",
+   "expected_behavior": "answer",
+   "predicted_behavior": "answer",
+   "predicted_metric": "rate:Cancelled_Orders/Orders",
+   "behavior_ok": true,
+   "plan_ok": true,
+   "metric_ok": true,
+   "chart_ok": true,
+   "signature": "[\"answer\", \"rate:Cancelled_Orders/Orders\", [\"Region\"], [], \"bar\", 1]",
+   "planner": "llm",
+   "llm_fallback": false,
+   "truncated": false,
+   "plan_latency_ms": 1904.0,
+   "tokens": {
+    "llm_calls": 1,
+    "input": 5118,
+    "output": 123,
+    "total": 5241
+   },
+   "embedding_tokens": 43,
+   "context": {
+    "documents": [
+     {
+      "document": "sales_metrics.pdf",
+      "section": "5. Доля отмен (Cancellation Rate)",
+      "score": 0.5517
+     },
+     {
+      "document": "sales_metrics.pdf",
+      "section": "3. Заказы и отмены",
+      "score": 0.3555
+     }
+    ],
+    "hit_at_3": true,
+    "hit_at_5": true,
+    "section_hit_at_3": true
+   },
+   "prompt": {
+    "calls": 1,
+    "system_sha": "15d4bc415fc5a887",
+    "system_chars": 4858,
+    "user_chars": 1733,
+    "user_has_documents": true
+   },
+   "error": null
+  },
+  {
+   "arm": "T0",
+   "repeat": 2,
+   "position": 1,
+   "case_id": "mi-03",
+   "group": "metric_interpretation",
+   "expected_behavior": "answer",
+   "predicted_behavior": "answer",
+   "predicted_metric": "rate:Cancelled_Orders/Orders",
+   "behavior_ok": true,
+   "plan_ok": true,
+   "metric_ok": true,
+   "chart_ok": true,
+   "signature": "[\"answer\", \"rate:Cancelled_Orders/Orders\", [\"Region\"], [], \"bar\", 1]",
+   "planner": "llm",
+   "llm_fallback": false,
+   "truncated": false,
+   "plan_latency_ms": 1900.9,
+   "tokens": {
+    "llm_calls": 1,
+    "input": 5118,
+    "output": 123,
+    "total": 5241
+   },
+   "embedding_tokens": 43,
+   "context": {
+    "documents": [
+     {
+      "document": "sales_metrics.pdf",
+      "section": "5. Доля отмен (Cancellation Rate)",
+      "score": 0.5517
+     },
+     {
+      "document": "sales_metrics.pdf",
+      "section": "3. Заказы и отмены",
+      "score": 0.3555
+     }
+    ],
+    "hit_at_3": true,
+    "hit_at_5": true,
+    "section_hit_at_3": true
+   },
+   "prompt": {
+    "calls": 1,
+    "system_sha": "15d4bc415fc5a887",
+    "system_chars": 4858,
+    "user_chars": 1733,
+    "user_has_documents": true
+   },
+   "error": null
+  },
+  {
+   "arm": "T0",
+   "repeat": 2,
+   "position": 0,
+   "case_id": "ts-01",
+   "group": "time_series",
+   "expected_behavior": "answer",
+   "predicted_behavior": "reject",
+   "predicted_metric": null,
+   "behavior_ok": false,
+   "plan_ok": false,
+   "metric_ok": false,
+   "chart_ok": false,
+   "signature": "[\"reject\", null, [], [], null, 0]",
+   "planner": "llm",
+   "llm_fallback": false,
+   "truncated": false,
+   "plan_latency_ms": 2499.3,
+   "tokens": {
+    "llm_calls": 2,
+    "input": 10577,
+    "output": 167,
+    "total": 10744
+   },
+   "embedding_tokens": 18,
+   "context": {
+    "documents": [
+     {
+      "document": "sales_metrics.pdf",
+      "section": "2. Выручка (Revenue)",
+      "score": 0.4533
+     },
+     {
+      "document": "sales_metrics.pdf",
+      "section": "1. Набор данных sales_2026.xlsx",
+      "score": 0.4212
+     },
+     {
+      "document": "sales_metrics.pdf",
+      "section": "6. Показатели без данных",
+      "score": 0.3513
+     }
+    ],
+    "hit_at_3": true,
+    "hit_at_5": true,
+    "section_hit_at_3": true
+   },
+   "prompt": {
+    "calls": 2,
+    "system_sha": "15d4bc415fc5a887",
+    "system_chars": 4858,
+    "user_chars": 2291,
+    "user_has_documents": true
+   },
+   "error": null
+  },
+  {
+   "arm": "T04",
+   "repeat": 2,
+   "position": 1,
+   "case_id": "ts-01",
+   "group": "time_series",
+   "expected_behavior": "answer",
+   "predicted_behavior": "reject",
+   "predicted_metric": null,
+   "behavior_ok": false,
+   "plan_ok": false,
+   "metric_ok": false,
+   "chart_ok": false,
+   "signature": "[\"reject\", null, [], [], null, 0]",
+   "planner": "llm",
+   "llm_fallback": false,
+   "truncated": false,
+   "plan_latency_ms": 2394.1,
+   "tokens": {
+    "llm_calls": 2,
+    "input": 10577,
+    "output": 159,
+    "total": 10736
+   },
+   "embedding_tokens": 18,
+   "context": {
+    "documents": [
+     {
+      "document": "sales_metrics.pdf",
+      "section": "2. Выручка (Revenue)",
+      "score": 0.4533
+     },
+     {
+      "document": "sales_metrics.pdf",
+      "section": "1. Набор данных sales_2026.xlsx",
+      "score": 0.4212
+     },
+     {
+      "document": "sales_metrics.pdf",
+      "section": "6. Показатели без данных",
+      "score": 0.3513
+     }
+    ],
+    "hit_at_3": true,
+    "hit_at_5": true,
+    "section_hit_at_3": true
+   },
+   "prompt": {
+    "calls": 2,
+    "system_sha": "15d4bc415fc5a887",
+    "system_chars": 4858,
+    "user_chars": 2291,
+    "user_has_documents": true
+   },
+   "error": null
+  },
+  {
+   "arm": "T04",
+   "repeat": 2,
+   "position": 0,
+   "case_id": "ts-04",
+   "group": "time_series",
+   "expected_behavior": "answer",
+   "predicted_behavior": "answer",
+   "predicted_metric": "ratio:Revenue_KZT/Orders",
+   "behavior_ok": true,
+   "plan_ok": true,
+   "metric_ok": true,
+   "chart_ok": true,
+   "signature": "[\"answer\", \"ratio:Revenue_KZT/Orders\", [\"Month\"], [], \"line\", 1]",
+   "planner": "llm",
+   "llm_fallback": false,
+   "truncated": false,
+   "plan_latency_ms": 1937.6,
+   "tokens": {
+    "llm_calls": 1,
+    "input": 5249,
+    "output": 136,
+    "total": 5385
+   },
+   "embedding_tokens": 48,
+   "context": {
+    "documents": [
+     {
+      "document": "sales_metrics.pdf",
+      "section": "4. Средний чек (Average Order Value, AOV)",
+      "score": 0.4554
+     },
+     {
+      "document": "sales_calendar_2026.pdf",
+      "section": "2. Как читать события",
+      "score": 0.3625
+     },
+     {
+      "document": "sales_metrics.pdf",
+      "section": "1. Набор данных sales_2026.xlsx",
+      "score": 0.3612
+     }
+    ],
+    "hit_at_3": true,
+    "hit_at_5": true,
+    "section_hit_at_3": true
+   },
+   "prompt": {
+    "calls": 1,
+    "system_sha": "15d4bc415fc5a887",
+    "system_chars": 4858,
+    "user_chars": 2214,
+    "user_has_documents": true
+   },
+   "error": null
+  },
+  {
+   "arm": "T0",
+   "repeat": 2,
+   "position": 1,
+   "case_id": "ts-04",
+   "group": "time_series",
+   "expected_behavior": "answer",
+   "predicted_behavior": "answer",
+   "predicted_metric": "ratio:Revenue_KZT/Orders",
+   "behavior_ok": true,
+   "plan_ok": true,
+   "metric_ok": true,
+   "chart_ok": true,
+   "signature": "[\"answer\", \"ratio:Revenue_KZT/Orders\", [\"Month\"], [], \"line\", 1]",
+   "planner": "llm",
+   "llm_fallback": false,
+   "truncated": false,
+   "plan_latency_ms": 1888.0,
+   "tokens": {
+    "llm_calls": 1,
+    "input": 5249,
+    "output": 133,
+    "total": 5382
+   },
+   "embedding_tokens": 48,
+   "context": {
+    "documents": [
+     {
+      "document": "sales_metrics.pdf",
+      "section": "4. Средний чек (Average Order Value, AOV)",
+      "score": 0.4554
+     },
+     {
+      "document": "sales_calendar_2026.pdf",
+      "section": "2. Как читать события",
+      "score": 0.3625
+     },
+     {
+      "document": "sales_metrics.pdf",
+      "section": "1. Набор данных sales_2026.xlsx",
+      "score": 0.3612
+     }
+    ],
+    "hit_at_3": true,
+    "hit_at_5": true,
+    "section_hit_at_3": true
+   },
+   "prompt": {
+    "calls": 1,
+    "system_sha": "15d4bc415fc5a887",
+    "system_chars": 4858,
+    "user_chars": 2214,
+    "user_has_documents": true
+   },
+   "error": null
+  },
+  {
+   "arm": "T0",
+   "repeat": 2,
+   "position": 0,
+   "case_id": "cc-01",
+   "group": "category_comparison",
+   "expected_behavior": "answer",
+   "predicted_behavior": "answer",
+   "predicted_metric": "sum:Revenue_KZT",
+   "behavior_ok": true,
+   "plan_ok": true,
+   "metric_ok": true,
+   "chart_ok": true,
+   "signature": "[\"answer\", \"sum:Revenue_KZT\", [\"Region\"], [], \"bar\", 1]",
+   "planner": "llm",
+   "llm_fallback": false,
+   "truncated": false,
+   "plan_latency_ms": 3178.2,
+   "tokens": {
+    "llm_calls": 2,
+    "input": 10277,
+    "output": 229,
+    "total": 10506
+   },
+   "embedding_tokens": 32,
+   "context": {
+    "documents": [
+     {
+      "document": "sales_metrics.pdf",
+      "section": "2. Выручка (Revenue)",
+      "score": 0.3742
+     },
+     {
+      "document": "sales_channels_regions.pdf",
+      "section": "2. Регионы",
+      "score": 0.3594
+     }
+    ],
+    "hit_at_3": true,
+    "hit_at_5": true,
+    "section_hit_at_3": true
+   },
+   "prompt": {
+    "calls": 2,
+    "system_sha": "15d4bc415fc5a887",
+    "system_chars": 4858,
+    "user_chars": 1693,
+    "user_has_documents": true
+   },
+   "error": null
+  },
+  {
+   "arm": "T04",
+   "repeat": 2,
+   "position": 1,
+   "case_id": "cc-01",
+   "group": "category_comparison",
+   "expected_behavior": "answer",
+   "predicted_behavior": "answer",
+   "predicted_metric": "sum:Revenue_KZT",
+   "behavior_ok": true,
+   "plan_ok": true,
+   "metric_ok": true,
+   "chart_ok": true,
+   "signature": "[\"answer\", \"sum:Revenue_KZT\", [\"Region\"], [], \"bar\", 1]",
+   "planner": "llm",
+   "llm_fallback": false,
+   "truncated": false,
+   "plan_latency_ms": 2945.5,
+   "tokens": {
+    "llm_calls": 2,
+    "input": 10277,
+    "output": 219,
+    "total": 10496
+   },
+   "embedding_tokens": 32,
+   "context": {
+    "documents": [
+     {
+      "document": "sales_metrics.pdf",
+      "section": "2. Выручка (Revenue)",
+      "score": 0.3742
+     },
+     {
+      "document": "sales_channels_regions.pdf",
+      "section": "2. Регионы",
+      "score": 0.3594
+     }
+    ],
+    "hit_at_3": true,
+    "hit_at_5": true,
+    "section_hit_at_3": true
+   },
+   "prompt": {
+    "calls": 2,
+    "system_sha": "15d4bc415fc5a887",
+    "system_chars": 4858,
+    "user_chars": 1693,
+    "user_has_documents": true
+   },
+   "error": null
+  },
+  {
+   "arm": "T04",
+   "repeat": 2,
+   "position": 0,
+   "case_id": "fl-01",
+   "group": "filters",
+   "expected_behavior": "answer",
+   "predicted_behavior": "answer",
+   "predicted_metric": "sum:Revenue_KZT",
+   "behavior_ok": true,
+   "plan_ok": true,
+   "metric_ok": true,
+   "chart_ok": true,
+   "signature": "[\"answer\", \"sum:Revenue_KZT\", [\"Channel\"], [[\"Channel\", \"in\", \"[\\\"Web\\\", \\\"Mobile\\\"]\"]], \"bar\", 1]",
+   "planner": "llm",
+   "llm_fallback": false,
+   "truncated": false,
+   "plan_latency_ms": 2026.7,
+   "tokens": {
+    "llm_calls": 1,
+    "input": 5262,
+    "output": 151,
+    "total": 5413
+   },
+   "embedding_tokens": 29,
+   "context": {
+    "documents": [
+     {
+      "document": "sales_channels_regions.pdf",
+      "section": "1. Каналы продаж",
+      "score": 0.3977
+     },
+     {
+      "document": "sales_channels_regions.pdf",
+      "section": "3. Категории товаров",
+      "score": 0.3482
+     },
+     {
+      "document": "sales_metrics.pdf",
+      "section": "6. Показатели без данных",
+      "score": 0.3149
+     }
+    ],
+    "hit_at_3": true,
+    "hit_at_5": true,
+    "section_hit_at_3": false
+   },
+   "prompt": {
+    "calls": 1,
+    "system_sha": "15d4bc415fc5a887",
+    "system_chars": 4858,
+    "user_chars": 2312,
+    "user_has_documents": true
+   },
+   "error": null
+  },
+  {
+   "arm": "T0",
+   "repeat": 2,
+   "position": 1,
+   "case_id": "fl-01",
+   "group": "filters",
+   "expected_behavior": "answer",
+   "predicted_behavior": "answer",
+   "predicted_metric": "sum:Revenue_KZT",
+   "behavior_ok": true,
+   "plan_ok": true,
+   "metric_ok": true,
+   "chart_ok": true,
+   "signature": "[\"answer\", \"sum:Revenue_KZT\", [\"Channel\"], [[\"Channel\", \"in\", \"[\\\"Web\\\", \\\"Mobile\\\"]\"]], \"bar\", 1]",
+   "planner": "llm",
+   "llm_fallback": false,
+   "truncated": false,
+   "plan_latency_ms": 2029.3,
+   "tokens": {
+    "llm_calls": 1,
+    "input": 5262,
+    "output": 154,
+    "total": 5416
+   },
+   "embedding_tokens": 29,
+   "context": {
+    "documents": [
+     {
+      "document": "sales_channels_regions.pdf",
+      "section": "1. Каналы продаж",
+      "score": 0.3977
+     },
+     {
+      "document": "sales_channels_regions.pdf",
+      "section": "3. Категории товаров",
+      "score": 0.3482
+     },
+     {
+      "document": "sales_metrics.pdf",
+      "section": "6. Показатели без данных",
+      "score": 0.3149
+     }
+    ],
+    "hit_at_3": true,
+    "hit_at_5": true,
+    "section_hit_at_3": false
+   },
+   "prompt": {
+    "calls": 1,
+    "system_sha": "15d4bc415fc5a887",
+    "system_chars": 4858,
+    "user_chars": 2312,
+    "user_has_documents": true
+   },
+   "error": null
+  },
+  {
+   "arm": "T0",
+   "repeat": 2,
+   "position": 0,
+   "case_id": "rg-02",
+   "group": "rag_terminology",
+   "expected_behavior": "answer",
+   "predicted_behavior": "answer",
+   "predicted_metric": "ratio:Revenue_KZT/Orders",
+   "behavior_ok": true,
+   "plan_ok": true,
+   "metric_ok": true,
+   "chart_ok": true,
+   "signature": "[\"answer\", \"ratio:Revenue_KZT/Orders\", [\"Region\"], [], \"bar\", 1]",
+   "planner": "llm",
+   "llm_fallback": false,
+   "truncated": false,
+   "plan_latency_ms": 1670.4,
+   "tokens": {
+    "llm_calls": 1,
+    "input": 5233,
+    "output": 118,
+    "total": 5351
+   },
+   "embedding_tokens": 35,
+   "context": {
+    "documents": [
+     {
+      "document": "sales_metrics.pdf",
+      "section": "4. Средний чек (Average Order Value, AOV)",
+      "score": 0.4032
+     },
+     {
+      "document": "sales_channels_regions.pdf",
+      "section": "SalesDemo KZ — каналы, регионы и категории",
+      "score": 0.3731
+     },
+     {
+      "document": "sales_metrics.pdf",
+      "section": "1. Набор данных sales_2026.xlsx",
+      "score": 0.3491
+     }
+    ],
+    "hit_at_3": true,
+    "hit_at_5": true,
+    "section_hit_at_3": true
+   },
+   "prompt": {
+    "calls": 1,
+    "system_sha": "15d4bc415fc5a887",
+    "system_chars": 4858,
+    "user_chars": 2129,
+    "user_has_documents": true
+   },
+   "error": null
+  },
+  {
+   "arm": "T04",
+   "repeat": 2,
+   "position": 1,
+   "case_id": "rg-02",
+   "group": "rag_terminology",
+   "expected_behavior": "answer",
+   "predicted_behavior": "answer",
+   "predicted_metric": "ratio:Revenue_KZT/Orders",
+   "behavior_ok": true,
+   "plan_ok": true,
+   "metric_ok": true,
+   "chart_ok": true,
+   "signature": "[\"answer\", \"ratio:Revenue_KZT/Orders\", [\"Region\"], [], \"bar\", 1]",
+   "planner": "llm",
+   "llm_fallback": false,
+   "truncated": false,
+   "plan_latency_ms": 1726.9,
+   "tokens": {
+    "llm_calls": 1,
+    "input": 5233,
+    "output": 118,
+    "total": 5351
+   },
+   "embedding_tokens": 35,
+   "context": {
+    "documents": [
+     {
+      "document": "sales_metrics.pdf",
+      "section": "4. Средний чек (Average Order Value, AOV)",
+      "score": 0.4032
+     },
+     {
+      "document": "sales_channels_regions.pdf",
+      "section": "SalesDemo KZ — каналы, регионы и категории",
+      "score": 0.3731
+     },
+     {
+      "document": "sales_metrics.pdf",
+      "section": "1. Набор данных sales_2026.xlsx",
+      "score": 0.3491
+     }
+    ],
+    "hit_at_3": true,
+    "hit_at_5": true,
+    "section_hit_at_3": true
+   },
+   "prompt": {
+    "calls": 1,
+    "system_sha": "15d4bc415fc5a887",
+    "system_chars": 4858,
+    "user_chars": 2129,
+    "user_has_documents": true
+   },
+   "error": null
+  },
+  {
+   "arm": "T04",
+   "repeat": 2,
+   "position": 0,
+   "case_id": "rg-04",
+   "group": "rag_terminology",
+   "expected_behavior": "answer",
+   "predicted_behavior": "answer",
+   "predicted_metric": "sum:Revenue_KZT",
+   "behavior_ok": true,
+   "plan_ok": true,
+   "metric_ok": true,
+   "chart_ok": true,
+   "signature": "[\"answer\", \"sum:Revenue_KZT\", [\"Category\"], [], \"bar\", 1]",
+   "planner": "llm",
+   "llm_fallback": false,
+   "truncated": false,
+   "plan_latency_ms": 1508.7,
+   "tokens": {
+    "llm_calls": 1,
+    "input": 5272,
+    "output": 117,
+    "total": 5389
+   },
+   "embedding_tokens": 24,
+   "context": {
+    "documents": [
+     {
+      "document": "sales_metrics.pdf",
+      "section": "2. Выручка (Revenue)",
+      "score": 0.5156
+     },
+     {
+      "document": "sales_metrics.pdf",
+      "section": "1. Набор данных sales_2026.xlsx",
+      "score": 0.4973
+     },
+     {
+      "document": "sales_metrics.pdf",
+      "section": "6. Показатели без данных",
+      "score": 0.4829
+     }
+    ],
+    "hit_at_3": true,
+    "hit_at_5": true,
+    "section_hit_at_3": true
+   },
+   "prompt": {
+    "calls": 1,
+    "system_sha": "15d4bc415fc5a887",
+    "system_chars": 4858,
+    "user_chars": 2285,
+    "user_has_documents": true
+   },
+   "error": null
+  },
+  {
+   "arm": "T0",
+   "repeat": 2,
+   "position": 1,
+   "case_id": "rg-04",
+   "group": "rag_terminology",
+   "expected_behavior": "answer",
+   "predicted_behavior": "answer",
+   "predicted_metric": "sum:Revenue_KZT",
+   "behavior_ok": true,
+   "plan_ok": true,
+   "metric_ok": true,
+   "chart_ok": true,
+   "signature": "[\"answer\", \"sum:Revenue_KZT\", [\"Category\"], [], \"bar\", 1]",
+   "planner": "llm",
+   "llm_fallback": false,
+   "truncated": false,
+   "plan_latency_ms": 2411.2,
+   "tokens": {
+    "llm_calls": 2,
+    "input": 10569,
+    "output": 183,
+    "total": 10752
+   },
+   "embedding_tokens": 24,
+   "context": {
+    "documents": [
+     {
+      "document": "sales_metrics.pdf",
+      "section": "2. Выручка (Revenue)",
+      "score": 0.5156
+     },
+     {
+      "document": "sales_metrics.pdf",
+      "section": "1. Набор данных sales_2026.xlsx",
+      "score": 0.4973
+     },
+     {
+      "document": "sales_metrics.pdf",
+      "section": "6. Показатели без данных",
+      "score": 0.4829
+     }
+    ],
+    "hit_at_3": true,
+    "hit_at_5": true,
+    "section_hit_at_3": true
+   },
+   "prompt": {
+    "calls": 2,
+    "system_sha": "15d4bc415fc5a887",
+    "system_chars": 4858,
+    "user_chars": 2285,
+    "user_has_documents": true
+   },
+   "error": null
+  },
+  {
+   "arm": "T0",
+   "repeat": 2,
+   "position": 0,
+   "case_id": "iv-01",
+   "group": "invalid_ambiguous",
+   "expected_behavior": "reject",
+   "predicted_behavior": "reject",
+   "predicted_metric": null,
+   "behavior_ok": true,
+   "plan_ok": null,
+   "metric_ok": null,
+   "chart_ok": null,
+   "signature": "[\"reject\", null, [], [], null, 0]",
+   "planner": "llm",
+   "llm_fallback": false,
+   "truncated": false,
+   "plan_latency_ms": 805.2,
+   "tokens": {
+    "llm_calls": 1,
+    "input": 5271,
+    "output": 26,
+    "total": 5297
+   },
+   "embedding_tokens": 7,
+   "context": {
+    "documents": [
+     {
+      "document": "sales_metrics.pdf",
+      "section": "SalesDemo KZ — определения показателей продаж",
+      "score": 0.3849
+     },
+     {
+      "document": "sales_metrics.pdf",
+      "section": "6. Показатели без данных",
+      "score": 0.3706
+     },
+     {
+      "document": "sales_metrics.pdf",
+      "section": "4. Средний чек (Average Order Value, AOV)",
+      "score": 0.313
+     }
+    ]
+   },
+   "prompt": {
+    "calls": 1,
+    "system_sha": "15d4bc415fc5a887",
+    "system_chars": 4858,
+    "user_chars": 2323,
+    "user_has_documents": true
+   },
+   "error": null
+  },
+  {
+   "arm": "T04",
+   "repeat": 2,
+   "position": 1,
+   "case_id": "iv-01",
+   "group": "invalid_ambiguous",
+   "expected_behavior": "reject",
+   "predicted_behavior": "reject",
+   "predicted_metric": null,
+   "behavior_ok": true,
+   "plan_ok": null,
+   "metric_ok": null,
+   "chart_ok": null,
+   "signature": "[\"reject\", null, [], [], null, 0]",
+   "planner": "llm",
+   "llm_fallback": false,
+   "truncated": false,
+   "plan_latency_ms": 908.2,
+   "tokens": {
+    "llm_calls": 1,
+    "input": 5271,
+    "output": 26,
+    "total": 5297
+   },
+   "embedding_tokens": 7,
+   "context": {
+    "documents": [
+     {
+      "document": "sales_metrics.pdf",
+      "section": "SalesDemo KZ — определения показателей продаж",
+      "score": 0.3849
+     },
+     {
+      "document": "sales_metrics.pdf",
+      "section": "6. Показатели без данных",
+      "score": 0.3706
+     },
+     {
+      "document": "sales_metrics.pdf",
+      "section": "4. Средний чек (Average Order Value, AOV)",
+      "score": 0.313
+     }
+    ]
+   },
+   "prompt": {
+    "calls": 1,
+    "system_sha": "15d4bc415fc5a887",
+    "system_chars": 4858,
+    "user_chars": 2323,
+    "user_has_documents": true
+   },
+   "error": null
+  },
+  {
+   "arm": "T04",
+   "repeat": 2,
+   "position": 0,
+   "case_id": "iv-04",
+   "group": "invalid_ambiguous",
+   "expected_behavior": "clarify",
+   "predicted_behavior": "clarify",
+   "predicted_metric": "sum:Revenue_KZT",
+   "behavior_ok": true,
+   "plan_ok": null,
+   "metric_ok": null,
+   "chart_ok": null,
+   "signature": "[\"clarify\", \"sum:Revenue_KZT\", [], [], \"bar\", 1]",
+   "planner": "llm",
+   "llm_fallback": false,
+   "truncated": false,
+   "plan_latency_ms": 1837.0,
+   "tokens": {
+    "llm_calls": 1,
+    "input": 5274,
+    "output": 122,
+    "total": 5396
+   },
+   "embedding_tokens": 31,
+   "context": {
+    "documents": [
+     {
+      "document": "sales_metrics.pdf",
+      "section": "2. Выручка (Revenue)",
+      "score": 0.4347
+     },
+     {
+      "document": "sales_metrics.pdf",
+      "section": "1. Набор данных sales_2026.xlsx",
+      "score": 0.3245
+     },
+     {
+      "document": "sales_metrics.pdf",
+      "section": "6. Показатели без данных",
+      "score": 0.318
+     }
+    ]
+   },
+   "prompt": {
+    "calls": 1,
+    "system_sha": "15d4bc415fc5a887",
+    "system_chars": 4858,
+    "user_chars": 2282,
+    "user_has_documents": true
+   },
+   "error": null
+  },
+  {
+   "arm": "T0",
+   "repeat": 2,
+   "position": 1,
+   "case_id": "iv-04",
+   "group": "invalid_ambiguous",
+   "expected_behavior": "clarify",
+   "predicted_behavior": "clarify",
+   "predicted_metric": "sum:Revenue_KZT",
+   "behavior_ok": true,
+   "plan_ok": null,
+   "metric_ok": null,
+   "chart_ok": null,
+   "signature": "[\"clarify\", \"sum:Revenue_KZT\", [], [], \"bar\", 1]",
+   "planner": "llm",
+   "llm_fallback": false,
+   "truncated": false,
+   "plan_latency_ms": 2753.5,
+   "tokens": {
+    "llm_calls": 2,
+    "input": 10573,
+    "output": 196,
+    "total": 10769
+   },
+   "embedding_tokens": 31,
+   "context": {
+    "documents": [
+     {
+      "document": "sales_metrics.pdf",
+      "section": "2. Выручка (Revenue)",
+      "score": 0.4347
+     },
+     {
+      "document": "sales_metrics.pdf",
+      "section": "1. Набор данных sales_2026.xlsx",
+      "score": 0.3245
+     },
+     {
+      "document": "sales_metrics.pdf",
+      "section": "6. Показатели без данных",
+      "score": 0.318
+     }
+    ]
+   },
+   "prompt": {
+    "calls": 2,
+    "system_sha": "15d4bc415fc5a887",
+    "system_chars": 4858,
+    "user_chars": 2282,
+    "user_has_documents": true
+   },
+   "error": null
+  },
+  {
+   "arm": "T04",
+   "repeat": 3,
+   "position": 0,
+   "case_id": "mi-01",
+   "group": "metric_interpretation",
+   "expected_behavior": "answer",
+   "predicted_behavior": "answer",
+   "predicted_metric": "ratio:Revenue_KZT/Orders",
+   "behavior_ok": true,
+   "plan_ok": true,
+   "metric_ok": true,
+   "chart_ok": true,
+   "signature": "[\"answer\", \"ratio:Revenue_KZT/Orders\", [\"Channel\"], [], \"bar\", 2]",
+   "planner": "llm",
+   "llm_fallback": false,
+   "truncated": false,
+   "plan_latency_ms": 2635.4,
+   "tokens": {
+    "llm_calls": 1,
+    "input": 5258,
+    "output": 239,
+    "total": 5497
+   },
+   "embedding_tokens": 48,
+   "context": {
+    "documents": [
+     {
+      "document": "sales_metrics.pdf",
+      "section": "4. Средний чек (Average Order Value, AOV)",
+      "score": 0.5045
+     },
+     {
+      "document": "sales_channels_regions.pdf",
+      "section": "3. Категории товаров",
+      "score": 0.3789
+     },
+     {
+      "document": "sales_metrics.pdf",
+      "section": "2. Выручка (Revenue)",
+      "score": 0.3115
+     }
+    ],
+    "hit_at_3": true,
+    "hit_at_5": true,
+    "section_hit_at_3": true
+   },
+   "prompt": {
+    "calls": 1,
+    "system_sha": "15d4bc415fc5a887",
+    "system_chars": 4858,
+    "user_chars": 2203,
+    "user_has_documents": true
+   },
+   "error": null
+  },
+  {
+   "arm": "T0",
+   "repeat": 3,
+   "position": 1,
+   "case_id": "mi-01",
+   "group": "metric_interpretation",
+   "expected_behavior": "answer",
+   "predicted_behavior": "answer",
+   "predicted_metric": "ratio:Revenue_KZT/Orders",
+   "behavior_ok": true,
+   "plan_ok": true,
+   "metric_ok": true,
+   "chart_ok": true,
+   "signature": "[\"answer\", \"ratio:Revenue_KZT/Orders\", [\"Channel\"], [], \"bar\", 1]",
+   "planner": "llm",
+   "llm_fallback": false,
+   "truncated": false,
+   "plan_latency_ms": 1742.0,
+   "tokens": {
+    "llm_calls": 1,
+    "input": 5258,
+    "output": 127,
+    "total": 5385
+   },
+   "embedding_tokens": 42,
+   "context": {
+    "documents": [
+     {
+      "document": "sales_metrics.pdf",
+      "section": "4. Средний чек (Average Order Value, AOV)",
+      "score": 0.5045
+     },
+     {
+      "document": "sales_channels_regions.pdf",
+      "section": "3. Категории товаров",
+      "score": 0.3789
+     },
+     {
+      "document": "sales_metrics.pdf",
+      "section": "2. Выручка (Revenue)",
+      "score": 0.3115
+     }
+    ],
+    "hit_at_3": true,
+    "hit_at_5": true,
+    "section_hit_at_3": true
+   },
+   "prompt": {
+    "calls": 1,
+    "system_sha": "15d4bc415fc5a887",
+    "system_chars": 4858,
+    "user_chars": 2203,
+    "user_has_documents": true
+   },
+   "error": null
+  },
+  {
+   "arm": "T0",
+   "repeat": 3,
+   "position": 0,
+   "case_id": "mi-03",
+   "group": "metric_interpretation",
+   "expected_behavior": "answer",
+   "predicted_behavior": "answer",
+   "predicted_metric": "rate:Cancelled_Orders/Orders",
+   "behavior_ok": true,
+   "plan_ok": true,
+   "metric_ok": true,
+   "chart_ok": true,
+   "signature": "[\"answer\", \"rate:Cancelled_Orders/Orders\", [\"Region\"], [], \"bar\", 1]",
+   "planner": "llm",
+   "llm_fallback": false,
+   "truncated": false,
+   "plan_latency_ms": 1769.1,
+   "tokens": {
+    "llm_calls": 1,
+    "input": 5118,
+    "output": 123,
+    "total": 5241
+   },
+   "embedding_tokens": 43,
+   "context": {
+    "documents": [
+     {
+      "document": "sales_metrics.pdf",
+      "section": "5. Доля отмен (Cancellation Rate)",
+      "score": 0.5517
+     },
+     {
+      "document": "sales_metrics.pdf",
+      "section": "3. Заказы и отмены",
+      "score": 0.3555
+     }
+    ],
+    "hit_at_3": true,
+    "hit_at_5": true,
+    "section_hit_at_3": true
+   },
+   "prompt": {
+    "calls": 1,
+    "system_sha": "15d4bc415fc5a887",
+    "system_chars": 4858,
+    "user_chars": 1733,
+    "user_has_documents": true
+   },
+   "error": null
+  },
+  {
+   "arm": "T04",
+   "repeat": 3,
+   "position": 1,
+   "case_id": "mi-03",
+   "group": "metric_interpretation",
+   "expected_behavior": "answer",
+   "predicted_behavior": "answer",
+   "predicted_metric": "rate:Cancelled_Orders/Orders",
+   "behavior_ok": true,
+   "plan_ok": true,
+   "metric_ok": true,
+   "chart_ok": true,
+   "signature": "[\"answer\", \"rate:Cancelled_Orders/Orders\", [\"Region\"], [], \"bar\", 1]",
+   "planner": "llm",
+   "llm_fallback": false,
+   "truncated": false,
+   "plan_latency_ms": 1999.6,
+   "tokens": {
+    "llm_calls": 1,
+    "input": 5118,
+    "output": 165,
+    "total": 5283
+   },
+   "embedding_tokens": 43,
+   "context": {
+    "documents": [
+     {
+      "document": "sales_metrics.pdf",
+      "section": "5. Доля отмен (Cancellation Rate)",
+      "score": 0.5517
+     },
+     {
+      "document": "sales_metrics.pdf",
+      "section": "3. Заказы и отмены",
+      "score": 0.3555
+     }
+    ],
+    "hit_at_3": true,
+    "hit_at_5": true,
+    "section_hit_at_3": true
+   },
+   "prompt": {
+    "calls": 1,
+    "system_sha": "15d4bc415fc5a887",
+    "system_chars": 4858,
+    "user_chars": 1733,
+    "user_has_documents": true
+   },
+   "error": null
+  },
+  {
+   "arm": "T04",
+   "repeat": 3,
+   "position": 0,
+   "case_id": "ts-01",
+   "group": "time_series",
+   "expected_behavior": "answer",
+   "predicted_behavior": "answer",
+   "predicted_metric": "sum:Revenue_KZT",
+   "behavior_ok": true,
+   "plan_ok": true,
+   "metric_ok": true,
+   "chart_ok": true,
+   "signature": "[\"answer\", \"sum:Revenue_KZT\", [\"Month\"], [], \"line\", 1]",
+   "planner": "llm",
+   "llm_fallback": false,
+   "truncated": false,
+   "plan_latency_ms": 1985.9,
+   "tokens": {
+    "llm_calls": 1,
+    "input": 5276,
+    "output": 142,
+    "total": 5418
+   },
+   "embedding_tokens": 37,
+   "context": {
+    "documents": [
+     {
+      "document": "sales_metrics.pdf",
+      "section": "2. Выручка (Revenue)",
+      "score": 0.4533
+     },
+     {
+      "document": "sales_metrics.pdf",
+      "section": "1. Набор данных sales_2026.xlsx",
+      "score": 0.4212
+     },
+     {
+      "document": "sales_metrics.pdf",
+      "section": "6. Показатели без данных",
+      "score": 0.3513
+     }
+    ],
+    "hit_at_3": true,
+    "hit_at_5": true,
+    "section_hit_at_3": true
+   },
+   "prompt": {
+    "calls": 1,
+    "system_sha": "15d4bc415fc5a887",
+    "system_chars": 4858,
+    "user_chars": 2291,
+    "user_has_documents": true
+   },
+   "error": null
+  },
+  {
+   "arm": "T0",
+   "repeat": 3,
+   "position": 1,
+   "case_id": "ts-01",
+   "group": "time_series",
+   "expected_behavior": "answer",
+   "predicted_behavior": "reject",
+   "predicted_metric": null,
+   "behavior_ok": false,
+   "plan_ok": false,
+   "metric_ok": false,
+   "chart_ok": false,
+   "signature": "[\"reject\", null, [], [], null, 0]",
+   "planner": "llm",
+   "llm_fallback": false,
+   "truncated": false,
+   "plan_latency_ms": 2275.9,
+   "tokens": {
+    "llm_calls": 2,
+    "input": 10577,
+    "output": 164,
+    "total": 10741
+   },
+   "embedding_tokens": 18,
+   "context": {
+    "documents": [
+     {
+      "document": "sales_metrics.pdf",
+      "section": "2. Выручка (Revenue)",
+      "score": 0.4533
+     },
+     {
+      "document": "sales_metrics.pdf",
+      "section": "1. Набор данных sales_2026.xlsx",
+      "score": 0.4212
+     },
+     {
+      "document": "sales_metrics.pdf",
+      "section": "6. Показатели без данных",
+      "score": 0.3513
+     }
+    ],
+    "hit_at_3": true,
+    "hit_at_5": true,
+    "section_hit_at_3": true
+   },
+   "prompt": {
+    "calls": 2,
+    "system_sha": "15d4bc415fc5a887",
+    "system_chars": 4858,
+    "user_chars": 2291,
+    "user_has_documents": true
+   },
+   "error": null
+  },
+  {
+   "arm": "T0",
+   "repeat": 3,
+   "position": 0,
+   "case_id": "ts-04",
+   "group": "time_series",
+   "expected_behavior": "answer",
+   "predicted_behavior": "answer",
+   "predicted_metric": "ratio:Revenue_KZT/Orders",
+   "behavior_ok": true,
+   "plan_ok": true,
+   "metric_ok": true,
+   "chart_ok": true,
+   "signature": "[\"answer\", \"ratio:Revenue_KZT/Orders\", [\"Month\"], [], \"line\", 1]",
+   "planner": "llm",
+   "llm_fallback": false,
+   "truncated": false,
+   "plan_latency_ms": 1906.7,
+   "tokens": {
+    "llm_calls": 1,
+    "input": 5249,
+    "output": 145,
+    "total": 5394
+   },
+   "embedding_tokens": 48,
+   "context": {
+    "documents": [
+     {
+      "document": "sales_metrics.pdf",
+      "section": "4. Средний чек (Average Order Value, AOV)",
+      "score": 0.4554
+     },
+     {
+      "document": "sales_calendar_2026.pdf",
+      "section": "2. Как читать события",
+      "score": 0.3625
+     },
+     {
+      "document": "sales_metrics.pdf",
+      "section": "1. Набор данных sales_2026.xlsx",
+      "score": 0.3612
+     }
+    ],
+    "hit_at_3": true,
+    "hit_at_5": true,
+    "section_hit_at_3": true
+   },
+   "prompt": {
+    "calls": 1,
+    "system_sha": "15d4bc415fc5a887",
+    "system_chars": 4858,
+    "user_chars": 2214,
+    "user_has_documents": true
+   },
+   "error": null
+  },
+  {
+   "arm": "T04",
+   "repeat": 3,
+   "position": 1,
+   "case_id": "ts-04",
+   "group": "time_series",
+   "expected_behavior": "answer",
+   "predicted_behavior": "answer",
+   "predicted_metric": "ratio:Revenue_KZT/Orders",
+   "behavior_ok": true,
+   "plan_ok": true,
+   "metric_ok": true,
+   "chart_ok": true,
+   "signature": "[\"answer\", \"ratio:Revenue_KZT/Orders\", [\"Month\"], [], \"line\", 1]",
+   "planner": "llm",
+   "llm_fallback": false,
+   "truncated": false,
+   "plan_latency_ms": 2006.9,
+   "tokens": {
+    "llm_calls": 1,
+    "input": 5249,
+    "output": 133,
+    "total": 5382
+   },
+   "embedding_tokens": 48,
+   "context": {
+    "documents": [
+     {
+      "document": "sales_metrics.pdf",
+      "section": "4. Средний чек (Average Order Value, AOV)",
+      "score": 0.4554
+     },
+     {
+      "document": "sales_calendar_2026.pdf",
+      "section": "2. Как читать события",
+      "score": 0.3625
+     },
+     {
+      "document": "sales_metrics.pdf",
+      "section": "1. Набор данных sales_2026.xlsx",
+      "score": 0.3612
+     }
+    ],
+    "hit_at_3": true,
+    "hit_at_5": true,
+    "section_hit_at_3": true
+   },
+   "prompt": {
+    "calls": 1,
+    "system_sha": "15d4bc415fc5a887",
+    "system_chars": 4858,
+    "user_chars": 2214,
+    "user_has_documents": true
+   },
+   "error": null
+  },
+  {
+   "arm": "T04",
+   "repeat": 3,
+   "position": 0,
+   "case_id": "cc-01",
+   "group": "category_comparison",
+   "expected_behavior": "answer",
+   "predicted_behavior": "answer",
+   "predicted_metric": "sum:Revenue_KZT",
+   "behavior_ok": true,
+   "plan_ok": true,
+   "metric_ok": true,
+   "chart_ok": true,
+   "signature": "[\"answer\", \"sum:Revenue_KZT\", [\"Region\"], [], \"bar\", 1]",
+   "planner": "llm",
+   "llm_fallback": false,
+   "truncated": false,
+   "plan_latency_ms": 2025.3,
+   "tokens": {
+    "llm_calls": 1,
+    "input": 5126,
+    "output": 148,
+    "total": 5274
+   },
+   "embedding_tokens": 32,
+   "context": {
+    "documents": [
+     {
+      "document": "sales_metrics.pdf",
+      "section": "2. Выручка (Revenue)",
+      "score": 0.3742
+     },
+     {
+      "document": "sales_channels_regions.pdf",
+      "section": "2. Регионы",
+      "score": 0.3594
+     }
+    ],
+    "hit_at_3": true,
+    "hit_at_5": true,
+    "section_hit_at_3": true
+   },
+   "prompt": {
+    "calls": 1,
+    "system_sha": "15d4bc415fc5a887",
+    "system_chars": 4858,
+    "user_chars": 1693,
+    "user_has_documents": true
+   },
+   "error": null
+  },
+  {
+   "arm": "T0",
+   "repeat": 3,
+   "position": 1,
+   "case_id": "cc-01",
+   "group": "category_comparison",
+   "expected_behavior": "answer",
+   "predicted_behavior": "answer",
+   "predicted_metric": "sum:Revenue_KZT",
+   "behavior_ok": true,
+   "plan_ok": true,
+   "metric_ok": true,
+   "chart_ok": true,
+   "signature": "[\"answer\", \"sum:Revenue_KZT\", [\"Region\"], [], \"bar\", 1]",
+   "planner": "llm",
+   "llm_fallback": false,
+   "truncated": false,
+   "plan_latency_ms": 1968.0,
+   "tokens": {
+    "llm_calls": 1,
+    "input": 5126,
+    "output": 148,
+    "total": 5274
+   },
+   "embedding_tokens": 32,
+   "context": {
+    "documents": [
+     {
+      "document": "sales_metrics.pdf",
+      "section": "2. Выручка (Revenue)",
+      "score": 0.3742
+     },
+     {
+      "document": "sales_channels_regions.pdf",
+      "section": "2. Регионы",
+      "score": 0.3594
+     }
+    ],
+    "hit_at_3": true,
+    "hit_at_5": true,
+    "section_hit_at_3": true
+   },
+   "prompt": {
+    "calls": 1,
+    "system_sha": "15d4bc415fc5a887",
+    "system_chars": 4858,
+    "user_chars": 1693,
+    "user_has_documents": true
+   },
+   "error": null
+  },
+  {
+   "arm": "T0",
+   "repeat": 3,
+   "position": 0,
+   "case_id": "fl-01",
+   "group": "filters",
+   "expected_behavior": "answer",
+   "predicted_behavior": "answer",
+   "predicted_metric": "sum:Revenue_KZT",
+   "behavior_ok": true,
+   "plan_ok": true,
+   "metric_ok": true,
+   "chart_ok": true,
+   "signature": "[\"answer\", \"sum:Revenue_KZT\", [\"Channel\"], [[\"Channel\", \"in\", \"[\\\"Web\\\", \\\"Mobile\\\"]\"]], \"bar\", 1]",
+   "planner": "llm",
+   "llm_fallback": false,
+   "truncated": false,
+   "plan_latency_ms": 2492.0,
+   "tokens": {
+    "llm_calls": 1,
+    "input": 5262,
+    "output": 160,
+    "total": 5422
+   },
+   "embedding_tokens": 29,
+   "context": {
+    "documents": [
+     {
+      "document": "sales_channels_regions.pdf",
+      "section": "1. Каналы продаж",
+      "score": 0.3977
+     },
+     {
+      "document": "sales_channels_regions.pdf",
+      "section": "3. Категории товаров",
+      "score": 0.3482
+     },
+     {
+      "document": "sales_metrics.pdf",
+      "section": "6. Показатели без данных",
+      "score": 0.3149
+     }
+    ],
+    "hit_at_3": true,
+    "hit_at_5": true,
+    "section_hit_at_3": false
+   },
+   "prompt": {
+    "calls": 1,
+    "system_sha": "15d4bc415fc5a887",
+    "system_chars": 4858,
+    "user_chars": 2312,
+    "user_has_documents": true
+   },
+   "error": null
+  },
+  {
+   "arm": "T04",
+   "repeat": 3,
+   "position": 1,
+   "case_id": "fl-01",
+   "group": "filters",
+   "expected_behavior": "answer",
+   "predicted_behavior": "answer",
+   "predicted_metric": "sum:Revenue_KZT",
+   "behavior_ok": true,
+   "plan_ok": true,
+   "metric_ok": true,
+   "chart_ok": true,
+   "signature": "[\"answer\", \"sum:Revenue_KZT\", [\"Channel\"], [[\"Channel\", \"in\", \"[\\\"Web\\\", \\\"Mobile\\\"]\"]], \"bar\", 1]",
+   "planner": "llm",
+   "llm_fallback": false,
+   "truncated": false,
+   "plan_latency_ms": 3313.0,
+   "tokens": {
+    "llm_calls": 2,
+    "input": 10549,
+    "output": 235,
+    "total": 10784
+   },
+   "embedding_tokens": 29,
+   "context": {
+    "documents": [
+     {
+      "document": "sales_channels_regions.pdf",
+      "section": "1. Каналы продаж",
+      "score": 0.3977
+     },
+     {
+      "document": "sales_channels_regions.pdf",
+      "section": "3. Категории товаров",
+      "score": 0.3482
+     },
+     {
+      "document": "sales_metrics.pdf",
+      "section": "6. Показатели без данных",
+      "score": 0.3149
+     }
+    ],
+    "hit_at_3": true,
+    "hit_at_5": true,
+    "section_hit_at_3": false
+   },
+   "prompt": {
+    "calls": 2,
+    "system_sha": "15d4bc415fc5a887",
+    "system_chars": 4858,
+    "user_chars": 2312,
+    "user_has_documents": true
+   },
+   "error": null
+  },
+  {
+   "arm": "T04",
+   "repeat": 3,
+   "position": 0,
+   "case_id": "rg-02",
+   "group": "rag_terminology",
+   "expected_behavior": "answer",
+   "predicted_behavior": "answer",
+   "predicted_metric": "ratio:Revenue_KZT/Orders",
+   "behavior_ok": true,
+   "plan_ok": true,
+   "metric_ok": true,
+   "chart_ok": true,
+   "signature": "[\"answer\", \"ratio:Revenue_KZT/Orders\", [\"Region\"], [], \"bar\", 1]",
+   "planner": "llm",
+   "llm_fallback": false,
+   "truncated": false,
+   "plan_latency_ms": 1924.0,
+   "tokens": {
+    "llm_calls": 1,
+    "input": 5233,
+    "output": 126,
+    "total": 5359
+   },
+   "embedding_tokens": 35,
+   "context": {
+    "documents": [
+     {
+      "document": "sales_metrics.pdf",
+      "section": "4. Средний чек (Average Order Value, AOV)",
+      "score": 0.4032
+     },
+     {
+      "document": "sales_channels_regions.pdf",
+      "section": "SalesDemo KZ — каналы, регионы и категории",
+      "score": 0.3731
+     },
+     {
+      "document": "sales_metrics.pdf",
+      "section": "1. Набор данных sales_2026.xlsx",
+      "score": 0.3491
+     }
+    ],
+    "hit_at_3": true,
+    "hit_at_5": true,
+    "section_hit_at_3": true
+   },
+   "prompt": {
+    "calls": 1,
+    "system_sha": "15d4bc415fc5a887",
+    "system_chars": 4858,
+    "user_chars": 2129,
+    "user_has_documents": true
+   },
+   "error": null
+  },
+  {
+   "arm": "T0",
+   "repeat": 3,
+   "position": 1,
+   "case_id": "rg-02",
+   "group": "rag_terminology",
+   "expected_behavior": "answer",
+   "predicted_behavior": "answer",
+   "predicted_metric": "ratio:Revenue_KZT/Orders",
+   "behavior_ok": true,
+   "plan_ok": true,
+   "metric_ok": true,
+   "chart_ok": true,
+   "signature": "[\"answer\", \"ratio:Revenue_KZT/Orders\", [\"Region\"], [], \"bar\", 1]",
+   "planner": "llm",
+   "llm_fallback": false,
+   "truncated": false,
+   "plan_latency_ms": 1708.7,
+   "tokens": {
+    "llm_calls": 1,
+    "input": 5233,
+    "output": 118,
+    "total": 5351
+   },
+   "embedding_tokens": 35,
+   "context": {
+    "documents": [
+     {
+      "document": "sales_metrics.pdf",
+      "section": "4. Средний чек (Average Order Value, AOV)",
+      "score": 0.4032
+     },
+     {
+      "document": "sales_channels_regions.pdf",
+      "section": "SalesDemo KZ — каналы, регионы и категории",
+      "score": 0.3731
+     },
+     {
+      "document": "sales_metrics.pdf",
+      "section": "1. Набор данных sales_2026.xlsx",
+      "score": 0.3491
+     }
+    ],
+    "hit_at_3": true,
+    "hit_at_5": true,
+    "section_hit_at_3": true
+   },
+   "prompt": {
+    "calls": 1,
+    "system_sha": "15d4bc415fc5a887",
+    "system_chars": 4858,
+    "user_chars": 2129,
+    "user_has_documents": true
+   },
+   "error": null
+  },
+  {
+   "arm": "T0",
+   "repeat": 3,
+   "position": 0,
+   "case_id": "rg-04",
+   "group": "rag_terminology",
+   "expected_behavior": "answer",
+   "predicted_behavior": "reject",
+   "predicted_metric": null,
+   "behavior_ok": false,
+   "plan_ok": false,
+   "metric_ok": false,
+   "chart_ok": false,
+   "signature": "[\"reject\", null, [], [], null, 0]",
+   "planner": "llm",
+   "llm_fallback": false,
+   "truncated": false,
+   "plan_latency_ms": 2006.6,
+   "tokens": {
+    "llm_calls": 2,
+    "input": 10569,
+    "output": 133,
+    "total": 10702
+   },
+   "embedding_tokens": 10,
+   "context": {
+    "documents": [
+     {
+      "document": "sales_metrics.pdf",
+      "section": "2. Выручка (Revenue)",
+      "score": 0.5156
+     },
+     {
+      "document": "sales_metrics.pdf",
+      "section": "1. Набор данных sales_2026.xlsx",
+      "score": 0.4973
+     },
+     {
+      "document": "sales_metrics.pdf",
+      "section": "6. Показатели без данных",
+      "score": 0.4829
+     }
+    ],
+    "hit_at_3": true,
+    "hit_at_5": true,
+    "section_hit_at_3": true
+   },
+   "prompt": {
+    "calls": 2,
+    "system_sha": "15d4bc415fc5a887",
+    "system_chars": 4858,
+    "user_chars": 2285,
+    "user_has_documents": true
+   },
+   "error": null
+  },
+  {
+   "arm": "T04",
+   "repeat": 3,
+   "position": 1,
+   "case_id": "rg-04",
+   "group": "rag_terminology",
+   "expected_behavior": "answer",
+   "predicted_behavior": "answer",
+   "predicted_metric": "sum:Revenue_KZT",
+   "behavior_ok": true,
+   "plan_ok": true,
+   "metric_ok": true,
+   "chart_ok": true,
+   "signature": "[\"answer\", \"sum:Revenue_KZT\", [\"Category\"], [], \"bar\", 1]",
+   "planner": "llm",
+   "llm_fallback": false,
+   "truncated": false,
+   "plan_latency_ms": 2681.9,
+   "tokens": {
+    "llm_calls": 2,
+    "input": 10569,
+    "output": 198,
+    "total": 10767
+   },
+   "embedding_tokens": 24,
+   "context": {
+    "documents": [
+     {
+      "document": "sales_metrics.pdf",
+      "section": "2. Выручка (Revenue)",
+      "score": 0.5156
+     },
+     {
+      "document": "sales_metrics.pdf",
+      "section": "1. Набор данных sales_2026.xlsx",
+      "score": 0.4973
+     },
+     {
+      "document": "sales_metrics.pdf",
+      "section": "6. Показатели без данных",
+      "score": 0.4829
+     }
+    ],
+    "hit_at_3": true,
+    "hit_at_5": true,
+    "section_hit_at_3": true
+   },
+   "prompt": {
+    "calls": 2,
+    "system_sha": "15d4bc415fc5a887",
+    "system_chars": 4858,
+    "user_chars": 2285,
+    "user_has_documents": true
+   },
+   "error": null
+  },
+  {
+   "arm": "T04",
+   "repeat": 3,
+   "position": 0,
+   "case_id": "iv-01",
+   "group": "invalid_ambiguous",
+   "expected_behavior": "reject",
+   "predicted_behavior": "reject",
+   "predicted_metric": null,
+   "behavior_ok": true,
+   "plan_ok": null,
+   "metric_ok": null,
+   "chart_ok": null,
+   "signature": "[\"reject\", null, [], [], null, 0]",
+   "planner": "llm",
+   "llm_fallback": false,
+   "truncated": false,
+   "plan_latency_ms": 890.6,
+   "tokens": {
+    "llm_calls": 1,
+    "input": 5271,
+    "output": 27,
+    "total": 5298
+   },
+   "embedding_tokens": 7,
+   "context": {
+    "documents": [
+     {
+      "document": "sales_metrics.pdf",
+      "section": "SalesDemo KZ — определения показателей продаж",
+      "score": 0.3849
+     },
+     {
+      "document": "sales_metrics.pdf",
+      "section": "6. Показатели без данных",
+      "score": 0.3706
+     },
+     {
+      "document": "sales_metrics.pdf",
+      "section": "4. Средний чек (Average Order Value, AOV)",
+      "score": 0.313
+     }
+    ]
+   },
+   "prompt": {
+    "calls": 1,
+    "system_sha": "15d4bc415fc5a887",
+    "system_chars": 4858,
+    "user_chars": 2323,
+    "user_has_documents": true
+   },
+   "error": null
+  },
+  {
+   "arm": "T0",
+   "repeat": 3,
+   "position": 1,
+   "case_id": "iv-01",
+   "group": "invalid_ambiguous",
+   "expected_behavior": "reject",
+   "predicted_behavior": "reject",
+   "predicted_metric": null,
+   "behavior_ok": true,
+   "plan_ok": null,
+   "metric_ok": null,
+   "chart_ok": null,
+   "signature": "[\"reject\", null, [], [], null, 0]",
+   "planner": "llm",
+   "llm_fallback": false,
+   "truncated": false,
+   "plan_latency_ms": 876.5,
+   "tokens": {
+    "llm_calls": 1,
+    "input": 5271,
+    "output": 26,
+    "total": 5297
+   },
+   "embedding_tokens": 7,
+   "context": {
+    "documents": [
+     {
+      "document": "sales_metrics.pdf",
+      "section": "SalesDemo KZ — определения показателей продаж",
+      "score": 0.3849
+     },
+     {
+      "document": "sales_metrics.pdf",
+      "section": "6. Показатели без данных",
+      "score": 0.3706
+     },
+     {
+      "document": "sales_metrics.pdf",
+      "section": "4. Средний чек (Average Order Value, AOV)",
+      "score": 0.313
+     }
+    ]
+   },
+   "prompt": {
+    "calls": 1,
+    "system_sha": "15d4bc415fc5a887",
+    "system_chars": 4858,
+    "user_chars": 2323,
+    "user_has_documents": true
+   },
+   "error": null
+  },
+  {
+   "arm": "T0",
+   "repeat": 3,
+   "position": 0,
+   "case_id": "iv-04",
+   "group": "invalid_ambiguous",
+   "expected_behavior": "clarify",
+   "predicted_behavior": "clarify",
+   "predicted_metric": "sum:Revenue_KZT",
+   "behavior_ok": true,
+   "plan_ok": null,
+   "metric_ok": null,
+   "chart_ok": null,
+   "signature": "[\"clarify\", \"sum:Revenue_KZT\", [], [], \"bar\", 1]",
+   "planner": "llm",
+   "llm_fallback": false,
+   "truncated": false,
+   "plan_latency_ms": 3054.6,
+   "tokens": {
+    "llm_calls": 2,
+    "input": 10573,
+    "output": 199,
+    "total": 10772
+   },
+   "embedding_tokens": 31,
+   "context": {
+    "documents": [
+     {
+      "document": "sales_metrics.pdf",
+      "section": "2. Выручка (Revenue)",
+      "score": 0.4347
+     },
+     {
+      "document": "sales_metrics.pdf",
+      "section": "1. Набор данных sales_2026.xlsx",
+      "score": 0.3245
+     },
+     {
+      "document": "sales_metrics.pdf",
+      "section": "6. Показатели без данных",
+      "score": 0.318
+     }
+    ]
+   },
+   "prompt": {
+    "calls": 2,
+    "system_sha": "15d4bc415fc5a887",
+    "system_chars": 4858,
+    "user_chars": 2282,
+    "user_has_documents": true
+   },
+   "error": null
+  },
+  {
+   "arm": "T04",
+   "repeat": 3,
+   "position": 1,
+   "case_id": "iv-04",
+   "group": "invalid_ambiguous",
+   "expected_behavior": "clarify",
+   "predicted_behavior": "clarify",
+   "predicted_metric": "sum:Revenue_KZT",
+   "behavior_ok": true,
+   "plan_ok": null,
+   "metric_ok": null,
+   "chart_ok": null,
+   "signature": "[\"clarify\", \"sum:Revenue_KZT\", [], [], \"bar\", 1]",
+   "planner": "llm",
+   "llm_fallback": false,
+   "truncated": false,
+   "plan_latency_ms": 2221.4,
+   "tokens": {
+    "llm_calls": 1,
+    "input": 5274,
+    "output": 130,
+    "total": 5404
+   },
+   "embedding_tokens": 31,
+   "context": {
+    "documents": [
+     {
+      "document": "sales_metrics.pdf",
+      "section": "2. Выручка (Revenue)",
+      "score": 0.4347
+     },
+     {
+      "document": "sales_metrics.pdf",
+      "section": "1. Набор данных sales_2026.xlsx",
+      "score": 0.3245
+     },
+     {
+      "document": "sales_metrics.pdf",
+      "section": "6. Показатели без данных",
+      "score": 0.318
+     }
+    ]
+   },
+   "prompt": {
+    "calls": 1,
+    "system_sha": "15d4bc415fc5a887",
+    "system_chars": 4858,
+    "user_chars": 2282,
+    "user_has_documents": true
+   },
+   "error": null
+  },
+  {
+   "arm": "T0",
+   "repeat": 4,
+   "position": 0,
+   "case_id": "mi-01",
+   "group": "metric_interpretation",
+   "expected_behavior": "answer",
+   "predicted_behavior": "answer",
+   "predicted_metric": "ratio:Revenue_KZT/Orders",
+   "behavior_ok": true,
+   "plan_ok": true,
+   "metric_ok": true,
+   "chart_ok": true,
+   "signature": "[\"answer\", \"ratio:Revenue_KZT/Orders\", [\"Channel\"], [], \"bar\", 1]",
+   "planner": "llm",
+   "llm_fallback": false,
+   "truncated": false,
+   "plan_latency_ms": 1816.4,
+   "tokens": {
+    "llm_calls": 1,
+    "input": 5258,
+    "output": 127,
+    "total": 5385
+   },
+   "embedding_tokens": 42,
+   "context": {
+    "documents": [
+     {
+      "document": "sales_metrics.pdf",
+      "section": "4. Средний чек (Average Order Value, AOV)",
+      "score": 0.5045
+     },
+     {
+      "document": "sales_channels_regions.pdf",
+      "section": "3. Категории товаров",
+      "score": 0.3789
+     },
+     {
+      "document": "sales_metrics.pdf",
+      "section": "2. Выручка (Revenue)",
+      "score": 0.3115
+     }
+    ],
+    "hit_at_3": true,
+    "hit_at_5": true,
+    "section_hit_at_3": true
+   },
+   "prompt": {
+    "calls": 1,
+    "system_sha": "15d4bc415fc5a887",
+    "system_chars": 4858,
+    "user_chars": 2203,
+    "user_has_documents": true
+   },
+   "error": null
+  },
+  {
+   "arm": "T04",
+   "repeat": 4,
+   "position": 1,
+   "case_id": "mi-01",
+   "group": "metric_interpretation",
+   "expected_behavior": "answer",
+   "predicted_behavior": "answer",
+   "predicted_metric": "ratio:Revenue_KZT/Orders",
+   "behavior_ok": true,
+   "plan_ok": true,
+   "metric_ok": true,
+   "chart_ok": true,
+   "signature": "[\"answer\", \"ratio:Revenue_KZT/Orders\", [\"Channel\"], [], \"bar\", 1]",
+   "planner": "llm",
+   "llm_fallback": false,
+   "truncated": false,
+   "plan_latency_ms": 1953.3,
+   "tokens": {
+    "llm_calls": 1,
+    "input": 5258,
+    "output": 133,
+    "total": 5391
+   },
+   "embedding_tokens": 42,
+   "context": {
+    "documents": [
+     {
+      "document": "sales_metrics.pdf",
+      "section": "4. Средний чек (Average Order Value, AOV)",
+      "score": 0.5045
+     },
+     {
+      "document": "sales_channels_regions.pdf",
+      "section": "3. Категории товаров",
+      "score": 0.3789
+     },
+     {
+      "document": "sales_metrics.pdf",
+      "section": "2. Выручка (Revenue)",
+      "score": 0.3115
+     }
+    ],
+    "hit_at_3": true,
+    "hit_at_5": true,
+    "section_hit_at_3": true
+   },
+   "prompt": {
+    "calls": 1,
+    "system_sha": "15d4bc415fc5a887",
+    "system_chars": 4858,
+    "user_chars": 2203,
+    "user_has_documents": true
+   },
+   "error": null
+  },
+  {
+   "arm": "T04",
+   "repeat": 4,
+   "position": 0,
+   "case_id": "mi-03",
+   "group": "metric_interpretation",
+   "expected_behavior": "answer",
+   "predicted_behavior": "answer",
+   "predicted_metric": "rate:Cancelled_Orders/Orders",
+   "behavior_ok": true,
+   "plan_ok": true,
+   "metric_ok": true,
+   "chart_ok": true,
+   "signature": "[\"answer\", \"rate:Cancelled_Orders/Orders\", [\"Region\"], [], \"bar\", 1]",
+   "planner": "llm",
+   "llm_fallback": false,
+   "truncated": false,
+   "plan_latency_ms": 1744.4,
+   "tokens": {
+    "llm_calls": 1,
+    "input": 5118,
+    "output": 123,
+    "total": 5241
+   },
+   "embedding_tokens": 43,
+   "context": {
+    "documents": [
+     {
+      "document": "sales_metrics.pdf",
+      "section": "5. Доля отмен (Cancellation Rate)",
+      "score": 0.5517
+     },
+     {
+      "document": "sales_metrics.pdf",
+      "section": "3. Заказы и отмены",
+      "score": 0.3555
+     }
+    ],
+    "hit_at_3": true,
+    "hit_at_5": true,
+    "section_hit_at_3": true
+   },
+   "prompt": {
+    "calls": 1,
+    "system_sha": "15d4bc415fc5a887",
+    "system_chars": 4858,
+    "user_chars": 1733,
+    "user_has_documents": true
+   },
+   "error": null
+  },
+  {
+   "arm": "T0",
+   "repeat": 4,
+   "position": 1,
+   "case_id": "mi-03",
+   "group": "metric_interpretation",
+   "expected_behavior": "answer",
+   "predicted_behavior": "answer",
+   "predicted_metric": "rate:Cancelled_Orders/Orders",
+   "behavior_ok": true,
+   "plan_ok": true,
+   "metric_ok": true,
+   "chart_ok": true,
+   "signature": "[\"answer\", \"rate:Cancelled_Orders/Orders\", [\"Region\"], [], \"bar\", 1]",
+   "planner": "llm",
+   "llm_fallback": false,
+   "truncated": false,
+   "plan_latency_ms": 1937.1,
+   "tokens": {
+    "llm_calls": 1,
+    "input": 5118,
+    "output": 123,
+    "total": 5241
+   },
+   "embedding_tokens": 43,
+   "context": {
+    "documents": [
+     {
+      "document": "sales_metrics.pdf",
+      "section": "5. Доля отмен (Cancellation Rate)",
+      "score": 0.5517
+     },
+     {
+      "document": "sales_metrics.pdf",
+      "section": "3. Заказы и отмены",
+      "score": 0.3555
+     }
+    ],
+    "hit_at_3": true,
+    "hit_at_5": true,
+    "section_hit_at_3": true
+   },
+   "prompt": {
+    "calls": 1,
+    "system_sha": "15d4bc415fc5a887",
+    "system_chars": 4858,
+    "user_chars": 1733,
+    "user_has_documents": true
+   },
+   "error": null
+  },
+  {
+   "arm": "T0",
+   "repeat": 4,
+   "position": 0,
+   "case_id": "ts-01",
+   "group": "time_series",
+   "expected_behavior": "answer",
+   "predicted_behavior": "reject",
+   "predicted_metric": null,
+   "behavior_ok": false,
+   "plan_ok": false,
+   "metric_ok": false,
+   "chart_ok": false,
+   "signature": "[\"reject\", null, [], [], null, 0]",
+   "planner": "llm",
+   "llm_fallback": false,
+   "truncated": false,
+   "plan_latency_ms": 2364.7,
+   "tokens": {
+    "llm_calls": 2,
+    "input": 10577,
+    "output": 167,
+    "total": 10744
+   },
+   "embedding_tokens": 18,
+   "context": {
+    "documents": [
+     {
+      "document": "sales_metrics.pdf",
+      "section": "2. Выручка (Revenue)",
+      "score": 0.4533
+     },
+     {
+      "document": "sales_metrics.pdf",
+      "section": "1. Набор данных sales_2026.xlsx",
+      "score": 0.4212
+     },
+     {
+      "document": "sales_metrics.pdf",
+      "section": "6. Показатели без данных",
+      "score": 0.3513
+     }
+    ],
+    "hit_at_3": true,
+    "hit_at_5": true,
+    "section_hit_at_3": true
+   },
+   "prompt": {
+    "calls": 2,
+    "system_sha": "15d4bc415fc5a887",
+    "system_chars": 4858,
+    "user_chars": 2291,
+    "user_has_documents": true
+   },
+   "error": null
+  },
+  {
+   "arm": "T04",
+   "repeat": 4,
+   "position": 1,
+   "case_id": "ts-01",
+   "group": "time_series",
+   "expected_behavior": "answer",
+   "predicted_behavior": "reject",
+   "predicted_metric": null,
+   "behavior_ok": false,
+   "plan_ok": false,
+   "metric_ok": false,
+   "chart_ok": false,
+   "signature": "[\"reject\", null, [], [], null, 0]",
+   "planner": "llm",
+   "llm_fallback": false,
+   "truncated": true,
+   "plan_latency_ms": 8504.0,
+   "tokens": {
+    "llm_calls": 1,
+    "input": 5276,
+    "output": 77,
+    "total": 5353
+   },
+   "embedding_tokens": 18,
+   "context": {
+    "documents": [
+     {
+      "document": "sales_metrics.pdf",
+      "section": "2. Выручка (Revenue)",
+      "score": 0.4533
+     },
+     {
+      "document": "sales_metrics.pdf",
+      "section": "1. Набор данных sales_2026.xlsx",
+      "score": 0.4212
+     },
+     {
+      "document": "sales_metrics.pdf",
+      "section": "6. Показатели без данных",
+      "score": 0.3513
+     }
+    ],
+    "hit_at_3": true,
+    "hit_at_5": true,
+    "section_hit_at_3": true
+   },
+   "prompt": {
+    "calls": 2,
+    "system_sha": "15d4bc415fc5a887",
+    "system_chars": 4858,
+    "user_chars": 2291,
+    "user_has_documents": true
+   },
+   "error": null
+  },
+  {
+   "arm": "T04",
+   "repeat": 4,
+   "position": 0,
+   "case_id": "ts-04",
+   "group": "time_series",
+   "expected_behavior": "answer",
+   "predicted_behavior": "answer",
+   "predicted_metric": "ratio:Revenue_KZT/Orders",
+   "behavior_ok": true,
+   "plan_ok": true,
+   "metric_ok": true,
+   "chart_ok": true,
+   "signature": "[\"answer\", \"ratio:Revenue_KZT/Orders\", [\"Month\"], [], \"line\", 1]",
+   "planner": "llm",
+   "llm_fallback": false,
+   "truncated": false,
+   "plan_latency_ms": 2525.8,
+   "tokens": {
+    "llm_calls": 1,
+    "input": 5249,
+    "output": 131,
+    "total": 5380
+   },
+   "embedding_tokens": 48,
+   "context": {
+    "documents": [
+     {
+      "document": "sales_metrics.pdf",
+      "section": "4. Средний чек (Average Order Value, AOV)",
+      "score": 0.4554
+     },
+     {
+      "document": "sales_calendar_2026.pdf",
+      "section": "2. Как читать события",
+      "score": 0.3625
+     },
+     {
+      "document": "sales_metrics.pdf",
+      "section": "1. Набор данных sales_2026.xlsx",
+      "score": 0.3612
+     }
+    ],
+    "hit_at_3": true,
+    "hit_at_5": true,
+    "section_hit_at_3": true
+   },
+   "prompt": {
+    "calls": 1,
+    "system_sha": "15d4bc415fc5a887",
+    "system_chars": 4858,
+    "user_chars": 2214,
+    "user_has_documents": true
+   },
+   "error": null
+  },
+  {
+   "arm": "T0",
+   "repeat": 4,
+   "position": 1,
+   "case_id": "ts-04",
+   "group": "time_series",
+   "expected_behavior": "answer",
+   "predicted_behavior": "answer",
+   "predicted_metric": "ratio:Revenue_KZT/Orders",
+   "behavior_ok": true,
+   "plan_ok": true,
+   "metric_ok": true,
+   "chart_ok": true,
+   "signature": "[\"answer\", \"ratio:Revenue_KZT/Orders\", [\"Month\"], [], \"line\", 1]",
+   "planner": "llm",
+   "llm_fallback": false,
+   "truncated": false,
+   "plan_latency_ms": 1997.3,
+   "tokens": {
+    "llm_calls": 1,
+    "input": 5249,
+    "output": 133,
+    "total": 5382
+   },
+   "embedding_tokens": 48,
+   "context": {
+    "documents": [
+     {
+      "document": "sales_metrics.pdf",
+      "section": "4. Средний чек (Average Order Value, AOV)",
+      "score": 0.4554
+     },
+     {
+      "document": "sales_calendar_2026.pdf",
+      "section": "2. Как читать события",
+      "score": 0.3625
+     },
+     {
+      "document": "sales_metrics.pdf",
+      "section": "1. Набор данных sales_2026.xlsx",
+      "score": 0.3612
+     }
+    ],
+    "hit_at_3": true,
+    "hit_at_5": true,
+    "section_hit_at_3": true
+   },
+   "prompt": {
+    "calls": 1,
+    "system_sha": "15d4bc415fc5a887",
+    "system_chars": 4858,
+    "user_chars": 2214,
+    "user_has_documents": true
+   },
+   "error": null
+  },
+  {
+   "arm": "T0",
+   "repeat": 4,
+   "position": 0,
+   "case_id": "cc-01",
+   "group": "category_comparison",
+   "expected_behavior": "answer",
+   "predicted_behavior": "answer",
+   "predicted_metric": "sum:Revenue_KZT",
+   "behavior_ok": true,
+   "plan_ok": true,
+   "metric_ok": true,
+   "chart_ok": true,
+   "signature": "[\"answer\", \"sum:Revenue_KZT\", [\"Region\"], [], \"bar\", 1]",
+   "planner": "llm",
+   "llm_fallback": false,
+   "truncated": false,
+   "plan_latency_ms": 3157.3,
+   "tokens": {
+    "llm_calls": 2,
+    "input": 10277,
+    "output": 223,
+    "total": 10500
+   },
+   "embedding_tokens": 32,
+   "context": {
+    "documents": [
+     {
+      "document": "sales_metrics.pdf",
+      "section": "2. Выручка (Revenue)",
+      "score": 0.3742
+     },
+     {
+      "document": "sales_channels_regions.pdf",
+      "section": "2. Регионы",
+      "score": 0.3594
+     }
+    ],
+    "hit_at_3": true,
+    "hit_at_5": true,
+    "section_hit_at_3": true
+   },
+   "prompt": {
+    "calls": 2,
+    "system_sha": "15d4bc415fc5a887",
+    "system_chars": 4858,
+    "user_chars": 1693,
+    "user_has_documents": true
+   },
+   "error": null
+  },
+  {
+   "arm": "T04",
+   "repeat": 4,
+   "position": 1,
+   "case_id": "cc-01",
+   "group": "category_comparison",
+   "expected_behavior": "answer",
+   "predicted_behavior": "reject",
+   "predicted_metric": null,
+   "behavior_ok": false,
+   "plan_ok": false,
+   "metric_ok": false,
+   "chart_ok": false,
+   "signature": "[\"reject\", null, [], [], null, 0]",
+   "planner": "llm",
+   "llm_fallback": false,
+   "truncated": false,
+   "plan_latency_ms": 2481.0,
+   "tokens": {
+    "llm_calls": 2,
+    "input": 10277,
+    "output": 182,
+    "total": 10459
+   },
+   "embedding_tokens": 13,
+   "context": {
+    "documents": [
+     {
+      "document": "sales_metrics.pdf",
+      "section": "2. Выручка (Revenue)",
+      "score": 0.3742
+     },
+     {
+      "document": "sales_channels_regions.pdf",
+      "section": "2. Регионы",
+      "score": 0.3594
+     }
+    ],
+    "hit_at_3": true,
+    "hit_at_5": true,
+    "section_hit_at_3": true
+   },
+   "prompt": {
+    "calls": 2,
+    "system_sha": "15d4bc415fc5a887",
+    "system_chars": 4858,
+    "user_chars": 1693,
+    "user_has_documents": true
+   },
+   "error": null
+  },
+  {
+   "arm": "T04",
+   "repeat": 4,
+   "position": 0,
+   "case_id": "fl-01",
+   "group": "filters",
+   "expected_behavior": "answer",
+   "predicted_behavior": "answer",
+   "predicted_metric": "sum:Revenue_KZT",
+   "behavior_ok": true,
+   "plan_ok": true,
+   "metric_ok": true,
+   "chart_ok": true,
+   "signature": "[\"answer\", \"sum:Revenue_KZT\", [\"Channel\"], [[\"Channel\", \"in\", \"[\\\"Web\\\", \\\"Mobile\\\"]\"]], \"bar\", 1]",
+   "planner": "llm",
+   "llm_fallback": false,
+   "truncated": false,
+   "plan_latency_ms": 2152.2,
+   "tokens": {
+    "llm_calls": 1,
+    "input": 5262,
+    "output": 148,
+    "total": 5410
+   },
+   "embedding_tokens": 29,
+   "context": {
+    "documents": [
+     {
+      "document": "sales_channels_regions.pdf",
+      "section": "1. Каналы продаж",
+      "score": 0.3977
+     },
+     {
+      "document": "sales_channels_regions.pdf",
+      "section": "3. Категории товаров",
+      "score": 0.3482
+     },
+     {
+      "document": "sales_metrics.pdf",
+      "section": "6. Показатели без данных",
+      "score": 0.3149
+     }
+    ],
+    "hit_at_3": true,
+    "hit_at_5": true,
+    "section_hit_at_3": false
+   },
+   "prompt": {
+    "calls": 1,
+    "system_sha": "15d4bc415fc5a887",
+    "system_chars": 4858,
+    "user_chars": 2312,
+    "user_has_documents": true
+   },
+   "error": null
+  },
+  {
+   "arm": "T0",
+   "repeat": 4,
+   "position": 1,
+   "case_id": "fl-01",
+   "group": "filters",
+   "expected_behavior": "answer",
+   "predicted_behavior": "answer",
+   "predicted_metric": "sum:Revenue_KZT",
+   "behavior_ok": true,
+   "plan_ok": true,
+   "metric_ok": true,
+   "chart_ok": true,
+   "signature": "[\"answer\", \"sum:Revenue_KZT\", [\"Channel\"], [[\"Channel\", \"in\", \"[\\\"Web\\\", \\\"Mobile\\\"]\"]], \"bar\", 1]",
+   "planner": "llm",
+   "llm_fallback": false,
+   "truncated": false,
+   "plan_latency_ms": 2015.3,
+   "tokens": {
+    "llm_calls": 1,
+    "input": 5262,
+    "output": 154,
+    "total": 5416
+   },
+   "embedding_tokens": 29,
+   "context": {
+    "documents": [
+     {
+      "document": "sales_channels_regions.pdf",
+      "section": "1. Каналы продаж",
+      "score": 0.3977
+     },
+     {
+      "document": "sales_channels_regions.pdf",
+      "section": "3. Категории товаров",
+      "score": 0.3482
+     },
+     {
+      "document": "sales_metrics.pdf",
+      "section": "6. Показатели без данных",
+      "score": 0.3149
+     }
+    ],
+    "hit_at_3": true,
+    "hit_at_5": true,
+    "section_hit_at_3": false
+   },
+   "prompt": {
+    "calls": 1,
+    "system_sha": "15d4bc415fc5a887",
+    "system_chars": 4858,
+    "user_chars": 2312,
+    "user_has_documents": true
+   },
+   "error": null
+  },
+  {
+   "arm": "T0",
+   "repeat": 4,
+   "position": 0,
+   "case_id": "rg-02",
+   "group": "rag_terminology",
+   "expected_behavior": "answer",
+   "predicted_behavior": "answer",
+   "predicted_metric": "ratio:Revenue_KZT/Orders",
+   "behavior_ok": true,
+   "plan_ok": true,
+   "metric_ok": true,
+   "chart_ok": true,
+   "signature": "[\"answer\", \"ratio:Revenue_KZT/Orders\", [\"Region\"], [], \"bar\", 1]",
+   "planner": "llm",
+   "llm_fallback": false,
+   "truncated": false,
+   "plan_latency_ms": 1770.6,
+   "tokens": {
+    "llm_calls": 1,
+    "input": 5233,
+    "output": 118,
+    "total": 5351
+   },
+   "embedding_tokens": 35,
+   "context": {
+    "documents": [
+     {
+      "document": "sales_metrics.pdf",
+      "section": "4. Средний чек (Average Order Value, AOV)",
+      "score": 0.4032
+     },
+     {
+      "document": "sales_channels_regions.pdf",
+      "section": "SalesDemo KZ — каналы, регионы и категории",
+      "score": 0.3731
+     },
+     {
+      "document": "sales_metrics.pdf",
+      "section": "1. Набор данных sales_2026.xlsx",
+      "score": 0.3491
+     }
+    ],
+    "hit_at_3": true,
+    "hit_at_5": true,
+    "section_hit_at_3": true
+   },
+   "prompt": {
+    "calls": 1,
+    "system_sha": "15d4bc415fc5a887",
+    "system_chars": 4858,
+    "user_chars": 2129,
+    "user_has_documents": true
+   },
+   "error": null
+  },
+  {
+   "arm": "T04",
+   "repeat": 4,
+   "position": 1,
+   "case_id": "rg-02",
+   "group": "rag_terminology",
+   "expected_behavior": "answer",
+   "predicted_behavior": "answer",
+   "predicted_metric": "ratio:Revenue_KZT/Orders",
+   "behavior_ok": true,
+   "plan_ok": true,
+   "metric_ok": true,
+   "chart_ok": true,
+   "signature": "[\"answer\", \"ratio:Revenue_KZT/Orders\", [\"Region\"], [], \"bar\", 1]",
+   "planner": "llm",
+   "llm_fallback": false,
+   "truncated": false,
+   "plan_latency_ms": 1782.1,
+   "tokens": {
+    "llm_calls": 1,
+    "input": 5233,
+    "output": 121,
+    "total": 5354
+   },
+   "embedding_tokens": 35,
+   "context": {
+    "documents": [
+     {
+      "document": "sales_metrics.pdf",
+      "section": "4. Средний чек (Average Order Value, AOV)",
+      "score": 0.4032
+     },
+     {
+      "document": "sales_channels_regions.pdf",
+      "section": "SalesDemo KZ — каналы, регионы и категории",
+      "score": 0.3731
+     },
+     {
+      "document": "sales_metrics.pdf",
+      "section": "1. Набор данных sales_2026.xlsx",
+      "score": 0.3491
+     }
+    ],
+    "hit_at_3": true,
+    "hit_at_5": true,
+    "section_hit_at_3": true
+   },
+   "prompt": {
+    "calls": 1,
+    "system_sha": "15d4bc415fc5a887",
+    "system_chars": 4858,
+    "user_chars": 2129,
+    "user_has_documents": true
+   },
+   "error": null
+  },
+  {
+   "arm": "T04",
+   "repeat": 4,
+   "position": 0,
+   "case_id": "rg-04",
+   "group": "rag_terminology",
+   "expected_behavior": "answer",
+   "predicted_behavior": "answer",
+   "predicted_metric": "sum:Revenue_KZT",
+   "behavior_ok": true,
+   "plan_ok": true,
+   "metric_ok": true,
+   "chart_ok": true,
+   "signature": "[\"answer\", \"sum:Revenue_KZT\", [\"Category\"], [], \"bar\", 1]",
+   "planner": "llm",
+   "llm_fallback": false,
+   "truncated": false,
+   "plan_latency_ms": 2673.9,
+   "tokens": {
+    "llm_calls": 2,
+    "input": 10569,
+    "output": 184,
+    "total": 10753
+   },
+   "embedding_tokens": 24,
+   "context": {
+    "documents": [
+     {
+      "document": "sales_metrics.pdf",
+      "section": "2. Выручка (Revenue)",
+      "score": 0.5156
+     },
+     {
+      "document": "sales_metrics.pdf",
+      "section": "1. Набор данных sales_2026.xlsx",
+      "score": 0.4973
+     },
+     {
+      "document": "sales_metrics.pdf",
+      "section": "6. Показатели без данных",
+      "score": 0.4829
+     }
+    ],
+    "hit_at_3": true,
+    "hit_at_5": true,
+    "section_hit_at_3": true
+   },
+   "prompt": {
+    "calls": 2,
+    "system_sha": "15d4bc415fc5a887",
+    "system_chars": 4858,
+    "user_chars": 2285,
+    "user_has_documents": true
+   },
+   "error": null
+  },
+  {
+   "arm": "T0",
+   "repeat": 4,
+   "position": 1,
+   "case_id": "rg-04",
+   "group": "rag_terminology",
+   "expected_behavior": "answer",
+   "predicted_behavior": "reject",
+   "predicted_metric": null,
+   "behavior_ok": false,
+   "plan_ok": false,
+   "metric_ok": false,
+   "chart_ok": false,
+   "signature": "[\"reject\", null, [], [], null, 0]",
+   "planner": "llm",
+   "llm_fallback": false,
+   "truncated": false,
+   "plan_latency_ms": 1953.6,
+   "tokens": {
+    "llm_calls": 2,
+    "input": 10569,
+    "output": 133,
+    "total": 10702
+   },
+   "embedding_tokens": 10,
+   "context": {
+    "documents": [
+     {
+      "document": "sales_metrics.pdf",
+      "section": "2. Выручка (Revenue)",
+      "score": 0.5156
+     },
+     {
+      "document": "sales_metrics.pdf",
+      "section": "1. Набор данных sales_2026.xlsx",
+      "score": 0.4973
+     },
+     {
+      "document": "sales_metrics.pdf",
+      "section": "6. Показатели без данных",
+      "score": 0.4829
+     }
+    ],
+    "hit_at_3": true,
+    "hit_at_5": true,
+    "section_hit_at_3": true
+   },
+   "prompt": {
+    "calls": 2,
+    "system_sha": "15d4bc415fc5a887",
+    "system_chars": 4858,
+    "user_chars": 2285,
+    "user_has_documents": true
+   },
+   "error": null
+  },
+  {
+   "arm": "T0",
+   "repeat": 4,
+   "position": 0,
+   "case_id": "iv-01",
+   "group": "invalid_ambiguous",
+   "expected_behavior": "reject",
+   "predicted_behavior": "reject",
+   "predicted_metric": null,
+   "behavior_ok": true,
+   "plan_ok": null,
+   "metric_ok": null,
+   "chart_ok": null,
+   "signature": "[\"reject\", null, [], [], null, 0]",
+   "planner": "llm",
+   "llm_fallback": false,
+   "truncated": false,
+   "plan_latency_ms": 813.2,
+   "tokens": {
+    "llm_calls": 1,
+    "input": 5271,
+    "output": 26,
+    "total": 5297
+   },
+   "embedding_tokens": 7,
+   "context": {
+    "documents": [
+     {
+      "document": "sales_metrics.pdf",
+      "section": "SalesDemo KZ — определения показателей продаж",
+      "score": 0.3849
+     },
+     {
+      "document": "sales_metrics.pdf",
+      "section": "6. Показатели без данных",
+      "score": 0.3706
+     },
+     {
+      "document": "sales_metrics.pdf",
+      "section": "4. Средний чек (Average Order Value, AOV)",
+      "score": 0.313
+     }
+    ]
+   },
+   "prompt": {
+    "calls": 1,
+    "system_sha": "15d4bc415fc5a887",
+    "system_chars": 4858,
+    "user_chars": 2323,
+    "user_has_documents": true
+   },
+   "error": null
+  },
+  {
+   "arm": "T04",
+   "repeat": 4,
+   "position": 1,
+   "case_id": "iv-01",
+   "group": "invalid_ambiguous",
+   "expected_behavior": "reject",
+   "predicted_behavior": "reject",
+   "predicted_metric": null,
+   "behavior_ok": true,
+   "plan_ok": null,
+   "metric_ok": null,
+   "chart_ok": null,
+   "signature": "[\"reject\", null, [], [], null, 0]",
+   "planner": "llm",
+   "llm_fallback": false,
+   "truncated": false,
+   "plan_latency_ms": 900.7,
+   "tokens": {
+    "llm_calls": 1,
+    "input": 5271,
+    "output": 27,
+    "total": 5298
+   },
+   "embedding_tokens": 7,
+   "context": {
+    "documents": [
+     {
+      "document": "sales_metrics.pdf",
+      "section": "SalesDemo KZ — определения показателей продаж",
+      "score": 0.3849
+     },
+     {
+      "document": "sales_metrics.pdf",
+      "section": "6. Показатели без данных",
+      "score": 0.3706
+     },
+     {
+      "document": "sales_metrics.pdf",
+      "section": "4. Средний чек (Average Order Value, AOV)",
+      "score": 0.313
+     }
+    ]
+   },
+   "prompt": {
+    "calls": 1,
+    "system_sha": "15d4bc415fc5a887",
+    "system_chars": 4858,
+    "user_chars": 2323,
+    "user_has_documents": true
+   },
+   "error": null
+  },
+  {
+   "arm": "T04",
+   "repeat": 4,
+   "position": 0,
+   "case_id": "iv-04",
+   "group": "invalid_ambiguous",
+   "expected_behavior": "clarify",
+   "predicted_behavior": "clarify",
+   "predicted_metric": "sum:Revenue_KZT",
+   "behavior_ok": true,
+   "plan_ok": null,
+   "metric_ok": null,
+   "chart_ok": null,
+   "signature": "[\"clarify\", \"sum:Revenue_KZT\", [], [], \"bar\", 1]",
+   "planner": "llm",
+   "llm_fallback": false,
+   "truncated": false,
+   "plan_latency_ms": 2739.0,
+   "tokens": {
+    "llm_calls": 2,
+    "input": 10573,
+    "output": 201,
+    "total": 10774
+   },
+   "embedding_tokens": 31,
+   "context": {
+    "documents": [
+     {
+      "document": "sales_metrics.pdf",
+      "section": "2. Выручка (Revenue)",
+      "score": 0.4347
+     },
+     {
+      "document": "sales_metrics.pdf",
+      "section": "1. Набор данных sales_2026.xlsx",
+      "score": 0.3245
+     },
+     {
+      "document": "sales_metrics.pdf",
+      "section": "6. Показатели без данных",
+      "score": 0.318
+     }
+    ]
+   },
+   "prompt": {
+    "calls": 2,
+    "system_sha": "15d4bc415fc5a887",
+    "system_chars": 4858,
+    "user_chars": 2282,
+    "user_has_documents": true
+   },
+   "error": null
+  },
+  {
+   "arm": "T0",
+   "repeat": 4,
+   "position": 1,
+   "case_id": "iv-04",
+   "group": "invalid_ambiguous",
+   "expected_behavior": "clarify",
+   "predicted_behavior": "clarify",
+   "predicted_metric": "sum:Revenue_KZT",
+   "behavior_ok": true,
+   "plan_ok": null,
+   "metric_ok": null,
+   "chart_ok": null,
+   "signature": "[\"clarify\", \"sum:Revenue_KZT\", [], [], \"bar\", 1]",
+   "planner": "llm",
+   "llm_fallback": false,
+   "truncated": false,
+   "plan_latency_ms": 2769.6,
+   "tokens": {
+    "llm_calls": 2,
+    "input": 10573,
+    "output": 207,
+    "total": 10780
+   },
+   "embedding_tokens": 31,
+   "context": {
+    "documents": [
+     {
+      "document": "sales_metrics.pdf",
+      "section": "2. Выручка (Revenue)",
+      "score": 0.4347
+     },
+     {
+      "document": "sales_metrics.pdf",
+      "section": "1. Набор данных sales_2026.xlsx",
+      "score": 0.3245
+     },
+     {
+      "document": "sales_metrics.pdf",
+      "section": "6. Показатели без данных",
+      "score": 0.318
+     }
+    ]
+   },
+   "prompt": {
+    "calls": 2,
+    "system_sha": "15d4bc415fc5a887",
+    "system_chars": 4858,
+    "user_chars": 2282,
+    "user_has_documents": true
+   },
+   "error": null
+  }
+ ]
+}

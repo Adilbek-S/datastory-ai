@@ -1,0 +1,3750 @@
+{
+ "schema_version": 1,
+ "generated_at": "2026-09-26T16:09:28+00:00",
+ "duration_s": 89.1,
+ "scope": {
+  "complete": true,
+  "cases": 30,
+  "total_cases": 30
+ },
+ "environment": {
+  "llm_model": "gpt-4o-mini",
+  "llm_available": true,
+  "llm_reason": "",
+  "embedding_provider": "openai-text-embedding-3-small",
+  "embedding_is_semantic": true,
+  "dataset": "data/demo/sales_2026.xlsx",
+  "dataset_sha256": "4ae245208360960414016eb6f57f20e70021dca9c1b07bdd9c4d0a596171b4ab",
+  "documents": {
+   "sales_metrics.pdf": "e057ba2f6dda120c247313239e49893d93f9e900fdedf0e9a458982741dad046",
+   "sales_channels_regions.pdf": "e36c68452d91ccdfce250552798739a991d7dc478b06b284a2b018aeae06a08b",
+   "sales_calendar_2026.pdf": "9dbcd4f1ed8ef78fb276ac603ff2fd65ea44a75d8d593415d0962a28fe8f0d21"
+  },
+  "golden_sha256": "439851be597bd404f6ae65f382d61bc2e12f4c5815f66e635081b5e1f204b3f1",
+  "top_k": 3,
+  "float_tolerance": {
+   "rel": 1e-09,
+   "abs": 1e-06
+  },
+  "git_commit": "946a144c288fcd9fc073a24b26523f8aa03d663c",
+  "git_dirty": true,
+  "python": "3.11.15",
+  "langsmith_tracing": false
+ },
+ "summary": {
+  "overall": {
+   "cases": 30,
+   "retrieval_hit_at_3": {
+    "hits": 26,
+    "total": 26,
+    "rate": 1.0
+   },
+   "retrieval_section_hit_at_3": {
+    "hits": 25,
+    "total": 26,
+    "rate": 0.9615
+   },
+   "plan_accuracy": {
+    "hits": 25,
+    "total": 25,
+    "rate": 1.0
+   },
+   "plan_full_accuracy": {
+    "hits": 25,
+    "total": 25,
+    "rate": 1.0
+   },
+   "plan_metric_accuracy": {
+    "hits": 25,
+    "total": 25,
+    "rate": 1.0
+   },
+   "plan_columns_accuracy": {
+    "hits": 25,
+    "total": 25,
+    "rate": 1.0
+   },
+   "plan_grouping_accuracy": {
+    "hits": 25,
+    "total": 25,
+    "rate": 1.0
+   },
+   "plan_filters_accuracy": {
+    "hits": 5,
+    "total": 5,
+    "rate": 1.0
+   },
+   "chart_type_accuracy": {
+    "hits": 24,
+    "total": 25,
+    "rate": 0.96
+   },
+   "numeric_accuracy": {
+    "hits": 25,
+    "total": 25,
+    "rate": 1.0
+   },
+   "numeric_accuracy_system_plan": {
+    "hits": 25,
+    "total": 25,
+    "rate": 1.0
+   },
+   "invalid_rejection_rate": {
+    "hits": 3,
+    "total": 4,
+    "rate": 0.75
+   },
+   "clarification_rate": {
+    "hits": 1,
+    "total": 1,
+    "rate": 1.0
+   },
+   "false_rejection_rate": {
+    "hits": 0,
+    "total": 25,
+    "rate": 0.0
+   },
+   "plan_latency_ms": {
+    "mean": 2280.6,
+    "median": 2193.4,
+    "p95": 2914.4,
+    "max": 5020.9
+   },
+   "retrieval_latency_ms": {
+    "mean": 203.5,
+    "median": 178.8,
+    "p95": 348.5,
+    "max": 365.5
+   },
+   "mcp_latency_ms": {
+    "mean": 125.5,
+    "median": 118.9,
+    "p95": 171.9,
+    "max": 216.1
+   },
+   "llm_tokens": {
+    "calls": 30,
+    "input": 157054,
+    "output": 3804,
+    "total": 160858,
+    "mean_total_per_case": 5361.9
+   },
+   "embedding_tokens": 1492,
+   "errors": 0
+  },
+  "by_group": {
+   "metric_interpretation": {
+    "cases": 5,
+    "retrieval_hit_at_3": {
+     "hits": 5,
+     "total": 5,
+     "rate": 1.0
+    },
+    "retrieval_section_hit_at_3": {
+     "hits": 5,
+     "total": 5,
+     "rate": 1.0
+    },
+    "plan_accuracy": {
+     "hits": 5,
+     "total": 5,
+     "rate": 1.0
+    },
+    "plan_full_accuracy": {
+     "hits": 5,
+     "total": 5,
+     "rate": 1.0
+    },
+    "plan_metric_accuracy": {
+     "hits": 5,
+     "total": 5,
+     "rate": 1.0
+    },
+    "plan_columns_accuracy": {
+     "hits": 5,
+     "total": 5,
+     "rate": 1.0
+    },
+    "plan_grouping_accuracy": {
+     "hits": 5,
+     "total": 5,
+     "rate": 1.0
+    },
+    "plan_filters_accuracy": {
+     "hits": 0,
+     "total": 0,
+     "rate": null
+    },
+    "chart_type_accuracy": {
+     "hits": 5,
+     "total": 5,
+     "rate": 1.0
+    },
+    "numeric_accuracy": {
+     "hits": 5,
+     "total": 5,
+     "rate": 1.0
+    },
+    "numeric_accuracy_system_plan": {
+     "hits": 5,
+     "total": 5,
+     "rate": 1.0
+    },
+    "invalid_rejection_rate": {
+     "hits": 0,
+     "total": 0,
+     "rate": null
+    },
+    "clarification_rate": {
+     "hits": 0,
+     "total": 0,
+     "rate": null
+    },
+    "false_rejection_rate": {
+     "hits": 0,
+     "total": 5,
+     "rate": 0.0
+    },
+    "plan_latency_ms": {
+     "mean": 2411.0,
+     "median": 2217.2,
+     "p95": 2763.1,
+     "max": 2771.8
+    },
+    "retrieval_latency_ms": {
+     "mean": 215.3,
+     "median": 178.1,
+     "p95": 312.3,
+     "max": 332.7
+    },
+    "mcp_latency_ms": {
+     "mean": 125.3,
+     "median": 115.0,
+     "p95": 173.7,
+     "max": 216.1
+    },
+    "llm_tokens": {
+     "calls": 5,
+     "input": 26142,
+     "output": 637,
+     "total": 26779,
+     "mean_total_per_case": 5355.8
+    },
+    "embedding_tokens": 316,
+    "errors": 0
+   },
+   "time_series": {
+    "cases": 5,
+    "retrieval_hit_at_3": {
+     "hits": 5,
+     "total": 5,
+     "rate": 1.0
+    },
+    "retrieval_section_hit_at_3": {
+     "hits": 5,
+     "total": 5,
+     "rate": 1.0
+    },
+    "plan_accuracy": {
+     "hits": 5,
+     "total": 5,
+     "rate": 1.0
+    },
+    "plan_full_accuracy": {
+     "hits": 5,
+     "total": 5,
+     "rate": 1.0
+    },
+    "plan_metric_accuracy": {
+     "hits": 5,
+     "total": 5,
+     "rate": 1.0
+    },
+    "plan_columns_accuracy": {
+     "hits": 5,
+     "total": 5,
+     "rate": 1.0
+    },
+    "plan_grouping_accuracy": {
+     "hits": 5,
+     "total": 5,
+     "rate": 1.0
+    },
+    "plan_filters_accuracy": {
+     "hits": 0,
+     "total": 0,
+     "rate": null
+    },
+    "chart_type_accuracy": {
+     "hits": 5,
+     "total": 5,
+     "rate": 1.0
+    },
+    "numeric_accuracy": {
+     "hits": 5,
+     "total": 5,
+     "rate": 1.0
+    },
+    "numeric_accuracy_system_plan": {
+     "hits": 5,
+     "total": 5,
+     "rate": 1.0
+    },
+    "invalid_rejection_rate": {
+     "hits": 0,
+     "total": 0,
+     "rate": null
+    },
+    "clarification_rate": {
+     "hits": 0,
+     "total": 0,
+     "rate": null
+    },
+    "false_rejection_rate": {
+     "hits": 0,
+     "total": 5,
+     "rate": 0.0
+    },
+    "plan_latency_ms": {
+     "mean": 2336.5,
+     "median": 2293.7,
+     "p95": 2821.9,
+     "max": 2936.8
+    },
+    "retrieval_latency_ms": {
+     "mean": 197.0,
+     "median": 200.1,
+     "p95": 225.7,
+     "max": 229.3
+    },
+    "mcp_latency_ms": {
+     "mean": 119.4,
+     "median": 119.4,
+     "p95": 123.4,
+     "max": 123.5
+    },
+    "llm_tokens": {
+     "calls": 5,
+     "input": 26150,
+     "output": 668,
+     "total": 26818,
+     "mean_total_per_case": 5363.6
+    },
+    "embedding_tokens": 310,
+    "errors": 0
+   },
+   "category_comparison": {
+    "cases": 5,
+    "retrieval_hit_at_3": {
+     "hits": 5,
+     "total": 5,
+     "rate": 1.0
+    },
+    "retrieval_section_hit_at_3": {
+     "hits": 5,
+     "total": 5,
+     "rate": 1.0
+    },
+    "plan_accuracy": {
+     "hits": 5,
+     "total": 5,
+     "rate": 1.0
+    },
+    "plan_full_accuracy": {
+     "hits": 5,
+     "total": 5,
+     "rate": 1.0
+    },
+    "plan_metric_accuracy": {
+     "hits": 5,
+     "total": 5,
+     "rate": 1.0
+    },
+    "plan_columns_accuracy": {
+     "hits": 5,
+     "total": 5,
+     "rate": 1.0
+    },
+    "plan_grouping_accuracy": {
+     "hits": 5,
+     "total": 5,
+     "rate": 1.0
+    },
+    "plan_filters_accuracy": {
+     "hits": 0,
+     "total": 0,
+     "rate": null
+    },
+    "chart_type_accuracy": {
+     "hits": 4,
+     "total": 5,
+     "rate": 0.8
+    },
+    "numeric_accuracy": {
+     "hits": 5,
+     "total": 5,
+     "rate": 1.0
+    },
+    "numeric_accuracy_system_plan": {
+     "hits": 5,
+     "total": 5,
+     "rate": 1.0
+    },
+    "invalid_rejection_rate": {
+     "hits": 0,
+     "total": 0,
+     "rate": null
+    },
+    "clarification_rate": {
+     "hits": 0,
+     "total": 0,
+     "rate": null
+    },
+    "false_rejection_rate": {
+     "hits": 0,
+     "total": 5,
+     "rate": 0.0
+    },
+    "plan_latency_ms": {
+     "mean": 2835.0,
+     "median": 2126.2,
+     "p95": 4594.1,
+     "max": 5020.9
+    },
+    "retrieval_latency_ms": {
+     "mean": 192.2,
+     "median": 170.2,
+     "p95": 259.1,
+     "max": 275.5
+    },
+    "mcp_latency_ms": {
+     "mean": 118.4,
+     "median": 112.9,
+     "p95": 137.2,
+     "max": 138.6
+    },
+    "llm_tokens": {
+     "calls": 5,
+     "input": 26076,
+     "output": 686,
+     "total": 26762,
+     "mean_total_per_case": 5352.4
+    },
+    "embedding_tokens": 244,
+    "errors": 0
+   },
+   "filters": {
+    "cases": 5,
+    "retrieval_hit_at_3": {
+     "hits": 5,
+     "total": 5,
+     "rate": 1.0
+    },
+    "retrieval_section_hit_at_3": {
+     "hits": 4,
+     "total": 5,
+     "rate": 0.8
+    },
+    "plan_accuracy": {
+     "hits": 5,
+     "total": 5,
+     "rate": 1.0
+    },
+    "plan_full_accuracy": {
+     "hits": 5,
+     "total": 5,
+     "rate": 1.0
+    },
+    "plan_metric_accuracy": {
+     "hits": 5,
+     "total": 5,
+     "rate": 1.0
+    },
+    "plan_columns_accuracy": {
+     "hits": 5,
+     "total": 5,
+     "rate": 1.0
+    },
+    "plan_grouping_accuracy": {
+     "hits": 5,
+     "total": 5,
+     "rate": 1.0
+    },
+    "plan_filters_accuracy": {
+     "hits": 5,
+     "total": 5,
+     "rate": 1.0
+    },
+    "chart_type_accuracy": {
+     "hits": 5,
+     "total": 5,
+     "rate": 1.0
+    },
+    "numeric_accuracy": {
+     "hits": 5,
+     "total": 5,
+     "rate": 1.0
+    },
+    "numeric_accuracy_system_plan": {
+     "hits": 5,
+     "total": 5,
+     "rate": 1.0
+    },
+    "invalid_rejection_rate": {
+     "hits": 0,
+     "total": 0,
+     "rate": null
+    },
+    "clarification_rate": {
+     "hits": 0,
+     "total": 0,
+     "rate": null
+    },
+    "false_rejection_rate": {
+     "hits": 0,
+     "total": 5,
+     "rate": 0.0
+    },
+    "plan_latency_ms": {
+     "mean": 2335.6,
+     "median": 2340.4,
+     "p95": 2481.8,
+     "max": 2514.9
+    },
+    "retrieval_latency_ms": {
+     "mean": 198.5,
+     "median": 187.3,
+     "p95": 262.9,
+     "max": 276.8
+    },
+    "mcp_latency_ms": {
+     "mean": 129.4,
+     "median": 119.3,
+     "p95": 171.9,
+     "max": 172.3
+    },
+    "llm_tokens": {
+     "calls": 5,
+     "input": 26172,
+     "output": 787,
+     "total": 26959,
+     "mean_total_per_case": 5391.8
+    },
+    "embedding_tokens": 250,
+    "errors": 0
+   },
+   "rag_terminology": {
+    "cases": 5,
+    "retrieval_hit_at_3": {
+     "hits": 5,
+     "total": 5,
+     "rate": 1.0
+    },
+    "retrieval_section_hit_at_3": {
+     "hits": 5,
+     "total": 5,
+     "rate": 1.0
+    },
+    "plan_accuracy": {
+     "hits": 5,
+     "total": 5,
+     "rate": 1.0
+    },
+    "plan_full_accuracy": {
+     "hits": 5,
+     "total": 5,
+     "rate": 1.0
+    },
+    "plan_metric_accuracy": {
+     "hits": 5,
+     "total": 5,
+     "rate": 1.0
+    },
+    "plan_columns_accuracy": {
+     "hits": 5,
+     "total": 5,
+     "rate": 1.0
+    },
+    "plan_grouping_accuracy": {
+     "hits": 5,
+     "total": 5,
+     "rate": 1.0
+    },
+    "plan_filters_accuracy": {
+     "hits": 0,
+     "total": 0,
+     "rate": null
+    },
+    "chart_type_accuracy": {
+     "hits": 5,
+     "total": 5,
+     "rate": 1.0
+    },
+    "numeric_accuracy": {
+     "hits": 5,
+     "total": 5,
+     "rate": 1.0
+    },
+    "numeric_accuracy_system_plan": {
+     "hits": 5,
+     "total": 5,
+     "rate": 1.0
+    },
+    "invalid_rejection_rate": {
+     "hits": 0,
+     "total": 0,
+     "rate": null
+    },
+    "clarification_rate": {
+     "hits": 0,
+     "total": 0,
+     "rate": null
+    },
+    "false_rejection_rate": {
+     "hits": 0,
+     "total": 5,
+     "rate": 0.0
+    },
+    "plan_latency_ms": {
+     "mean": 2163.9,
+     "median": 2117.5,
+     "p95": 2302.4,
+     "max": 2322.4
+    },
+    "retrieval_latency_ms": {
+     "mean": 209.9,
+     "median": 179.5,
+     "p95": 326.1,
+     "max": 361.5
+    },
+    "mcp_latency_ms": {
+     "mean": 134.8,
+     "median": 129.4,
+     "p95": 169.2,
+     "max": 182.3
+    },
+    "llm_tokens": {
+     "calls": 5,
+     "input": 26174,
+     "output": 620,
+     "total": 26794,
+     "mean_total_per_case": 5358.8
+    },
+    "embedding_tokens": 221,
+    "errors": 0
+   },
+   "invalid_ambiguous": {
+    "cases": 5,
+    "retrieval_hit_at_3": {
+     "hits": 1,
+     "total": 1,
+     "rate": 1.0
+    },
+    "retrieval_section_hit_at_3": {
+     "hits": 1,
+     "total": 1,
+     "rate": 1.0
+    },
+    "plan_accuracy": {
+     "hits": 0,
+     "total": 0,
+     "rate": null
+    },
+    "plan_full_accuracy": {
+     "hits": 0,
+     "total": 0,
+     "rate": null
+    },
+    "plan_metric_accuracy": {
+     "hits": 0,
+     "total": 0,
+     "rate": null
+    },
+    "plan_columns_accuracy": {
+     "hits": 0,
+     "total": 0,
+     "rate": null
+    },
+    "plan_grouping_accuracy": {
+     "hits": 0,
+     "total": 0,
+     "rate": null
+    },
+    "plan_filters_accuracy": {
+     "hits": 0,
+     "total": 0,
+     "rate": null
+    },
+    "chart_type_accuracy": {
+     "hits": 0,
+     "total": 0,
+     "rate": null
+    },
+    "numeric_accuracy": {
+     "hits": 0,
+     "total": 0,
+     "rate": null
+    },
+    "numeric_accuracy_system_plan": {
+     "hits": 0,
+     "total": 0,
+     "rate": null
+    },
+    "invalid_rejection_rate": {
+     "hits": 3,
+     "total": 4,
+     "rate": 0.75
+    },
+    "clarification_rate": {
+     "hits": 1,
+     "total": 1,
+     "rate": 1.0
+    },
+    "false_rejection_rate": {
+     "hits": 0,
+     "total": 0,
+     "rate": null
+    },
+    "plan_latency_ms": {
+     "mean": 1601.8,
+     "median": 1466.1,
+     "p95": 2009.8,
+     "max": 2029.2
+    },
+    "retrieval_latency_ms": {
+     "mean": 208.2,
+     "median": 171.2,
+     "p95": 327.0,
+     "max": 365.5
+    },
+    "mcp_latency_ms": {
+     "mean": null,
+     "median": null,
+     "p95": null,
+     "max": null
+    },
+    "llm_tokens": {
+     "calls": 5,
+     "input": 26340,
+     "output": 406,
+     "total": 26746,
+     "mean_total_per_case": 5349.2
+    },
+    "embedding_tokens": 151,
+    "errors": 0
+   }
+  }
+ },
+ "cases": [
+  {
+   "id": "mi-01",
+   "group": "metric_interpretation",
+   "user_query": "Какой средний чек по каналам?",
+   "expected_behavior": "answer",
+   "has_numeric": true,
+   "llm_used": true,
+   "expected": {
+    "metric": "ratio:Revenue_KZT/Orders",
+    "columns": [
+     "Revenue_KZT",
+     "Orders",
+     "Channel"
+    ],
+    "group_by": [
+     "Channel"
+    ],
+    "filters": [],
+    "chart_type": "bar",
+    "rag_document": "sales_metrics.pdf",
+    "rag_section": "4. Средний чек"
+   },
+   "error": null,
+   "retrieval": {
+    "hits": [
+     {
+      "document": "sales_metrics.pdf",
+      "section": "4. Средний чек (Average Order Value, AOV)",
+      "score": 0.5046,
+      "relevant": true
+     },
+     {
+      "document": "sales_channels_regions.pdf",
+      "section": "3. Категории товаров",
+      "score": 0.3789,
+      "relevant": true
+     },
+     {
+      "document": "sales_metrics.pdf",
+      "section": "2. Выручка (Revenue)",
+      "score": 0.3115,
+      "relevant": true
+     }
+    ],
+    "latency_ms": 332.7,
+    "provider": "openai-text-embedding-3-small",
+    "hit_at_3": true,
+    "section_hit_at_3": true
+   },
+   "numeric_golden_plan": {
+    "ok": true,
+    "max_abs_error": 0.0,
+    "max_rel_error": 0.0,
+    "detail": "",
+    "latency_ms": 216.1
+   },
+   "plan_latency_ms": 2771.8,
+   "tokens": {
+    "llm_calls": 1,
+    "input": 5258,
+    "output": 122,
+    "total": 5380
+   },
+   "plan": {
+    "computed": true,
+    "predicted": {
+     "behavior": "answer",
+     "phase": "awaiting_approval",
+     "steps": 1,
+     "planner": "llm",
+     "unsupported": [],
+     "excluded": [],
+     "notes": [],
+     "metric": "ratio:Revenue_KZT/Orders",
+     "group_by": [
+      "Channel"
+     ],
+     "filters": [],
+     "chart_type": "bar",
+     "columns": [
+      "Revenue_KZT",
+      "Orders",
+      "Channel"
+     ]
+    },
+    "behavior_ok": true,
+    "accurate": true,
+    "full_accurate": true,
+    "metric_ok": true,
+    "columns_ok": true,
+    "grouping_ok": true,
+    "filters_ok": true,
+    "chart_ok": true,
+    "reasons": []
+   },
+   "numeric_system_plan": {
+    "ok": true,
+    "max_abs_error": 0.0,
+    "max_rel_error": 0.0,
+    "detail": "",
+    "latency_ms": 112.4
+   },
+   "embedding_tokens": 57
+  },
+  {
+   "id": "mi-02",
+   "group": "metric_interpretation",
+   "user_query": "Покажи средний чек по категориям товаров",
+   "expected_behavior": "answer",
+   "has_numeric": true,
+   "llm_used": true,
+   "expected": {
+    "metric": "ratio:Revenue_KZT/Orders",
+    "columns": [
+     "Revenue_KZT",
+     "Orders",
+     "Category"
+    ],
+    "group_by": [
+     "Category"
+    ],
+    "filters": [],
+    "chart_type": "bar",
+    "rag_document": "sales_metrics.pdf",
+    "rag_section": "4. Средний чек"
+   },
+   "error": null,
+   "retrieval": {
+    "hits": [
+     {
+      "document": "sales_channels_regions.pdf",
+      "section": "3. Категории товаров",
+      "score": 0.6282,
+      "relevant": true
+     },
+     {
+      "document": "sales_metrics.pdf",
+      "section": "4. Средний чек (Average Order Value, AOV)",
+      "score": 0.5717,
+      "relevant": true
+     },
+     {
+      "document": "sales_metrics.pdf",
+      "section": "6. Показатели без данных",
+      "score": 0.4123,
+      "relevant": true
+     }
+    ],
+    "latency_ms": 168.2,
+    "provider": "openai-text-embedding-3-small",
+    "hit_at_3": true,
+    "section_hit_at_3": true
+   },
+   "numeric_golden_plan": {
+    "ok": true,
+    "max_abs_error": 0.0,
+    "max_rel_error": 0.0,
+    "detail": "",
+    "latency_ms": 121.9
+   },
+   "plan_latency_ms": 2728.3,
+   "tokens": {
+    "llm_calls": 1,
+    "input": 5306,
+    "output": 128,
+    "total": 5434
+   },
+   "plan": {
+    "computed": true,
+    "predicted": {
+     "behavior": "answer",
+     "phase": "awaiting_approval",
+     "steps": 1,
+     "planner": "llm",
+     "unsupported": [],
+     "excluded": [],
+     "notes": [],
+     "metric": "ratio:Revenue_KZT/Orders",
+     "group_by": [
+      "Category"
+     ],
+     "filters": [],
+     "chart_type": "bar",
+     "columns": [
+      "Revenue_KZT",
+      "Orders",
+      "Category"
+     ]
+    },
+    "behavior_ok": true,
+    "accurate": true,
+    "full_accurate": true,
+    "metric_ok": true,
+    "columns_ok": true,
+    "grouping_ok": true,
+    "filters_ok": true,
+    "chart_ok": true,
+    "reasons": []
+   },
+   "numeric_system_plan": {
+    "ok": true,
+    "max_abs_error": 0.0,
+    "max_rel_error": 0.0,
+    "detail": "",
+    "latency_ms": 112.1
+   },
+   "embedding_tokens": 61
+  },
+  {
+   "id": "mi-03",
+   "group": "metric_interpretation",
+   "user_query": "Какая доля отмен по регионам?",
+   "expected_behavior": "answer",
+   "has_numeric": true,
+   "llm_used": true,
+   "expected": {
+    "metric": "rate:Cancelled_Orders/Orders",
+    "columns": [
+     "Cancelled_Orders",
+     "Orders",
+     "Region"
+    ],
+    "group_by": [
+     "Region"
+    ],
+    "filters": [],
+    "chart_type": "bar",
+    "rag_document": "sales_metrics.pdf",
+    "rag_section": "5. Доля отмен"
+   },
+   "error": null,
+   "retrieval": {
+    "hits": [
+     {
+      "document": "sales_metrics.pdf",
+      "section": "5. Доля отмен (Cancellation Rate)",
+      "score": 0.5518,
+      "relevant": true
+     },
+     {
+      "document": "sales_metrics.pdf",
+      "section": "3. Заказы и отмены",
+      "score": 0.3556,
+      "relevant": true
+     },
+     {
+      "document": "sales_metrics.pdf",
+      "section": "2. Выручка (Revenue)",
+      "score": 0.2923,
+      "relevant": false
+     }
+    ],
+    "latency_ms": 230.9,
+    "provider": "openai-text-embedding-3-small",
+    "hit_at_3": true,
+    "section_hit_at_3": true
+   },
+   "numeric_golden_plan": {
+    "ok": true,
+    "max_abs_error": 0.0,
+    "max_rel_error": 0.0,
+    "detail": "",
+    "latency_ms": 114.1
+   },
+   "plan_latency_ms": 2179.7,
+   "tokens": {
+    "llm_calls": 1,
+    "input": 5118,
+    "output": 123,
+    "total": 5241
+   },
+   "plan": {
+    "computed": true,
+    "predicted": {
+     "behavior": "answer",
+     "phase": "awaiting_approval",
+     "steps": 1,
+     "planner": "llm",
+     "unsupported": [],
+     "excluded": [],
+     "notes": [],
+     "metric": "rate:Cancelled_Orders/Orders",
+     "group_by": [
+      "Region"
+     ],
+     "filters": [],
+     "chart_type": "bar",
+     "columns": [
+      "Cancelled_Orders",
+      "Orders",
+      "Region"
+     ]
+    },
+    "behavior_ok": true,
+    "accurate": true,
+    "full_accurate": true,
+    "metric_ok": true,
+    "columns_ok": true,
+    "grouping_ok": true,
+    "filters_ok": true,
+    "chart_ok": true,
+    "reasons": []
+   },
+   "numeric_system_plan": {
+    "ok": true,
+    "max_abs_error": 0.0,
+    "max_rel_error": 0.0,
+    "detail": "",
+    "latency_ms": 115.8
+   },
+   "embedding_tokens": 57
+  },
+  {
+   "id": "mi-04",
+   "group": "metric_interpretation",
+   "user_query": "Сколько в среднем стоит один заказ по регионам?",
+   "expected_behavior": "answer",
+   "has_numeric": true,
+   "llm_used": true,
+   "expected": {
+    "metric": "ratio:Revenue_KZT/Orders",
+    "columns": [
+     "Revenue_KZT",
+     "Orders",
+     "Region"
+    ],
+    "group_by": [
+     "Region"
+    ],
+    "filters": [],
+    "chart_type": "bar",
+    "rag_document": "sales_metrics.pdf",
+    "rag_section": "4. Средний чек"
+   },
+   "error": null,
+   "retrieval": {
+    "hits": [
+     {
+      "document": "sales_metrics.pdf",
+      "section": "4. Средний чек (Average Order Value, AOV)",
+      "score": 0.465,
+      "relevant": true
+     },
+     {
+      "document": "sales_channels_regions.pdf",
+      "section": "3. Категории товаров",
+      "score": 0.4287,
+      "relevant": true
+     },
+     {
+      "document": "sales_metrics.pdf",
+      "section": "2. Выручка (Revenue)",
+      "score": 0.3931,
+      "relevant": true
+     }
+    ],
+    "latency_ms": 178.1,
+    "provider": "openai-text-embedding-3-small",
+    "hit_at_3": true,
+    "section_hit_at_3": true
+   },
+   "numeric_golden_plan": {
+    "ok": true,
+    "max_abs_error": 0.0,
+    "max_rel_error": 0.0,
+    "detail": "",
+    "latency_ms": 119.6
+   },
+   "plan_latency_ms": 2158.1,
+   "tokens": {
+    "llm_calls": 1,
+    "input": 5260,
+    "output": 125,
+    "total": 5385
+   },
+   "plan": {
+    "computed": true,
+    "predicted": {
+     "behavior": "answer",
+     "phase": "awaiting_approval",
+     "steps": 1,
+     "planner": "llm",
+     "unsupported": [],
+     "excluded": [],
+     "notes": [],
+     "metric": "ratio:Revenue_KZT/Orders",
+     "group_by": [
+      "Region"
+     ],
+     "filters": [],
+     "chart_type": "bar",
+     "columns": [
+      "Revenue_KZT",
+      "Orders",
+      "Region"
+     ]
+    },
+    "behavior_ok": true,
+    "accurate": true,
+    "full_accurate": true,
+    "metric_ok": true,
+    "columns_ok": true,
+    "grouping_ok": true,
+    "filters_ok": true,
+    "chart_ok": true,
+    "reasons": []
+   },
+   "numeric_system_plan": {
+    "ok": true,
+    "max_abs_error": 0.0,
+    "max_rel_error": 0.0,
+    "detail": "",
+    "latency_ms": 114.3
+   },
+   "embedding_tokens": 69
+  },
+  {
+   "id": "mi-05",
+   "group": "metric_interpretation",
+   "user_query": "Какой процент заказов отменяется по каналам?",
+   "expected_behavior": "answer",
+   "has_numeric": true,
+   "llm_used": true,
+   "expected": {
+    "metric": "rate:Cancelled_Orders/Orders",
+    "columns": [
+     "Cancelled_Orders",
+     "Orders",
+     "Channel"
+    ],
+    "group_by": [
+     "Channel"
+    ],
+    "filters": [],
+    "chart_type": "bar",
+    "rag_document": "sales_metrics.pdf",
+    "rag_section": "5. Доля отмен"
+   },
+   "error": null,
+   "retrieval": {
+    "hits": [
+     {
+      "document": "sales_metrics.pdf",
+      "section": "5. Доля отмен (Cancellation Rate)",
+      "score": 0.5846,
+      "relevant": true
+     },
+     {
+      "document": "sales_channels_regions.pdf",
+      "section": "1. Каналы продаж",
+      "score": 0.5438,
+      "relevant": true
+     },
+     {
+      "document": "sales_metrics.pdf",
+      "section": "3. Заказы и отмены",
+      "score": 0.5252,
+      "relevant": true
+     }
+    ],
+    "latency_ms": 166.6,
+    "provider": "openai-text-embedding-3-small",
+    "hit_at_3": true,
+    "section_hit_at_3": true
+   },
+   "numeric_golden_plan": {
+    "ok": true,
+    "max_abs_error": 0.0,
+    "max_rel_error": 0.0,
+    "detail": "",
+    "latency_ms": 118.4
+   },
+   "plan_latency_ms": 2217.2,
+   "tokens": {
+    "llm_calls": 1,
+    "input": 5200,
+    "output": 139,
+    "total": 5339
+   },
+   "plan": {
+    "computed": true,
+    "predicted": {
+     "behavior": "answer",
+     "phase": "awaiting_approval",
+     "steps": 1,
+     "planner": "llm",
+     "unsupported": [],
+     "excluded": [],
+     "notes": [],
+     "metric": "rate:Cancelled_Orders/Orders",
+     "group_by": [
+      "Channel"
+     ],
+     "filters": [],
+     "chart_type": "bar",
+     "columns": [
+      "Cancelled_Orders",
+      "Orders",
+      "Channel"
+     ]
+    },
+    "behavior_ok": true,
+    "accurate": true,
+    "full_accurate": true,
+    "metric_ok": true,
+    "columns_ok": true,
+    "grouping_ok": true,
+    "filters_ok": true,
+    "chart_ok": true,
+    "reasons": []
+   },
+   "numeric_system_plan": {
+    "ok": true,
+    "max_abs_error": 0.0,
+    "max_rel_error": 0.0,
+    "detail": "",
+    "latency_ms": 108.8
+   },
+   "embedding_tokens": 72
+  },
+  {
+   "id": "ts-01",
+   "group": "time_series",
+   "user_query": "Покажи динамику выручки по месяцам",
+   "expected_behavior": "answer",
+   "has_numeric": true,
+   "llm_used": true,
+   "expected": {
+    "metric": "sum:Revenue_KZT",
+    "columns": [
+     "Revenue_KZT",
+     "Month"
+    ],
+    "group_by": [
+     "Month"
+    ],
+    "filters": [],
+    "chart_type": "line",
+    "rag_document": "sales_metrics.pdf",
+    "rag_section": "2. Выручка"
+   },
+   "error": null,
+   "retrieval": {
+    "hits": [
+     {
+      "document": "sales_metrics.pdf",
+      "section": "2. Выручка (Revenue)",
+      "score": 0.4533,
+      "relevant": true
+     },
+     {
+      "document": "sales_metrics.pdf",
+      "section": "1. Набор данных sales_2026.xlsx",
+      "score": 0.4204,
+      "relevant": true
+     },
+     {
+      "document": "sales_metrics.pdf",
+      "section": "6. Показатели без данных",
+      "score": 0.3514,
+      "relevant": true
+     }
+    ],
+    "latency_ms": 185.3,
+    "provider": "openai-text-embedding-3-small",
+    "hit_at_3": true,
+    "section_hit_at_3": true
+   },
+   "numeric_golden_plan": {
+    "ok": true,
+    "max_abs_error": 0.0,
+    "max_rel_error": 0.0,
+    "detail": "",
+    "latency_ms": 119.7
+   },
+   "plan_latency_ms": 2936.8,
+   "tokens": {
+    "llm_calls": 1,
+    "input": 5276,
+    "output": 138,
+    "total": 5414
+   },
+   "plan": {
+    "computed": true,
+    "predicted": {
+     "behavior": "answer",
+     "phase": "awaiting_approval",
+     "steps": 1,
+     "planner": "llm",
+     "unsupported": [],
+     "excluded": [],
+     "notes": [],
+     "metric": "sum:Revenue_KZT",
+     "group_by": [
+      "Month"
+     ],
+     "filters": [],
+     "chart_type": "line",
+     "columns": [
+      "Revenue_KZT",
+      "Month"
+     ]
+    },
+    "behavior_ok": true,
+    "accurate": true,
+    "full_accurate": true,
+    "metric_ok": true,
+    "columns_ok": true,
+    "grouping_ok": true,
+    "filters_ok": true,
+    "chart_ok": true,
+    "reasons": []
+   },
+   "numeric_system_plan": {
+    "ok": true,
+    "max_abs_error": 0.0,
+    "max_rel_error": 0.0,
+    "detail": "",
+    "latency_ms": 114.9
+   },
+   "embedding_tokens": 55
+  },
+  {
+   "id": "ts-02",
+   "group": "time_series",
+   "user_query": "Как менялось количество заказов от месяца к месяцу?",
+   "expected_behavior": "answer",
+   "has_numeric": true,
+   "llm_used": true,
+   "expected": {
+    "metric": "sum:Orders",
+    "columns": [
+     "Orders",
+     "Month"
+    ],
+    "group_by": [
+     "Month"
+    ],
+    "filters": [],
+    "chart_type": "line",
+    "rag_document": "sales_metrics.pdf",
+    "rag_section": "3. Заказы и отмены"
+   },
+   "error": null,
+   "retrieval": {
+    "hits": [
+     {
+      "document": "sales_metrics.pdf",
+      "section": "3. Заказы и отмены",
+      "score": 0.5218,
+      "relevant": true
+     },
+     {
+      "document": "sales_metrics.pdf",
+      "section": "1. Набор данных sales_2026.xlsx",
+      "score": 0.4606,
+      "relevant": true
+     },
+     {
+      "document": "sales_metrics.pdf",
+      "section": "2. Выручка (Revenue)",
+      "score": 0.454,
+      "relevant": true
+     }
+    ],
+    "latency_ms": 211.4,
+    "provider": "openai-text-embedding-3-small",
+    "hit_at_3": true,
+    "section_hit_at_3": true
+   },
+   "numeric_golden_plan": {
+    "ok": true,
+    "max_abs_error": 0.0,
+    "max_rel_error": 0.0,
+    "detail": "",
+    "latency_ms": 119.3
+   },
+   "plan_latency_ms": 2362.2,
+   "tokens": {
+    "llm_calls": 1,
+    "input": 5215,
+    "output": 130,
+    "total": 5345
+   },
+   "plan": {
+    "computed": true,
+    "predicted": {
+     "behavior": "answer",
+     "phase": "awaiting_approval",
+     "steps": 1,
+     "planner": "llm",
+     "unsupported": [],
+     "excluded": [],
+     "notes": [],
+     "metric": "sum:Orders",
+     "group_by": [
+      "Month"
+     ],
+     "filters": [],
+     "chart_type": "line",
+     "columns": [
+      "Orders",
+      "Month"
+     ]
+    },
+    "behavior_ok": true,
+    "accurate": true,
+    "full_accurate": true,
+    "metric_ok": true,
+    "columns_ok": true,
+    "grouping_ok": true,
+    "filters_ok": true,
+    "chart_ok": true,
+    "reasons": []
+   },
+   "numeric_system_plan": {
+    "ok": true,
+    "max_abs_error": 0.0,
+    "max_rel_error": 0.0,
+    "detail": "",
+    "latency_ms": 123.2
+   },
+   "embedding_tokens": 57
+  },
+  {
+   "id": "ts-03",
+   "group": "time_series",
+   "user_query": "Покажи динамику отменённых заказов по месяцам",
+   "expected_behavior": "answer",
+   "has_numeric": true,
+   "llm_used": true,
+   "expected": {
+    "metric": "sum:Cancelled_Orders",
+    "columns": [
+     "Cancelled_Orders",
+     "Month"
+    ],
+    "group_by": [
+     "Month"
+    ],
+    "filters": [],
+    "chart_type": "line",
+    "rag_document": "sales_metrics.pdf",
+    "rag_section": "3. Заказы и отмены"
+   },
+   "error": null,
+   "retrieval": {
+    "hits": [
+     {
+      "document": "sales_metrics.pdf",
+      "section": "3. Заказы и отмены",
+      "score": 0.5674,
+      "relevant": true
+     },
+     {
+      "document": "sales_metrics.pdf",
+      "section": "5. Доля отмен (Cancellation Rate)",
+      "score": 0.511,
+      "relevant": true
+     },
+     {
+      "document": "sales_metrics.pdf",
+      "section": "1. Набор данных sales_2026.xlsx",
+      "score": 0.4912,
+      "relevant": true
+     }
+    ],
+    "latency_ms": 158.8,
+    "provider": "openai-text-embedding-3-small",
+    "hit_at_3": true,
+    "section_hit_at_3": true
+   },
+   "numeric_golden_plan": {
+    "ok": true,
+    "max_abs_error": 0.0,
+    "max_rel_error": 0.0,
+    "detail": "",
+    "latency_ms": 117.8
+   },
+   "plan_latency_ms": 2293.7,
+   "tokens": {
+    "llm_calls": 1,
+    "input": 5206,
+    "output": 143,
+    "total": 5349
+   },
+   "plan": {
+    "computed": true,
+    "predicted": {
+     "behavior": "answer",
+     "phase": "awaiting_approval",
+     "steps": 1,
+     "planner": "llm",
+     "unsupported": [],
+     "excluded": [],
+     "notes": [],
+     "metric": "sum:Cancelled_Orders",
+     "group_by": [
+      "Month"
+     ],
+     "filters": [],
+     "chart_type": "line",
+     "columns": [
+      "Cancelled_Orders",
+      "Month"
+     ]
+    },
+    "behavior_ok": true,
+    "accurate": true,
+    "full_accurate": true,
+    "metric_ok": true,
+    "columns_ok": true,
+    "grouping_ok": true,
+    "filters_ok": true,
+    "chart_ok": true,
+    "reasons": []
+   },
+   "numeric_system_plan": {
+    "ok": true,
+    "max_abs_error": 0.0,
+    "max_rel_error": 0.0,
+    "detail": "",
+    "latency_ms": 115.7
+   },
+   "embedding_tokens": 64
+  },
+  {
+   "id": "ts-04",
+   "group": "time_series",
+   "user_query": "Покажи динамику среднего чека по месяцам",
+   "expected_behavior": "answer",
+   "has_numeric": true,
+   "llm_used": true,
+   "expected": {
+    "metric": "ratio:Revenue_KZT/Orders",
+    "columns": [
+     "Revenue_KZT",
+     "Orders",
+     "Month"
+    ],
+    "group_by": [
+     "Month"
+    ],
+    "filters": [],
+    "chart_type": "line",
+    "rag_document": "sales_metrics.pdf",
+    "rag_section": "4. Средний чек"
+   },
+   "error": null,
+   "retrieval": {
+    "hits": [
+     {
+      "document": "sales_metrics.pdf",
+      "section": "4. Средний чек (Average Order Value, AOV)",
+      "score": 0.4555,
+      "relevant": true
+     },
+     {
+      "document": "sales_calendar_2026.pdf",
+      "section": "2. Как читать события",
+      "score": 0.3625,
+      "relevant": true
+     },
+     {
+      "document": "sales_metrics.pdf",
+      "section": "1. Набор данных sales_2026.xlsx",
+      "score": 0.3606,
+      "relevant": true
+     }
+    ],
+    "latency_ms": 229.3,
+    "provider": "openai-text-embedding-3-small",
+    "hit_at_3": true,
+    "section_hit_at_3": true
+   },
+   "numeric_golden_plan": {
+    "ok": true,
+    "max_abs_error": 0.0,
+    "max_rel_error": 0.0,
+    "detail": "",
+    "latency_ms": 119.6
+   },
+   "plan_latency_ms": 2019.0,
+   "tokens": {
+    "llm_calls": 1,
+    "input": 5249,
+    "output": 131,
+    "total": 5380
+   },
+   "plan": {
+    "computed": true,
+    "predicted": {
+     "behavior": "answer",
+     "phase": "awaiting_approval",
+     "steps": 1,
+     "planner": "llm",
+     "unsupported": [],
+     "excluded": [],
+     "notes": [],
+     "metric": "ratio:Revenue_KZT/Orders",
+     "group_by": [
+      "Month"
+     ],
+     "filters": [],
+     "chart_type": "line",
+     "columns": [
+      "Revenue_KZT",
+      "Orders",
+      "Month"
+     ]
+    },
+    "behavior_ok": true,
+    "accurate": true,
+    "full_accurate": true,
+    "metric_ok": true,
+    "columns_ok": true,
+    "grouping_ok": true,
+    "filters_ok": true,
+    "chart_ok": true,
+    "reasons": []
+   },
+   "numeric_system_plan": {
+    "ok": true,
+    "max_abs_error": 0.0,
+    "max_rel_error": 0.0,
+    "detail": "",
+    "latency_ms": 123.5
+   },
+   "embedding_tokens": 69
+  },
+  {
+   "id": "ts-05",
+   "group": "time_series",
+   "user_query": "Как изменялась доля отмен по месяцам?",
+   "expected_behavior": "answer",
+   "has_numeric": true,
+   "llm_used": true,
+   "expected": {
+    "metric": "rate:Cancelled_Orders/Orders",
+    "columns": [
+     "Cancelled_Orders",
+     "Orders",
+     "Month"
+    ],
+    "group_by": [
+     "Month"
+    ],
+    "filters": [],
+    "chart_type": "line",
+    "rag_document": "sales_metrics.pdf",
+    "rag_section": "5. Доля отмен"
+   },
+   "error": null,
+   "retrieval": {
+    "hits": [
+     {
+      "document": "sales_metrics.pdf",
+      "section": "5. Доля отмен (Cancellation Rate)",
+      "score": 0.5472,
+      "relevant": true
+     },
+     {
+      "document": "sales_metrics.pdf",
+      "section": "3. Заказы и отмены",
+      "score": 0.379,
+      "relevant": true
+     },
+     {
+      "document": "sales_metrics.pdf",
+      "section": "2. Выручка (Revenue)",
+      "score": 0.3585,
+      "relevant": true
+     }
+    ],
+    "latency_ms": 200.1,
+    "provider": "openai-text-embedding-3-small",
+    "hit_at_3": true,
+    "section_hit_at_3": true
+   },
+   "numeric_golden_plan": {
+    "ok": true,
+    "max_abs_error": 0.0,
+    "max_rel_error": 0.0,
+    "detail": "",
+    "latency_ms": 121.2
+   },
+   "plan_latency_ms": 2070.7,
+   "tokens": {
+    "llm_calls": 1,
+    "input": 5204,
+    "output": 126,
+    "total": 5330
+   },
+   "plan": {
+    "computed": true,
+    "predicted": {
+     "behavior": "answer",
+     "phase": "awaiting_approval",
+     "steps": 1,
+     "planner": "llm",
+     "unsupported": [],
+     "excluded": [],
+     "notes": [],
+     "metric": "rate:Cancelled_Orders/Orders",
+     "group_by": [
+      "Month"
+     ],
+     "filters": [],
+     "chart_type": "line",
+     "columns": [
+      "Cancelled_Orders",
+      "Orders",
+      "Month"
+     ]
+    },
+    "behavior_ok": true,
+    "accurate": true,
+    "full_accurate": true,
+    "metric_ok": true,
+    "columns_ok": true,
+    "grouping_ok": true,
+    "filters_ok": true,
+    "chart_ok": true,
+    "reasons": []
+   },
+   "numeric_system_plan": {
+    "ok": true,
+    "max_abs_error": 0.0,
+    "max_rel_error": 0.0,
+    "detail": "",
+    "latency_ms": 118.8
+   },
+   "embedding_tokens": 65
+  },
+  {
+   "id": "cc-01",
+   "group": "category_comparison",
+   "user_query": "Сравни регионы по выручке",
+   "expected_behavior": "answer",
+   "has_numeric": true,
+   "llm_used": true,
+   "expected": {
+    "metric": "sum:Revenue_KZT",
+    "columns": [
+     "Revenue_KZT",
+     "Region"
+    ],
+    "group_by": [
+     "Region"
+    ],
+    "filters": [],
+    "chart_type": "bar",
+    "rag_document": "sales_metrics.pdf",
+    "rag_section": "2. Выручка"
+   },
+   "error": null,
+   "retrieval": {
+    "hits": [
+     {
+      "document": "sales_metrics.pdf",
+      "section": "2. Выручка (Revenue)",
+      "score": 0.3742,
+      "relevant": true
+     },
+     {
+      "document": "sales_channels_regions.pdf",
+      "section": "2. Регионы",
+      "score": 0.3594,
+      "relevant": true
+     },
+     {
+      "document": "sales_metrics.pdf",
+      "section": "6. Показатели без данных",
+      "score": 0.2859,
+      "relevant": false
+     }
+    ],
+    "latency_ms": 169.2,
+    "provider": "openai-text-embedding-3-small",
+    "hit_at_3": true,
+    "section_hit_at_3": true
+   },
+   "numeric_golden_plan": {
+    "ok": true,
+    "max_abs_error": 0.0,
+    "max_rel_error": 0.0,
+    "detail": "",
+    "latency_ms": 112.9
+   },
+   "plan_latency_ms": 2887.1,
+   "tokens": {
+    "llm_calls": 1,
+    "input": 5126,
+    "output": 148,
+    "total": 5274
+   },
+   "plan": {
+    "computed": true,
+    "predicted": {
+     "behavior": "answer",
+     "phase": "awaiting_approval",
+     "steps": 1,
+     "planner": "llm",
+     "unsupported": [],
+     "excluded": [],
+     "notes": [],
+     "metric": "sum:Revenue_KZT",
+     "group_by": [
+      "Region"
+     ],
+     "filters": [],
+     "chart_type": "bar",
+     "columns": [
+      "Revenue_KZT",
+      "Region"
+     ]
+    },
+    "behavior_ok": true,
+    "accurate": true,
+    "full_accurate": true,
+    "metric_ok": true,
+    "columns_ok": true,
+    "grouping_ok": true,
+    "filters_ok": true,
+    "chart_ok": true,
+    "reasons": []
+   },
+   "numeric_system_plan": {
+    "ok": true,
+    "max_abs_error": 0.0,
+    "max_rel_error": 0.0,
+    "detail": "",
+    "latency_ms": 120.4
+   },
+   "embedding_tokens": 45
+  },
+  {
+   "id": "cc-02",
+   "group": "category_comparison",
+   "user_query": "Какая категория показала наибольший рост выручки?",
+   "expected_behavior": "answer",
+   "has_numeric": true,
+   "llm_used": true,
+   "expected": {
+    "metric": "sum:Revenue_KZT",
+    "columns": [
+     "Revenue_KZT",
+     "Month",
+     "Category"
+    ],
+    "group_by": [
+     "Month",
+     "Category"
+    ],
+    "filters": [],
+    "chart_type": "line",
+    "rag_document": "sales_metrics.pdf",
+    "rag_section": "2. Выручка"
+   },
+   "error": null,
+   "retrieval": {
+    "hits": [
+     {
+      "document": "sales_channels_regions.pdf",
+      "section": "3. Категории товаров",
+      "score": 0.4405,
+      "relevant": true
+     },
+     {
+      "document": "sales_metrics.pdf",
+      "section": "2. Выручка (Revenue)",
+      "score": 0.4005,
+      "relevant": true
+     },
+     {
+      "document": "sales_metrics.pdf",
+      "section": "6. Показатели без данных",
+      "score": 0.3193,
+      "relevant": true
+     }
+    ],
+    "latency_ms": 170.2,
+    "provider": "openai-text-embedding-3-small",
+    "hit_at_3": true,
+    "section_hit_at_3": true
+   },
+   "numeric_golden_plan": {
+    "ok": true,
+    "max_abs_error": 0.0,
+    "max_rel_error": 0.0,
+    "detail": "",
+    "latency_ms": 135.4
+   },
+   "plan_latency_ms": 5020.9,
+   "tokens": {
+    "llm_calls": 1,
+    "input": 5271,
+    "output": 156,
+    "total": 5427
+   },
+   "plan": {
+    "computed": true,
+    "predicted": {
+     "behavior": "answer",
+     "phase": "awaiting_approval",
+     "steps": 1,
+     "planner": "llm",
+     "unsupported": [],
+     "excluded": [],
+     "notes": [
+      "«Сравнение выручки по категориям»: в запросе речь о динамике, поэтому добавлена группировка по «Month».",
+      "График «Сравнение выручки по категориям»: динамика по «Month» показывается линейным графиком, а не «bar»."
+     ],
+     "metric": "sum:Revenue_KZT",
+     "group_by": [
+      "Month",
+      "Category"
+     ],
+     "filters": [],
+     "chart_type": "line",
+     "columns": [
+      "Revenue_KZT",
+      "Month",
+      "Category"
+     ]
+    },
+    "behavior_ok": true,
+    "accurate": true,
+    "full_accurate": true,
+    "metric_ok": true,
+    "columns_ok": true,
+    "grouping_ok": true,
+    "filters_ok": true,
+    "chart_ok": true,
+    "reasons": []
+   },
+   "numeric_system_plan": {
+    "ok": true,
+    "max_abs_error": 0.0,
+    "max_rel_error": 0.0,
+    "detail": "",
+    "latency_ms": 138.6
+   },
+   "embedding_tokens": 58
+  },
+  {
+   "id": "cc-03",
+   "group": "category_comparison",
+   "user_query": "Какой канал приносит больше всего выручки?",
+   "expected_behavior": "answer",
+   "has_numeric": true,
+   "llm_used": true,
+   "expected": {
+    "metric": "sum:Revenue_KZT",
+    "columns": [
+     "Revenue_KZT",
+     "Channel"
+    ],
+    "group_by": [
+     "Channel"
+    ],
+    "filters": [],
+    "chart_type": "bar",
+    "rag_document": "sales_metrics.pdf",
+    "rag_section": "2. Выручка"
+   },
+   "error": null,
+   "retrieval": {
+    "hits": [
+     {
+      "document": "sales_metrics.pdf",
+      "section": "2. Выручка (Revenue)",
+      "score": 0.4349,
+      "relevant": true
+     },
+     {
+      "document": "sales_channels_regions.pdf",
+      "section": "1. Каналы продаж",
+      "score": 0.3743,
+      "relevant": true
+     },
+     {
+      "document": "sales_metrics.pdf",
+      "section": "4. Средний чек (Average Order Value, AOV)",
+      "score": 0.3556,
+      "relevant": true
+     }
+    ],
+    "latency_ms": 153.0,
+    "provider": "openai-text-embedding-3-small",
+    "hit_at_3": true,
+    "section_hit_at_3": true
+   },
+   "numeric_golden_plan": {
+    "ok": true,
+    "max_abs_error": 0.0,
+    "max_rel_error": 0.0,
+    "detail": "",
+    "latency_ms": 108.7
+   },
+   "plan_latency_ms": 2044.8,
+   "tokens": {
+    "llm_calls": 1,
+    "input": 5263,
+    "output": 120,
+    "total": 5383
+   },
+   "plan": {
+    "computed": true,
+    "predicted": {
+     "behavior": "answer",
+     "phase": "awaiting_approval",
+     "steps": 1,
+     "planner": "llm",
+     "unsupported": [],
+     "excluded": [],
+     "notes": [],
+     "metric": "sum:Revenue_KZT",
+     "group_by": [
+      "Channel"
+     ],
+     "filters": [],
+     "chart_type": "bar",
+     "columns": [
+      "Revenue_KZT",
+      "Channel"
+     ]
+    },
+    "behavior_ok": true,
+    "accurate": true,
+    "full_accurate": true,
+    "metric_ok": true,
+    "columns_ok": true,
+    "grouping_ok": true,
+    "filters_ok": true,
+    "chart_ok": true,
+    "reasons": []
+   },
+   "numeric_system_plan": {
+    "ok": true,
+    "max_abs_error": 0.0,
+    "max_rel_error": 0.0,
+    "detail": "",
+    "latency_ms": 111.6
+   },
+   "embedding_tokens": 52
+  },
+  {
+   "id": "cc-04",
+   "group": "category_comparison",
+   "user_query": "Сравни категории по количеству заказов",
+   "expected_behavior": "answer",
+   "has_numeric": true,
+   "llm_used": true,
+   "expected": {
+    "metric": "sum:Orders",
+    "columns": [
+     "Orders",
+     "Category"
+    ],
+    "group_by": [
+     "Category"
+    ],
+    "filters": [],
+    "chart_type": "bar",
+    "rag_document": "sales_metrics.pdf",
+    "rag_section": "3. Заказы и отмены"
+   },
+   "error": null,
+   "retrieval": {
+    "hits": [
+     {
+      "document": "sales_channels_regions.pdf",
+      "section": "3. Категории товаров",
+      "score": 0.5493,
+      "relevant": true
+     },
+     {
+      "document": "sales_metrics.pdf",
+      "section": "3. Заказы и отмены",
+      "score": 0.5394,
+      "relevant": true
+     },
+     {
+      "document": "sales_metrics.pdf",
+      "section": "2. Выручка (Revenue)",
+      "score": 0.4613,
+      "relevant": true
+     }
+    ],
+    "latency_ms": 193.3,
+    "provider": "openai-text-embedding-3-small",
+    "hit_at_3": true,
+    "section_hit_at_3": true
+   },
+   "numeric_golden_plan": {
+    "ok": true,
+    "max_abs_error": 0.0,
+    "max_rel_error": 0.0,
+    "detail": "",
+    "latency_ms": 118.4
+   },
+   "plan_latency_ms": 2095.8,
+   "tokens": {
+    "llm_calls": 1,
+    "input": 5204,
+    "output": 129,
+    "total": 5333
+   },
+   "plan": {
+    "computed": true,
+    "predicted": {
+     "behavior": "answer",
+     "phase": "awaiting_approval",
+     "steps": 1,
+     "planner": "llm",
+     "unsupported": [],
+     "excluded": [],
+     "notes": [],
+     "metric": "sum:Orders",
+     "group_by": [
+      "Category"
+     ],
+     "filters": [],
+     "chart_type": "bar",
+     "columns": [
+      "Orders",
+      "Category"
+     ]
+    },
+    "behavior_ok": true,
+    "accurate": true,
+    "full_accurate": true,
+    "metric_ok": true,
+    "columns_ok": true,
+    "grouping_ok": true,
+    "filters_ok": true,
+    "chart_ok": true,
+    "reasons": []
+   },
+   "numeric_system_plan": {
+    "ok": true,
+    "max_abs_error": 0.0,
+    "max_rel_error": 0.0,
+    "detail": "",
+    "latency_ms": 112.6
+   },
+   "embedding_tokens": 41
+  },
+  {
+   "id": "cc-05",
+   "group": "category_comparison",
+   "user_query": "Покажи вклад регионов в выручку",
+   "expected_behavior": "answer",
+   "has_numeric": true,
+   "llm_used": true,
+   "expected": {
+    "metric": "sum:Revenue_KZT",
+    "columns": [
+     "Revenue_KZT",
+     "Region"
+    ],
+    "group_by": [
+     "Region"
+    ],
+    "filters": [],
+    "chart_type": "pie",
+    "rag_document": "sales_metrics.pdf",
+    "rag_section": "2. Выручка"
+   },
+   "error": null,
+   "retrieval": {
+    "hits": [
+     {
+      "document": "sales_metrics.pdf",
+      "section": "2. Выручка (Revenue)",
+      "score": 0.4241,
+      "relevant": true
+     },
+     {
+      "document": "sales_channels_regions.pdf",
+      "section": "2. Регионы",
+      "score": 0.3677,
+      "relevant": true
+     },
+     {
+      "document": "sales_metrics.pdf",
+      "section": "1. Набор данных sales_2026.xlsx",
+      "score": 0.3342,
+      "relevant": true
+     }
+    ],
+    "latency_ms": 275.5,
+    "provider": "openai-text-embedding-3-small",
+    "hit_at_3": true,
+    "section_hit_at_3": true
+   },
+   "numeric_golden_plan": {
+    "ok": true,
+    "max_abs_error": 0.0,
+    "max_rel_error": 0.0,
+    "detail": "",
+    "latency_ms": 112.6
+   },
+   "plan_latency_ms": 2126.2,
+   "tokens": {
+    "llm_calls": 1,
+    "input": 5212,
+    "output": 133,
+    "total": 5345
+   },
+   "plan": {
+    "computed": true,
+    "predicted": {
+     "behavior": "answer",
+     "phase": "awaiting_approval",
+     "steps": 1,
+     "planner": "llm",
+     "unsupported": [],
+     "excluded": [],
+     "notes": [],
+     "metric": "sum:Revenue_KZT",
+     "group_by": [
+      "Region"
+     ],
+     "filters": [],
+     "chart_type": "bar",
+     "columns": [
+      "Revenue_KZT",
+      "Region"
+     ]
+    },
+    "behavior_ok": true,
+    "accurate": true,
+    "full_accurate": true,
+    "metric_ok": true,
+    "columns_ok": true,
+    "grouping_ok": true,
+    "filters_ok": true,
+    "chart_ok": false,
+    "reasons": []
+   },
+   "numeric_system_plan": {
+    "ok": true,
+    "max_abs_error": 0.0,
+    "max_rel_error": 0.0,
+    "detail": "",
+    "latency_ms": 112.9
+   },
+   "embedding_tokens": 48
+  },
+  {
+   "id": "fl-01",
+   "group": "filters",
+   "user_query": "Сравни выручку Web и Mobile",
+   "expected_behavior": "answer",
+   "has_numeric": true,
+   "llm_used": true,
+   "expected": {
+    "metric": "sum:Revenue_KZT",
+    "columns": [
+     "Revenue_KZT",
+     "Channel"
+    ],
+    "group_by": [
+     "Channel"
+    ],
+    "filters": [
+     {
+      "column": "Channel",
+      "op": "in",
+      "value": [
+       "Web",
+       "Mobile"
+      ]
+     }
+    ],
+    "chart_type": "bar",
+    "rag_document": "sales_metrics.pdf",
+    "rag_section": "2. Выручка"
+   },
+   "error": null,
+   "retrieval": {
+    "hits": [
+     {
+      "document": "sales_channels_regions.pdf",
+      "section": "1. Каналы продаж",
+      "score": 0.3977,
+      "relevant": true
+     },
+     {
+      "document": "sales_channels_regions.pdf",
+      "section": "3. Категории товаров",
+      "score": 0.3482,
+      "relevant": true
+     },
+     {
+      "document": "sales_metrics.pdf",
+      "section": "6. Показатели без данных",
+      "score": 0.3149,
+      "relevant": true
+     }
+    ],
+    "latency_ms": 207.5,
+    "provider": "openai-text-embedding-3-small",
+    "hit_at_3": true,
+    "section_hit_at_3": false
+   },
+   "numeric_golden_plan": {
+    "ok": true,
+    "max_abs_error": 0.0,
+    "max_rel_error": 0.0,
+    "detail": "",
+    "latency_ms": 117.5
+   },
+   "plan_latency_ms": 2349.5,
+   "tokens": {
+    "llm_calls": 1,
+    "input": 5262,
+    "output": 160,
+    "total": 5422
+   },
+   "plan": {
+    "computed": true,
+    "predicted": {
+     "behavior": "answer",
+     "phase": "awaiting_approval",
+     "steps": 1,
+     "planner": "llm",
+     "unsupported": [],
+     "excluded": [],
+     "notes": [],
+     "metric": "sum:Revenue_KZT",
+     "group_by": [
+      "Channel"
+     ],
+     "filters": [
+      {
+       "column": "Channel",
+       "op": "in",
+       "value": [
+        "Web",
+        "Mobile"
+       ]
+      }
+     ],
+     "chart_type": "bar",
+     "columns": [
+      "Revenue_KZT",
+      "Channel"
+     ]
+    },
+    "behavior_ok": true,
+    "accurate": true,
+    "full_accurate": true,
+    "metric_ok": true,
+    "columns_ok": true,
+    "grouping_ok": true,
+    "filters_ok": true,
+    "chart_ok": true,
+    "reasons": []
+   },
+   "numeric_system_plan": {
+    "ok": true,
+    "max_abs_error": 0.0,
+    "max_rel_error": 0.0,
+    "detail": "",
+    "latency_ms": 111.6
+   },
+   "embedding_tokens": 39
+  },
+  {
+   "id": "fl-02",
+   "group": "filters",
+   "user_query": "Покажи динамику выручки только по Almaty",
+   "expected_behavior": "answer",
+   "has_numeric": true,
+   "llm_used": true,
+   "expected": {
+    "metric": "sum:Revenue_KZT",
+    "columns": [
+     "Revenue_KZT",
+     "Month",
+     "Region"
+    ],
+    "group_by": [
+     "Month"
+    ],
+    "filters": [
+     {
+      "column": "Region",
+      "op": "eq",
+      "value": "Almaty"
+     }
+    ],
+    "chart_type": "line",
+    "rag_document": "sales_metrics.pdf",
+    "rag_section": "2. Выручка"
+   },
+   "error": null,
+   "retrieval": {
+    "hits": [
+     {
+      "document": "sales_channels_regions.pdf",
+      "section": "2. Регионы",
+      "score": 0.4766,
+      "relevant": true
+     },
+     {
+      "document": "sales_metrics.pdf",
+      "section": "2. Выручка (Revenue)",
+      "score": 0.4291,
+      "relevant": true
+     },
+     {
+      "document": "sales_metrics.pdf",
+      "section": "1. Набор данных sales_2026.xlsx",
+      "score": 0.3873,
+      "relevant": true
+     }
+    ],
+    "latency_ms": 187.3,
+    "provider": "openai-text-embedding-3-small",
+    "hit_at_3": true,
+    "section_hit_at_3": true
+   },
+   "numeric_golden_plan": {
+    "ok": true,
+    "max_abs_error": 0.0,
+    "max_rel_error": 0.0,
+    "detail": "",
+    "latency_ms": 124.2
+   },
+   "plan_latency_ms": 2340.4,
+   "tokens": {
+    "llm_calls": 1,
+    "input": 5215,
+    "output": 158,
+    "total": 5373
+   },
+   "plan": {
+    "computed": true,
+    "predicted": {
+     "behavior": "answer",
+     "phase": "awaiting_approval",
+     "steps": 1,
+     "planner": "llm",
+     "unsupported": [],
+     "excluded": [],
+     "notes": [],
+     "metric": "sum:Revenue_KZT",
+     "group_by": [
+      "Month"
+     ],
+     "filters": [
+      {
+       "column": "Region",
+       "op": "eq",
+       "value": "Almaty"
+      }
+     ],
+     "chart_type": "line",
+     "columns": [
+      "Revenue_KZT",
+      "Month",
+      "Region"
+     ]
+    },
+    "behavior_ok": true,
+    "accurate": true,
+    "full_accurate": true,
+    "metric_ok": true,
+    "columns_ok": true,
+    "grouping_ok": true,
+    "filters_ok": true,
+    "chart_ok": true,
+    "reasons": []
+   },
+   "numeric_system_plan": {
+    "ok": true,
+    "max_abs_error": 0.0,
+    "max_rel_error": 0.0,
+    "detail": "",
+    "latency_ms": 122.3
+   },
+   "embedding_tokens": 53
+  },
+  {
+   "id": "fl-03",
+   "group": "filters",
+   "user_query": "Какой средний чек в категории Electronics по каналам?",
+   "expected_behavior": "answer",
+   "has_numeric": true,
+   "llm_used": true,
+   "expected": {
+    "metric": "ratio:Revenue_KZT/Orders",
+    "columns": [
+     "Revenue_KZT",
+     "Orders",
+     "Channel",
+     "Category"
+    ],
+    "group_by": [
+     "Channel"
+    ],
+    "filters": [
+     {
+      "column": "Category",
+      "op": "eq",
+      "value": "Electronics"
+     }
+    ],
+    "chart_type": "bar",
+    "rag_document": "sales_metrics.pdf",
+    "rag_section": "4. Средний чек"
+   },
+   "error": null,
+   "retrieval": {
+    "hits": [
+     {
+      "document": "sales_channels_regions.pdf",
+      "section": "3. Категории товаров",
+      "score": 0.6236,
+      "relevant": true
+     },
+     {
+      "document": "sales_metrics.pdf",
+      "section": "4. Средний чек (Average Order Value, AOV)",
+      "score": 0.4945,
+      "relevant": true
+     },
+     {
+      "document": "sales_calendar_2026.pdf",
+      "section": "1. События 2026 года",
+      "score": 0.3433,
+      "relevant": true
+     }
+    ],
+    "latency_ms": 168.1,
+    "provider": "openai-text-embedding-3-small",
+    "hit_at_3": true,
+    "section_hit_at_3": true
+   },
+   "numeric_golden_plan": {
+    "ok": true,
+    "max_abs_error": 0.0,
+    "max_rel_error": 0.0,
+    "detail": "",
+    "latency_ms": 117.1
+   },
+   "plan_latency_ms": 2265.9,
+   "tokens": {
+    "llm_calls": 1,
+    "input": 5275,
+    "output": 153,
+    "total": 5428
+   },
+   "plan": {
+    "computed": true,
+    "predicted": {
+     "behavior": "answer",
+     "phase": "awaiting_approval",
+     "steps": 1,
+     "planner": "llm",
+     "unsupported": [],
+     "excluded": [],
+     "notes": [],
+     "metric": "ratio:Revenue_KZT/Orders",
+     "group_by": [
+      "Channel"
+     ],
+     "filters": [
+      {
+       "column": "Category",
+       "op": "eq",
+       "value": "Electronics"
+      }
+     ],
+     "chart_type": "bar",
+     "columns": [
+      "Revenue_KZT",
+      "Orders",
+      "Channel",
+      "Category"
+     ]
+    },
+    "behavior_ok": true,
+    "accurate": true,
+    "full_accurate": true,
+    "metric_ok": true,
+    "columns_ok": true,
+    "grouping_ok": true,
+    "filters_ok": true,
+    "chart_ok": true,
+    "reasons": []
+   },
+   "numeric_system_plan": {
+    "ok": true,
+    "max_abs_error": 0.0,
+    "max_rel_error": 0.0,
+    "detail": "",
+    "latency_ms": 119.5
+   },
+   "embedding_tokens": 67
+  },
+  {
+   "id": "fl-04",
+   "group": "filters",
+   "user_query": "Сравни выручку регионов за март",
+   "expected_behavior": "answer",
+   "has_numeric": true,
+   "llm_used": true,
+   "expected": {
+    "metric": "sum:Revenue_KZT",
+    "columns": [
+     "Revenue_KZT",
+     "Region",
+     "Month"
+    ],
+    "group_by": [
+     "Region"
+    ],
+    "filters": [
+     {
+      "column": "Month",
+      "op": "eq",
+      "value": "2026-03"
+     }
+    ],
+    "chart_type": "bar",
+    "rag_document": "sales_metrics.pdf",
+    "rag_section": "2. Выручка"
+   },
+   "error": null,
+   "retrieval": {
+    "hits": [
+     {
+      "document": "sales_metrics.pdf",
+      "section": "2. Выручка (Revenue)",
+      "score": 0.3852,
+      "relevant": true
+     },
+     {
+      "document": "sales_channels_regions.pdf",
+      "section": "2. Регионы",
+      "score": 0.3631,
+      "relevant": true
+     },
+     {
+      "document": "sales_metrics.pdf",
+      "section": "1. Набор данных sales_2026.xlsx",
+      "score": 0.3574,
+      "relevant": true
+     }
+    ],
+    "latency_ms": 152.9,
+    "provider": "openai-text-embedding-3-small",
+    "hit_at_3": true,
+    "section_hit_at_3": true
+   },
+   "numeric_golden_plan": {
+    "ok": true,
+    "max_abs_error": 0.0,
+    "max_rel_error": 0.0,
+    "detail": "",
+    "latency_ms": 171.3
+   },
+   "plan_latency_ms": 2514.9,
+   "tokens": {
+    "llm_calls": 1,
+    "input": 5212,
+    "output": 176,
+    "total": 5388
+   },
+   "plan": {
+    "computed": true,
+    "predicted": {
+     "behavior": "answer",
+     "phase": "awaiting_approval",
+     "steps": 1,
+     "planner": "llm",
+     "unsupported": [],
+     "excluded": [],
+     "notes": [],
+     "metric": "sum:Revenue_KZT",
+     "group_by": [
+      "Region"
+     ],
+     "filters": [
+      {
+       "column": "Month",
+       "op": "eq",
+       "value": "2026-03"
+      }
+     ],
+     "chart_type": "bar",
+     "columns": [
+      "Revenue_KZT",
+      "Region",
+      "Month"
+     ]
+    },
+    "behavior_ok": true,
+    "accurate": true,
+    "full_accurate": true,
+    "metric_ok": true,
+    "columns_ok": true,
+    "grouping_ok": true,
+    "filters_ok": true,
+    "chart_ok": true,
+    "reasons": []
+   },
+   "numeric_system_plan": {
+    "ok": true,
+    "max_abs_error": 0.0,
+    "max_rel_error": 0.0,
+    "detail": "",
+    "latency_ms": 119.1
+   },
+   "embedding_tokens": 49
+  },
+  {
+   "id": "fl-05",
+   "group": "filters",
+   "user_query": "Покажи заказы Offline по регионам",
+   "expected_behavior": "answer",
+   "has_numeric": true,
+   "llm_used": true,
+   "expected": {
+    "metric": "sum:Orders",
+    "columns": [
+     "Orders",
+     "Region",
+     "Channel"
+    ],
+    "group_by": [
+     "Region"
+    ],
+    "filters": [
+     {
+      "column": "Channel",
+      "op": "eq",
+      "value": "Offline"
+     }
+    ],
+    "chart_type": "bar",
+    "rag_document": "sales_metrics.pdf",
+    "rag_section": "3. Заказы и отмены"
+   },
+   "error": null,
+   "retrieval": {
+    "hits": [
+     {
+      "document": "sales_channels_regions.pdf",
+      "section": "1. Каналы продаж",
+      "score": 0.4595,
+      "relevant": true
+     },
+     {
+      "document": "sales_metrics.pdf",
+      "section": "3. Заказы и отмены",
+      "score": 0.4534,
+      "relevant": true
+     },
+     {
+      "document": "sales_metrics.pdf",
+      "section": "1. Набор данных sales_2026.xlsx",
+      "score": 0.4104,
+      "relevant": true
+     }
+    ],
+    "latency_ms": 276.8,
+    "provider": "openai-text-embedding-3-small",
+    "hit_at_3": true,
+    "section_hit_at_3": true
+   },
+   "numeric_golden_plan": {
+    "ok": true,
+    "max_abs_error": 0.0,
+    "max_rel_error": 0.0,
+    "detail": "",
+    "latency_ms": 118.7
+   },
+   "plan_latency_ms": 2207.2,
+   "tokens": {
+    "llm_calls": 1,
+    "input": 5208,
+    "output": 140,
+    "total": 5348
+   },
+   "plan": {
+    "computed": true,
+    "predicted": {
+     "behavior": "answer",
+     "phase": "awaiting_approval",
+     "steps": 1,
+     "planner": "llm",
+     "unsupported": [],
+     "excluded": [],
+     "notes": [],
+     "metric": "sum:Orders",
+     "group_by": [
+      "Region"
+     ],
+     "filters": [
+      {
+       "column": "Channel",
+       "op": "eq",
+       "value": "Offline"
+      }
+     ],
+     "chart_type": "bar",
+     "columns": [
+      "Orders",
+      "Region",
+      "Channel"
+     ]
+    },
+    "behavior_ok": true,
+    "accurate": true,
+    "full_accurate": true,
+    "metric_ok": true,
+    "columns_ok": true,
+    "grouping_ok": true,
+    "filters_ok": true,
+    "chart_ok": true,
+    "reasons": []
+   },
+   "numeric_system_plan": {
+    "ok": true,
+    "max_abs_error": 0.0,
+    "max_rel_error": 0.0,
+    "detail": "",
+    "latency_ms": 172.3
+   },
+   "embedding_tokens": 42
+  },
+  {
+   "id": "rg-01",
+   "group": "rag_terminology",
+   "user_query": "Покажи cancellation rate",
+   "expected_behavior": "answer",
+   "has_numeric": true,
+   "llm_used": true,
+   "expected": {
+    "metric": "rate:Cancelled_Orders/Orders",
+    "columns": [
+     "Cancelled_Orders",
+     "Orders",
+     "Month"
+    ],
+    "group_by": [
+     "Month"
+    ],
+    "filters": [],
+    "chart_type": "line",
+    "rag_document": "sales_metrics.pdf",
+    "rag_section": "5. Доля отмен"
+   },
+   "error": null,
+   "retrieval": {
+    "hits": [
+     {
+      "document": "sales_metrics.pdf",
+      "section": "5. Доля отмен (Cancellation Rate)",
+      "score": 0.6502,
+      "relevant": true
+     },
+     {
+      "document": "sales_metrics.pdf",
+      "section": "3. Заказы и отмены",
+      "score": 0.4308,
+      "relevant": true
+     },
+     {
+      "document": "sales_metrics.pdf",
+      "section": "6. Показатели без данных",
+      "score": 0.3859,
+      "relevant": true
+     }
+    ],
+    "latency_ms": 158.1,
+    "provider": "openai-text-embedding-3-small",
+    "hit_at_3": true,
+    "section_hit_at_3": true
+   },
+   "numeric_golden_plan": {
+    "ok": true,
+    "max_abs_error": 0.0,
+    "max_rel_error": 0.0,
+    "detail": "",
+    "latency_ms": 149.4
+   },
+   "plan_latency_ms": 2322.4,
+   "tokens": {
+    "llm_calls": 1,
+    "input": 5245,
+    "output": 128,
+    "total": 5373
+   },
+   "plan": {
+    "computed": true,
+    "predicted": {
+     "behavior": "answer",
+     "phase": "awaiting_approval",
+     "steps": 1,
+     "planner": "llm",
+     "unsupported": [],
+     "excluded": [],
+     "notes": [],
+     "metric": "rate:Cancelled_Orders/Orders",
+     "group_by": [
+      "Month"
+     ],
+     "filters": [],
+     "chart_type": "line",
+     "columns": [
+      "Cancelled_Orders",
+      "Orders",
+      "Month"
+     ]
+    },
+    "behavior_ok": true,
+    "accurate": true,
+    "full_accurate": true,
+    "metric_ok": true,
+    "columns_ok": true,
+    "grouping_ok": true,
+    "filters_ok": true,
+    "chart_ok": true,
+    "reasons": []
+   },
+   "numeric_system_plan": {
+    "ok": true,
+    "max_abs_error": 0.0,
+    "max_rel_error": 0.0,
+    "detail": "",
+    "latency_ms": 182.3
+   },
+   "embedding_tokens": 40
+  },
+  {
+   "id": "rg-02",
+   "group": "rag_terminology",
+   "user_query": "Покажи AOV по регионам",
+   "expected_behavior": "answer",
+   "has_numeric": true,
+   "llm_used": true,
+   "expected": {
+    "metric": "ratio:Revenue_KZT/Orders",
+    "columns": [
+     "Revenue_KZT",
+     "Orders",
+     "Region"
+    ],
+    "group_by": [
+     "Region"
+    ],
+    "filters": [],
+    "chart_type": "bar",
+    "rag_document": "sales_metrics.pdf",
+    "rag_section": "4. Средний чек"
+   },
+   "error": null,
+   "retrieval": {
+    "hits": [
+     {
+      "document": "sales_metrics.pdf",
+      "section": "4. Средний чек (Average Order Value, AOV)",
+      "score": 0.403,
+      "relevant": true
+     },
+     {
+      "document": "sales_channels_regions.pdf",
+      "section": "SalesDemo KZ — каналы, регионы и категории",
+      "score": 0.373,
+      "relevant": true
+     },
+     {
+      "document": "sales_metrics.pdf",
+      "section": "1. Набор данных sales_2026.xlsx",
+      "score": 0.3493,
+      "relevant": true
+     }
+    ],
+    "latency_ms": 361.5,
+    "provider": "openai-text-embedding-3-small",
+    "hit_at_3": true,
+    "section_hit_at_3": true
+   },
+   "numeric_golden_plan": {
+    "ok": true,
+    "max_abs_error": 0.0,
+    "max_rel_error": 0.0,
+    "detail": "",
+    "latency_ms": 153.2
+   },
+   "plan_latency_ms": 2117.5,
+   "tokens": {
+    "llm_calls": 1,
+    "input": 5233,
+    "output": 116,
+    "total": 5349
+   },
+   "plan": {
+    "computed": true,
+    "predicted": {
+     "behavior": "answer",
+     "phase": "awaiting_approval",
+     "steps": 1,
+     "planner": "llm",
+     "unsupported": [],
+     "excluded": [],
+     "notes": [],
+     "metric": "ratio:Revenue_KZT/Orders",
+     "group_by": [
+      "Region"
+     ],
+     "filters": [],
+     "chart_type": "bar",
+     "columns": [
+      "Revenue_KZT",
+      "Orders",
+      "Region"
+     ]
+    },
+    "behavior_ok": true,
+    "accurate": true,
+    "full_accurate": true,
+    "metric_ok": true,
+    "columns_ok": true,
+    "grouping_ok": true,
+    "filters_ok": true,
+    "chart_ok": true,
+    "reasons": []
+   },
+   "numeric_system_plan": {
+    "ok": true,
+    "max_abs_error": 0.0,
+    "max_rel_error": 0.0,
+    "detail": "",
+    "latency_ms": 114.7
+   },
+   "embedding_tokens": 47
+  },
+  {
+   "id": "rg-03",
+   "group": "rag_terminology",
+   "user_query": "Как менялся Cancellation Rate по месяцам?",
+   "expected_behavior": "answer",
+   "has_numeric": true,
+   "llm_used": true,
+   "expected": {
+    "metric": "rate:Cancelled_Orders/Orders",
+    "columns": [
+     "Cancelled_Orders",
+     "Orders",
+     "Month"
+    ],
+    "group_by": [
+     "Month"
+    ],
+    "filters": [],
+    "chart_type": "line",
+    "rag_document": "sales_metrics.pdf",
+    "rag_section": "5. Доля отмен"
+   },
+   "error": null,
+   "retrieval": {
+    "hits": [
+     {
+      "document": "sales_metrics.pdf",
+      "section": "5. Доля отмен (Cancellation Rate)",
+      "score": 0.5558,
+      "relevant": true
+     },
+     {
+      "document": "sales_metrics.pdf",
+      "section": "3. Заказы и отмены",
+      "score": 0.3789,
+      "relevant": true
+     },
+     {
+      "document": "sales_metrics.pdf",
+      "section": "6. Показатели без данных",
+      "score": 0.3318,
+      "relevant": true
+     }
+    ],
+    "latency_ms": 165.8,
+    "provider": "openai-text-embedding-3-small",
+    "hit_at_3": true,
+    "section_hit_at_3": true
+   },
+   "numeric_golden_plan": {
+    "ok": true,
+    "max_abs_error": 0.0,
+    "max_rel_error": 0.0,
+    "detail": "",
+    "latency_ms": 118.4
+   },
+   "plan_latency_ms": 2111.2,
+   "tokens": {
+    "llm_calls": 1,
+    "input": 5249,
+    "output": 125,
+    "total": 5374
+   },
+   "plan": {
+    "computed": true,
+    "predicted": {
+     "behavior": "answer",
+     "phase": "awaiting_approval",
+     "steps": 1,
+     "planner": "llm",
+     "unsupported": [],
+     "excluded": [],
+     "notes": [],
+     "metric": "rate:Cancelled_Orders/Orders",
+     "group_by": [
+      "Month"
+     ],
+     "filters": [],
+     "chart_type": "line",
+     "columns": [
+      "Cancelled_Orders",
+      "Orders",
+      "Month"
+     ]
+    },
+    "behavior_ok": true,
+    "accurate": true,
+    "full_accurate": true,
+    "metric_ok": true,
+    "columns_ok": true,
+    "grouping_ok": true,
+    "filters_ok": true,
+    "chart_ok": true,
+    "reasons": []
+   },
+   "numeric_system_plan": {
+    "ok": true,
+    "max_abs_error": 0.0,
+    "max_rel_error": 0.0,
+    "detail": "",
+    "latency_ms": 120.4
+   },
+   "embedding_tokens": 59
+  },
+  {
+   "id": "rg-04",
+   "group": "rag_terminology",
+   "user_query": "Покажи Revenue по категориям",
+   "expected_behavior": "answer",
+   "has_numeric": true,
+   "llm_used": true,
+   "expected": {
+    "metric": "sum:Revenue_KZT",
+    "columns": [
+     "Revenue_KZT",
+     "Category"
+    ],
+    "group_by": [
+     "Category"
+    ],
+    "filters": [],
+    "chart_type": "bar",
+    "rag_document": "sales_metrics.pdf",
+    "rag_section": "2. Выручка"
+   },
+   "error": null,
+   "retrieval": {
+    "hits": [
+     {
+      "document": "sales_metrics.pdf",
+      "section": "2. Выручка (Revenue)",
+      "score": 0.5157,
+      "relevant": true
+     },
+     {
+      "document": "sales_metrics.pdf",
+      "section": "1. Набор данных sales_2026.xlsx",
+      "score": 0.4974,
+      "relevant": true
+     },
+     {
+      "document": "sales_metrics.pdf",
+      "section": "6. Показатели без данных",
+      "score": 0.4829,
+      "relevant": true
+     }
+    ],
+    "latency_ms": 184.4,
+    "provider": "openai-text-embedding-3-small",
+    "hit_at_3": true,
+    "section_hit_at_3": true
+   },
+   "numeric_golden_plan": {
+    "ok": true,
+    "max_abs_error": 0.0,
+    "max_rel_error": 0.0,
+    "detail": "",
+    "latency_ms": 110.6
+   },
+   "plan_latency_ms": 2045.9,
+   "tokens": {
+    "llm_calls": 1,
+    "input": 5272,
+    "output": 128,
+    "total": 5400
+   },
+   "plan": {
+    "computed": true,
+    "predicted": {
+     "behavior": "answer",
+     "phase": "awaiting_approval",
+     "steps": 1,
+     "planner": "llm",
+     "unsupported": [],
+     "excluded": [],
+     "notes": [],
+     "metric": "sum:Revenue_KZT",
+     "group_by": [
+      "Category"
+     ],
+     "filters": [],
+     "chart_type": "bar",
+     "columns": [
+      "Revenue_KZT",
+      "Category"
+     ]
+    },
+    "behavior_ok": true,
+    "accurate": true,
+    "full_accurate": true,
+    "metric_ok": true,
+    "columns_ok": true,
+    "grouping_ok": true,
+    "filters_ok": true,
+    "chart_ok": true,
+    "reasons": []
+   },
+   "numeric_system_plan": {
+    "ok": true,
+    "max_abs_error": 0.0,
+    "max_rel_error": 0.0,
+    "detail": "",
+    "latency_ms": 135.0
+   },
+   "embedding_tokens": 34
+  },
+  {
+   "id": "rg-05",
+   "group": "rag_terminology",
+   "user_query": "Покажи заказы по каналам продаж",
+   "expected_behavior": "answer",
+   "has_numeric": true,
+   "llm_used": true,
+   "expected": {
+    "metric": "sum:Orders",
+    "columns": [
+     "Orders",
+     "Channel"
+    ],
+    "group_by": [
+     "Channel"
+    ],
+    "filters": [],
+    "chart_type": "bar",
+    "rag_document": "sales_channels_regions.pdf",
+    "rag_section": "1. Каналы продаж"
+   },
+   "error": null,
+   "retrieval": {
+    "hits": [
+     {
+      "document": "sales_channels_regions.pdf",
+      "section": "1. Каналы продаж",
+      "score": 0.5668,
+      "relevant": true
+     },
+     {
+      "document": "sales_metrics.pdf",
+      "section": "3. Заказы и отмены",
+      "score": 0.4933,
+      "relevant": true
+     },
+     {
+      "document": "sales_channels_regions.pdf",
+      "section": "SalesDemo KZ — каналы, регионы и категории",
+      "score": 0.4696,
+      "relevant": true
+     }
+    ],
+    "latency_ms": 179.5,
+    "provider": "openai-text-embedding-3-small",
+    "hit_at_3": true,
+    "section_hit_at_3": true
+   },
+   "numeric_golden_plan": {
+    "ok": true,
+    "max_abs_error": 0.0,
+    "max_rel_error": 0.0,
+    "detail": "",
+    "latency_ms": 123.9
+   },
+   "plan_latency_ms": 2222.4,
+   "tokens": {
+    "llm_calls": 1,
+    "input": 5175,
+    "output": 123,
+    "total": 5298
+   },
+   "plan": {
+    "computed": true,
+    "predicted": {
+     "behavior": "answer",
+     "phase": "awaiting_approval",
+     "steps": 1,
+     "planner": "llm",
+     "unsupported": [],
+     "excluded": [],
+     "notes": [],
+     "metric": "sum:Orders",
+     "group_by": [
+      "Channel"
+     ],
+     "filters": [],
+     "chart_type": "bar",
+     "columns": [
+      "Orders",
+      "Channel"
+     ]
+    },
+    "behavior_ok": true,
+    "accurate": true,
+    "full_accurate": true,
+    "metric_ok": true,
+    "columns_ok": true,
+    "grouping_ok": true,
+    "filters_ok": true,
+    "chart_ok": true,
+    "reasons": []
+   },
+   "numeric_system_plan": {
+    "ok": true,
+    "max_abs_error": 0.0,
+    "max_rel_error": 0.0,
+    "detail": "",
+    "latency_ms": 139.9
+   },
+   "embedding_tokens": 41
+  },
+  {
+   "id": "iv-01",
+   "group": "invalid_ambiguous",
+   "user_query": "Покажи EBITDA",
+   "expected_behavior": "reject",
+   "has_numeric": false,
+   "llm_used": true,
+   "expected": {
+    "metric": null,
+    "columns": [],
+    "group_by": [],
+    "filters": [],
+    "chart_type": null,
+    "rag_document": null,
+    "rag_section": null
+   },
+   "error": null,
+   "retrieval": {
+    "hits": [
+     {
+      "document": "sales_metrics.pdf",
+      "section": "SalesDemo KZ — определения показателей продаж",
+      "score": 0.3849,
+      "relevant": true
+     },
+     {
+      "document": "sales_metrics.pdf",
+      "section": "6. Показатели без данных",
+      "score": 0.3706,
+      "relevant": true
+     },
+     {
+      "document": "sales_metrics.pdf",
+      "section": "4. Средний чек (Average Order Value, AOV)",
+      "score": 0.3129,
+      "relevant": true
+     }
+    ],
+    "latency_ms": 365.5,
+    "provider": "openai-text-embedding-3-small"
+   },
+   "plan_latency_ms": 1131.7,
+   "tokens": {
+    "llm_calls": 1,
+    "input": 5271,
+    "output": 27,
+    "total": 5298
+   },
+   "plan": {
+    "computed": true,
+    "predicted": {
+     "behavior": "reject",
+     "phase": "empty",
+     "steps": 0,
+     "planner": "llm",
+     "unsupported": [
+      "EBITDA"
+     ],
+     "excluded": [],
+     "notes": [],
+     "metric": null,
+     "group_by": [],
+     "filters": [],
+     "chart_type": null,
+     "columns": []
+    },
+    "behavior_ok": true
+   },
+   "embedding_tokens": 14
+  },
+  {
+   "id": "iv-02",
+   "group": "invalid_ambiguous",
+   "user_query": "Покажи Return Rate по категориям",
+   "expected_behavior": "reject",
+   "has_numeric": false,
+   "llm_used": true,
+   "expected": {
+    "metric": null,
+    "columns": [],
+    "group_by": [],
+    "filters": [],
+    "chart_type": null,
+    "rag_document": "sales_metrics.pdf",
+    "rag_section": "6. Показатели без данных"
+   },
+   "error": null,
+   "retrieval": {
+    "hits": [
+     {
+      "document": "sales_metrics.pdf",
+      "section": "6. Показатели без данных",
+      "score": 0.5528,
+      "relevant": true
+     },
+     {
+      "document": "sales_metrics.pdf",
+      "section": "5. Доля отмен (Cancellation Rate)",
+      "score": 0.4647,
+      "relevant": true
+     },
+     {
+      "document": "sales_channels_regions.pdf",
+      "section": "3. Категории товаров",
+      "score": 0.4371,
+      "relevant": true
+     }
+    ],
+    "latency_ms": 171.2,
+    "provider": "openai-text-embedding-3-small",
+    "hit_at_3": true,
+    "section_hit_at_3": true
+   },
+   "plan_latency_ms": 1466.1,
+   "tokens": {
+    "llm_calls": 1,
+    "input": 5256,
+    "output": 80,
+    "total": 5336
+   },
+   "plan": {
+    "computed": true,
+    "predicted": {
+     "behavior": "reject",
+     "phase": "empty",
+     "steps": 0,
+     "planner": "llm",
+     "unsupported": [
+      "Return Rate"
+     ],
+     "excluded": [],
+     "notes": [],
+     "metric": null,
+     "group_by": [],
+     "filters": [],
+     "chart_type": null,
+     "columns": []
+    },
+    "behavior_ok": true
+   },
+   "embedding_tokens": 22
+  },
+  {
+   "id": "iv-03",
+   "group": "invalid_ambiguous",
+   "user_query": "Покажи прибыль по регионам",
+   "expected_behavior": "reject",
+   "has_numeric": false,
+   "llm_used": true,
+   "expected": {
+    "metric": null,
+    "columns": [],
+    "group_by": [],
+    "filters": [],
+    "chart_type": null,
+    "rag_document": null,
+    "rag_section": null
+   },
+   "error": null,
+   "retrieval": {
+    "hits": [
+     {
+      "document": "sales_metrics.pdf",
+      "section": "6. Показатели без данных",
+      "score": 0.402,
+      "relevant": true
+     },
+     {
+      "document": "sales_metrics.pdf",
+      "section": "2. Выручка (Revenue)",
+      "score": 0.3861,
+      "relevant": true
+     },
+     {
+      "document": "sales_metrics.pdf",
+      "section": "1. Набор данных sales_2026.xlsx",
+      "score": 0.3764,
+      "relevant": true
+     }
+    ],
+    "latency_ms": 172.9,
+    "provider": "openai-text-embedding-3-small"
+   },
+   "plan_latency_ms": 1932.2,
+   "tokens": {
+    "llm_calls": 1,
+    "input": 5272,
+    "output": 114,
+    "total": 5386
+   },
+   "plan": {
+    "computed": true,
+    "predicted": {
+     "behavior": "answer",
+     "phase": "awaiting_approval",
+     "steps": 1,
+     "planner": "llm",
+     "unsupported": [],
+     "excluded": [],
+     "notes": [],
+     "metric": "sum:Revenue_KZT",
+     "group_by": [
+      "Region"
+     ],
+     "filters": [],
+     "chart_type": "bar",
+     "columns": [
+      "Revenue_KZT",
+      "Region"
+     ]
+    },
+    "behavior_ok": false
+   },
+   "embedding_tokens": 47
+  },
+  {
+   "id": "iv-04",
+   "group": "invalid_ambiguous",
+   "user_query": "Покажи выручку по группам",
+   "expected_behavior": "clarify",
+   "has_numeric": false,
+   "llm_used": true,
+   "expected": {
+    "metric": null,
+    "columns": [],
+    "group_by": [],
+    "filters": [],
+    "chart_type": null,
+    "rag_document": null,
+    "rag_section": null
+   },
+   "error": null,
+   "retrieval": {
+    "hits": [
+     {
+      "document": "sales_metrics.pdf",
+      "section": "2. Выручка (Revenue)",
+      "score": 0.4346,
+      "relevant": true
+     },
+     {
+      "document": "sales_metrics.pdf",
+      "section": "1. Набор данных sales_2026.xlsx",
+      "score": 0.3245,
+      "relevant": true
+     },
+     {
+      "document": "sales_metrics.pdf",
+      "section": "6. Показатели без данных",
+      "score": 0.318,
+      "relevant": true
+     }
+    ],
+    "latency_ms": 166.1,
+    "provider": "openai-text-embedding-3-small"
+   },
+   "plan_latency_ms": 2029.2,
+   "tokens": {
+    "llm_calls": 1,
+    "input": 5274,
+    "output": 126,
+    "total": 5400
+   },
+   "plan": {
+    "computed": true,
+    "predicted": {
+     "behavior": "clarify",
+     "phase": "awaiting_approval",
+     "steps": 1,
+     "planner": "llm",
+     "unsupported": [],
+     "excluded": [],
+     "notes": [
+      "«Выручка по группам»: группировка названа неопределённо — выберите колонку."
+     ],
+     "metric": "sum:Revenue_KZT",
+     "group_by": [],
+     "filters": [],
+     "chart_type": "bar",
+     "columns": [
+      "Revenue_KZT"
+     ]
+    },
+    "behavior_ok": true
+   },
+   "embedding_tokens": 38
+  },
+  {
+   "id": "iv-05",
+   "group": "invalid_ambiguous",
+   "user_query": "Сделай прогноз выручки на июль",
+   "expected_behavior": "reject",
+   "has_numeric": false,
+   "llm_used": true,
+   "expected": {
+    "metric": null,
+    "columns": [],
+    "group_by": [],
+    "filters": [],
+    "chart_type": null,
+    "rag_document": null,
+    "rag_section": null
+   },
+   "error": null,
+   "retrieval": {
+    "hits": [
+     {
+      "document": "sales_metrics.pdf",
+      "section": "2. Выручка (Revenue)",
+      "score": 0.3953,
+      "relevant": true
+     },
+     {
+      "document": "sales_metrics.pdf",
+      "section": "1. Набор данных sales_2026.xlsx",
+      "score": 0.3928,
+      "relevant": true
+     },
+     {
+      "document": "sales_metrics.pdf",
+      "section": "4. Средний чек (Average Order Value, AOV)",
+      "score": 0.3204,
+      "relevant": true
+     }
+    ],
+    "latency_ms": 165.1,
+    "provider": "openai-text-embedding-3-small"
+   },
+   "plan_latency_ms": 1449.9,
+   "tokens": {
+    "llm_calls": 1,
+    "input": 5267,
+    "output": 59,
+    "total": 5326
+   },
+   "plan": {
+    "computed": true,
+    "predicted": {
+     "behavior": "reject",
+     "phase": "empty",
+     "steps": 0,
+     "planner": "llm",
+     "unsupported": [
+      "Прогноз выручки на июль не может быть построен, так как в запросе указано действие, которое не поддерживается."
+     ],
+     "excluded": [],
+     "notes": [],
+     "metric": null,
+     "group_by": [],
+     "filters": [],
+     "chart_type": null,
+     "columns": []
+    },
+    "behavior_ok": true
+   },
+   "embedding_tokens": 30
+  }
+ ]
+}

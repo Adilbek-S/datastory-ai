@@ -43,7 +43,7 @@ def build_chart_spec(result: MetricResult, chart_type: str, title: str, x_axis: 
     if chart_type == "pie":
         if series:
             raise AnalyticsError("Круговая диаграмма строится по одной колонке группировки; для двух используйте bar или line.")
-        if result.metric in NON_ADDITIVE_METRICS:
+        if result.metric in NON_ADDITIVE_METRICS or result.metric.startswith(("ratio:", "rate:")):
             raise AnalyticsError(
                 f"Круговая диаграмма показывает доли целого, а {result.metric} ({result.unit}) — отношение: его части не складываются "
                 "в целое. Используйте bar или line."

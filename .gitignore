@@ -14,6 +14,9 @@ data/workspace/
 data/uploads/
 *.log
 
+# Частичные прогоны evaluation (latest.json и history/ — результаты полных прогонов — хранятся в репозитории)
+evaluation/results/partial.json
+
 # IDE / ОС
 .idea/
 .vscode/

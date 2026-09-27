@@ -1,0 +1,1670 @@
+{
+ "description": "30 полностью синтетических golden cases по демо-набору sales_2026 (вымышленная сеть SalesDemo KZ). Эталонные числа рассчитаны обычным Python-кодом по строкам генератора; файл строится командой python -m datastory.evaluation.golden_builder.",
+ "dataset": "data/demo/sales_2026.xlsx",
+ "documents": [
+  "data/demo/sales_docs/sales_metrics.pdf",
+  "data/demo/sales_docs/sales_channels_regions.pdf",
+  "data/demo/sales_docs/sales_calendar_2026.pdf"
+ ],
+ "cases": [
+  {
+   "id": "mi-01",
+   "group": "metric_interpretation",
+   "user_query": "Какой средний чек по каналам?",
+   "expected_behavior": "answer",
+   "expected_metric": "ratio:Revenue_KZT/Orders",
+   "expected_columns": [
+    "Revenue_KZT",
+    "Orders",
+    "Channel"
+   ],
+   "expected_group_by": [
+    "Channel"
+   ],
+   "expected_filters": [],
+   "expected_chart_type": "bar",
+   "expected_rag_document": "sales_metrics.pdf",
+   "expected_rag_section": "4. Средний чек",
+   "expected_numeric": {
+    "metric": "ratio:Revenue_KZT/Orders",
+    "group_by": [
+     "Channel"
+    ],
+    "filters": [],
+    "rows": [
+     {
+      "group": {
+       "Channel": "Mobile"
+      },
+      "value": 21274.16278444723
+     },
+     {
+      "group": {
+       "Channel": "Offline"
+      },
+      "value": 22200.737873196915
+     },
+     {
+      "group": {
+       "Channel": "Web"
+      },
+      "value": 21699.647753757134
+     }
+    ],
+    "overall": 21666.97000724463
+   },
+   "notes": ""
+  },
+  {
+   "id": "mi-02",
+   "group": "metric_interpretation",
+   "user_query": "Покажи средний чек по категориям товаров",
+   "expected_behavior": "answer",
+   "expected_metric": "ratio:Revenue_KZT/Orders",
+   "expected_columns": [
+    "Revenue_KZT",
+    "Orders",
+    "Category"
+   ],
+   "expected_group_by": [
+    "Category"
+   ],
+   "expected_filters": [],
+   "expected_chart_type": "bar",
+   "expected_rag_document": "sales_metrics.pdf",
+   "expected_rag_section": "4. Средний чек",
+   "expected_numeric": {
+    "metric": "ratio:Revenue_KZT/Orders",
+    "group_by": [
+     "Category"
+    ],
+    "filters": [],
+    "rows": [
+     {
+      "group": {
+       "Category": "Clothing"
+      },
+      "value": 11208.959056346266
+     },
+     {
+      "group": {
+       "Category": "Electronics"
+      },
+      "value": 42084.099548803475
+     },
+     {
+      "group": {
+       "Category": "Home"
+      },
+      "value": 20705.312456312036
+     },
+     {
+      "group": {
+       "Category": "Sports"
+      },
+      "value": 8464.854762878169
+     }
+    ],
+    "overall": 21666.97000724463
+   },
+   "notes": ""
+  },
+  {
+   "id": "mi-03",
+   "group": "metric_interpretation",
+   "user_query": "Какая доля отмен по регионам?",
+   "expected_behavior": "answer",
+   "expected_metric": "rate:Cancelled_Orders/Orders",
+   "expected_columns": [
+    "Cancelled_Orders",
+    "Orders",
+    "Region"
+   ],
+   "expected_group_by": [
+    "Region"
+   ],
+   "expected_filters": [],
+   "expected_chart_type": "bar",
+   "expected_rag_document": "sales_metrics.pdf",
+   "expected_rag_section": "5. Доля отмен",
+   "expected_numeric": {
+    "metric": "rate:Cancelled_Orders/Orders",
+    "group_by": [
+     "Region"
+    ],
+    "filters": [],
+    "rows": [
+     {
+      "group": {
+       "Region": "Almaty"
+      },
+      "value": 4.388246833553669
+     },
+     {
+      "group": {
+       "Region": "Astana"
+      },
+      "value": 4.418443126569429
+     },
+     {
+      "group": {
+       "Region": "Karaganda"
+      },
+      "value": 4.499451286428484
+     },
+     {
+      "group": {
+       "Region": "Shymkent"
+      },
+      "value": 4.409261150834184
+     }
+    ],
+    "overall": 4.416002575867343
+   },
+   "notes": ""
+  },
+  {
+   "id": "mi-04",
+   "group": "metric_interpretation",
+   "user_query": "Сколько в среднем стоит один заказ по регионам?",
+   "expected_behavior": "answer",
+   "expected_metric": "ratio:Revenue_KZT/Orders",
+   "expected_columns": [
+    "Revenue_KZT",
+    "Orders",
+    "Region"
+   ],
+   "expected_group_by": [
+    "Region"
+   ],
+   "expected_filters": [],
+   "expected_chart_type": "bar",
+   "expected_rag_document": "sales_metrics.pdf",
+   "expected_rag_section": "4. Средний чек",
+   "expected_numeric": {
+    "metric": "ratio:Revenue_KZT/Orders",
+    "group_by": [
+     "Region"
+    ],
+    "filters": [],
+    "rows": [
+     {
+      "group": {
+       "Region": "Almaty"
+      },
+      "value": 22162.388460062262
+     },
+     {
+      "group": {
+       "Region": "Astana"
+      },
+      "value": 20708.974248009832
+     },
+     {
+      "group": {
+       "Region": "Karaganda"
+      },
+      "value": 21953.90098768443
+     },
+     {
+      "group": {
+       "Region": "Shymkent"
+      },
+      "value": 22004.101293837248
+     }
+    ],
+    "overall": 21666.97000724463
+   },
+   "notes": ""
+  },
+  {
+   "id": "mi-05",
+   "group": "metric_interpretation",
+   "user_query": "Какой процент заказов отменяется по каналам?",
+   "expected_behavior": "answer",
+   "expected_metric": "rate:Cancelled_Orders/Orders",
+   "expected_columns": [
+    "Cancelled_Orders",
+    "Orders",
+    "Channel"
+   ],
+   "expected_group_by": [
+    "Channel"
+   ],
+   "expected_filters": [],
+   "expected_chart_type": "bar",
+   "expected_rag_document": "sales_metrics.pdf",
+   "expected_rag_section": "5. Доля отмен",
+   "expected_numeric": {
+    "metric": "rate:Cancelled_Orders/Orders",
+    "group_by": [
+     "Channel"
+    ],
+    "filters": [],
+    "rows": [
+     {
+      "group": {
+       "Channel": "Mobile"
+      },
+      "value": 6.513169682852535
+     },
+     {
+      "group": {
+       "Channel": "Offline"
+      },
+      "value": 2.059711506205971
+     },
+     {
+      "group": {
+       "Channel": "Web"
+      },
+      "value": 3.945993731415254
+     }
+    ],
+    "overall": 4.416002575867343
+   },
+   "notes": ""
+  },
+  {
+   "id": "ts-01",
+   "group": "time_series",
+   "user_query": "Покажи динамику выручки по месяцам",
+   "expected_behavior": "answer",
+   "expected_metric": "sum:Revenue_KZT",
+   "expected_columns": [
+    "Revenue_KZT",
+    "Month"
+   ],
+   "expected_group_by": [
+    "Month"
+   ],
+   "expected_filters": [],
+   "expected_chart_type": "line",
+   "expected_rag_document": "sales_metrics.pdf",
+   "expected_rag_section": "2. Выручка",
+   "expected_numeric": {
+    "metric": "sum:Revenue_KZT",
+    "group_by": [
+     "Month"
+    ],
+    "filters": [],
+    "rows": [
+     {
+      "group": {
+       "Month": "2026-01"
+      },
+      "value": 208316536.0
+     },
+     {
+      "group": {
+       "Month": "2026-02"
+      },
+      "value": 213360205.0
+     },
+     {
+      "group": {
+       "Month": "2026-03"
+      },
+      "value": 223975319.0
+     },
+     {
+      "group": {
+       "Month": "2026-04"
+      },
+      "value": 205544195.0
+     },
+     {
+      "group": {
+       "Month": "2026-05"
+      },
+      "value": 241591934.0
+     },
+     {
+      "group": {
+       "Month": "2026-06"
+      },
+      "value": 253055653.0
+     }
+    ],
+    "overall": 1345843842.0
+   },
+   "notes": ""
+  },
+  {
+   "id": "ts-02",
+   "group": "time_series",
+   "user_query": "Как менялось количество заказов от месяца к месяцу?",
+   "expected_behavior": "answer",
+   "expected_metric": "sum:Orders",
+   "expected_columns": [
+    "Orders",
+    "Month"
+   ],
+   "expected_group_by": [
+    "Month"
+   ],
+   "expected_filters": [],
+   "expected_chart_type": "line",
+   "expected_rag_document": "sales_metrics.pdf",
+   "expected_rag_section": "3. Заказы и отмены",
+   "expected_numeric": {
+    "metric": "sum:Orders",
+    "group_by": [
+     "Month"
+    ],
+    "filters": [],
+    "rows": [
+     {
+      "group": {
+       "Month": "2026-01"
+      },
+      "value": 9798.0
+     },
+     {
+      "group": {
+       "Month": "2026-02"
+      },
+      "value": 9981.0
+     },
+     {
+      "group": {
+       "Month": "2026-03"
+      },
+      "value": 10225.0
+     },
+     {
+      "group": {
+       "Month": "2026-04"
+      },
+      "value": 10401.0
+     },
+     {
+      "group": {
+       "Month": "2026-05"
+      },
+      "value": 10659.0
+     },
+     {
+      "group": {
+       "Month": "2026-06"
+      },
+      "value": 11051.0
+     }
+    ],
+    "overall": 62115.0
+   },
+   "notes": ""
+  },
+  {
+   "id": "ts-03",
+   "group": "time_series",
+   "user_query": "Покажи динамику отменённых заказов по месяцам",
+   "expected_behavior": "answer",
+   "expected_metric": "sum:Cancelled_Orders",
+   "expected_columns": [
+    "Cancelled_Orders",
+    "Month"
+   ],
+   "expected_group_by": [
+    "Month"
+   ],
+   "expected_filters": [],
+   "expected_chart_type": "line",
+   "expected_rag_document": "sales_metrics.pdf",
+   "expected_rag_section": "3. Заказы и отмены",
+   "expected_numeric": {
+    "metric": "sum:Cancelled_Orders",
+    "group_by": [
+     "Month"
+    ],
+    "filters": [],
+    "rows": [
+     {
+      "group": {
+       "Month": "2026-01"
+      },
+      "value": 432.0
+     },
+     {
+      "group": {
+       "Month": "2026-02"
+      },
+      "value": 442.0
+     },
+     {
+      "group": {
+       "Month": "2026-03"
+      },
+      "value": 461.0
+     },
+     {
+      "group": {
+       "Month": "2026-04"
+      },
+      "value": 462.0
+     },
+     {
+      "group": {
+       "Month": "2026-05"
+      },
+      "value": 467.0
+     },
+     {
+      "group": {
+       "Month": "2026-06"
+      },
+      "value": 479.0
+     }
+    ],
+    "overall": 2743.0
+   },
+   "notes": ""
+  },
+  {
+   "id": "ts-04",
+   "group": "time_series",
+   "user_query": "Покажи динамику среднего чека по месяцам",
+   "expected_behavior": "answer",
+   "expected_metric": "ratio:Revenue_KZT/Orders",
+   "expected_columns": [
+    "Revenue_KZT",
+    "Orders",
+    "Month"
+   ],
+   "expected_group_by": [
+    "Month"
+   ],
+   "expected_filters": [],
+   "expected_chart_type": "line",
+   "expected_rag_document": "sales_metrics.pdf",
+   "expected_rag_section": "4. Средний чек",
+   "expected_numeric": {
+    "metric": "ratio:Revenue_KZT/Orders",
+    "group_by": [
+     "Month"
+    ],
+    "filters": [],
+    "rows": [
+     {
+      "group": {
+       "Month": "2026-01"
+      },
+      "value": 21261.128393549705
+     },
+     {
+      "group": {
+       "Month": "2026-02"
+      },
+      "value": 21376.63610860635
+     },
+     {
+      "group": {
+       "Month": "2026-03"
+      },
+      "value": 21904.676674816626
+     },
+     {
+      "group": {
+       "Month": "2026-04"
+      },
+      "value": 19761.964714931255
+     },
+     {
+      "group": {
+       "Month": "2026-05"
+      },
+      "value": 22665.534665540858
+     },
+     {
+      "group": {
+       "Month": "2026-06"
+      },
+      "value": 22898.891774500044
+     }
+    ],
+    "overall": 21666.97000724463
+   },
+   "notes": ""
+  },
+  {
+   "id": "ts-05",
+   "group": "time_series",
+   "user_query": "Как изменялась доля отмен по месяцам?",
+   "expected_behavior": "answer",
+   "expected_metric": "rate:Cancelled_Orders/Orders",
+   "expected_columns": [
+    "Cancelled_Orders",
+    "Orders",
+    "Month"
+   ],
+   "expected_group_by": [
+    "Month"
+   ],
+   "expected_filters": [],
+   "expected_chart_type": "line",
+   "expected_rag_document": "sales_metrics.pdf",
+   "expected_rag_section": "5. Доля отмен",
+   "expected_numeric": {
+    "metric": "rate:Cancelled_Orders/Orders",
+    "group_by": [
+     "Month"
+    ],
+    "filters": [],
+    "rows": [
+     {
+      "group": {
+       "Month": "2026-01"
+      },
+      "value": 4.409063074096754
+     },
+     {
+      "group": {
+       "Month": "2026-02"
+      },
+      "value": 4.428413986574491
+     },
+     {
+      "group": {
+       "Month": "2026-03"
+      },
+      "value": 4.508557457212714
+     },
+     {
+      "group": {
+       "Month": "2026-04"
+      },
+      "value": 4.441880588404961
+     },
+     {
+      "group": {
+       "Month": "2026-05"
+      },
+      "value": 4.3812740407167645
+     },
+     {
+      "group": {
+       "Month": "2026-06"
+      },
+      "value": 4.334449371097638
+     }
+    ],
+    "overall": 4.416002575867343
+   },
+   "notes": ""
+  },
+  {
+   "id": "cc-01",
+   "group": "category_comparison",
+   "user_query": "Сравни регионы по выручке",
+   "expected_behavior": "answer",
+   "expected_metric": "sum:Revenue_KZT",
+   "expected_columns": [
+    "Revenue_KZT",
+    "Region"
+   ],
+   "expected_group_by": [
+    "Region"
+   ],
+   "expected_filters": [],
+   "expected_chart_type": "bar",
+   "expected_rag_document": "sales_metrics.pdf",
+   "expected_rag_section": "2. Выручка",
+   "expected_numeric": {
+    "metric": "sum:Revenue_KZT",
+    "group_by": [
+     "Region"
+    ],
+    "filters": [],
+    "rows": [
+     {
+      "group": {
+       "Region": "Almaty"
+      },
+      "value": 519685847.0
+     },
+     {
+      "group": {
+       "Region": "Astana"
+      },
+      "value": 387609871.0
+     },
+     {
+      "group": {
+       "Region": "Karaganda"
+      },
+      "value": 180043942.0
+     },
+     {
+      "group": {
+       "Region": "Shymkent"
+      },
+      "value": 258504182.0
+     }
+    ],
+    "overall": 1345843842.0
+   },
+   "notes": ""
+  },
+  {
+   "id": "cc-02",
+   "group": "category_comparison",
+   "user_query": "Какая категория показала наибольший рост выручки?",
+   "expected_behavior": "answer",
+   "expected_metric": "sum:Revenue_KZT",
+   "expected_columns": [
+    "Revenue_KZT",
+    "Month",
+    "Category"
+   ],
+   "expected_group_by": [
+    "Month",
+    "Category"
+   ],
+   "expected_filters": [],
+   "expected_chart_type": "line",
+   "expected_rag_document": "sales_metrics.pdf",
+   "expected_rag_section": "2. Выручка",
+   "expected_numeric": {
+    "metric": "sum:Revenue_KZT",
+    "group_by": [
+     "Month",
+     "Category"
+    ],
+    "filters": [],
+    "rows": [
+     {
+      "group": {
+       "Month": "2026-01",
+       "Category": "Clothing"
+      },
+      "value": 38681278.0
+     },
+     {
+      "group": {
+       "Month": "2026-01",
+       "Category": "Electronics"
+      },
+      "value": 108445531.0
+     },
+     {
+      "group": {
+       "Month": "2026-01",
+       "Category": "Home"
+      },
+      "value": 46685543.0
+     },
+     {
+      "group": {
+       "Month": "2026-01",
+       "Category": "Sports"
+      },
+      "value": 14504184.0
+     },
+     {
+      "group": {
+       "Month": "2026-02",
+       "Category": "Clothing"
+      },
+      "value": 38177317.0
+     },
+     {
+      "group": {
+       "Month": "2026-02",
+       "Category": "Electronics"
+      },
+      "value": 112238288.0
+     },
+     {
+      "group": {
+       "Month": "2026-02",
+       "Category": "Home"
+      },
+      "value": 48451022.0
+     },
+     {
+      "group": {
+       "Month": "2026-02",
+       "Category": "Sports"
+      },
+      "value": 14493578.0
+     },
+     {
+      "group": {
+       "Month": "2026-03",
+       "Category": "Clothing"
+      },
+      "value": 38996517.0
+     },
+     {
+      "group": {
+       "Month": "2026-03",
+       "Category": "Electronics"
+      },
+      "value": 122042325.0
+     },
+     {
+      "group": {
+       "Month": "2026-03",
+       "Category": "Home"
+      },
+      "value": 48745153.0
+     },
+     {
+      "group": {
+       "Month": "2026-03",
+       "Category": "Sports"
+      },
+      "value": 14191324.0
+     },
+     {
+      "group": {
+       "Month": "2026-04",
+       "Category": "Clothing"
+      },
+      "value": 34353969.0
+     },
+     {
+      "group": {
+       "Month": "2026-04",
+       "Category": "Electronics"
+      },
+      "value": 113657746.0
+     },
+     {
+      "group": {
+       "Month": "2026-04",
+       "Category": "Home"
+      },
+      "value": 45318572.0
+     },
+     {
+      "group": {
+       "Month": "2026-04",
+       "Category": "Sports"
+      },
+      "value": 12213908.0
+     },
+     {
+      "group": {
+       "Month": "2026-05",
+       "Category": "Clothing"
+      },
+      "value": 39391964.0
+     },
+     {
+      "group": {
+       "Month": "2026-05",
+       "Category": "Electronics"
+      },
+      "value": 136441443.0
+     },
+     {
+      "group": {
+       "Month": "2026-05",
+       "Category": "Home"
+      },
+      "value": 51968596.0
+     },
+     {
+      "group": {
+       "Month": "2026-05",
+       "Category": "Sports"
+      },
+      "value": 13789931.0
+     },
+     {
+      "group": {
+       "Month": "2026-06",
+       "Category": "Clothing"
+      },
+      "value": 40361959.0
+     },
+     {
+      "group": {
+       "Month": "2026-06",
+       "Category": "Electronics"
+      },
+      "value": 144025166.0
+     },
+     {
+      "group": {
+       "Month": "2026-06",
+       "Category": "Home"
+      },
+      "value": 55041314.0
+     },
+     {
+      "group": {
+       "Month": "2026-06",
+       "Category": "Sports"
+      },
+      "value": 13627214.0
+     }
+    ],
+    "overall": 1345843842.0
+   },
+   "notes": "Рост считается по ряду «месяц × категория»: нужна ось времени и серии."
+  },
+  {
+   "id": "cc-03",
+   "group": "category_comparison",
+   "user_query": "Какой канал приносит больше всего выручки?",
+   "expected_behavior": "answer",
+   "expected_metric": "sum:Revenue_KZT",
+   "expected_columns": [
+    "Revenue_KZT",
+    "Channel"
+   ],
+   "expected_group_by": [
+    "Channel"
+   ],
+   "expected_filters": [],
+   "expected_chart_type": "bar",
+   "expected_rag_document": "sales_metrics.pdf",
+   "expected_rag_section": "2. Выручка",
+   "expected_numeric": {
+    "metric": "sum:Revenue_KZT",
+    "group_by": [
+     "Channel"
+    ],
+    "filters": [],
+    "rows": [
+     {
+      "group": {
+       "Channel": "Mobile"
+      },
+      "value": 474924410.0
+     },
+     {
+      "group": {
+       "Channel": "Offline"
+      },
+      "value": 330901998.0
+     },
+     {
+      "group": {
+       "Channel": "Web"
+      },
+      "value": 540017434.0
+     }
+    ],
+    "overall": 1345843842.0
+   },
+   "notes": ""
+  },
+  {
+   "id": "cc-04",
+   "group": "category_comparison",
+   "user_query": "Сравни категории по количеству заказов",
+   "expected_behavior": "answer",
+   "expected_metric": "sum:Orders",
+   "expected_columns": [
+    "Orders",
+    "Category"
+   ],
+   "expected_group_by": [
+    "Category"
+   ],
+   "expected_filters": [],
+   "expected_chart_type": "bar",
+   "expected_rag_document": "sales_metrics.pdf",
+   "expected_rag_section": "3. Заказы и отмены",
+   "expected_numeric": {
+    "metric": "sum:Orders",
+    "group_by": [
+     "Category"
+    ],
+    "filters": [],
+    "rows": [
+     {
+      "group": {
+       "Category": "Clothing"
+      },
+      "value": 20516.0
+     },
+     {
+      "group": {
+       "Category": "Electronics"
+      },
+      "value": 17509.0
+     },
+     {
+      "group": {
+       "Category": "Home"
+      },
+      "value": 14306.0
+     },
+     {
+      "group": {
+       "Category": "Sports"
+      },
+      "value": 9784.0
+     }
+    ],
+    "overall": 62115.0
+   },
+   "notes": ""
+  },
+  {
+   "id": "cc-05",
+   "group": "category_comparison",
+   "user_query": "Покажи вклад регионов в выручку",
+   "expected_behavior": "answer",
+   "expected_metric": "sum:Revenue_KZT",
+   "expected_columns": [
+    "Revenue_KZT",
+    "Region"
+   ],
+   "expected_group_by": [
+    "Region"
+   ],
+   "expected_filters": [],
+   "expected_chart_type": "pie",
+   "expected_rag_document": "sales_metrics.pdf",
+   "expected_rag_section": "2. Выручка",
+   "expected_numeric": {
+    "metric": "sum:Revenue_KZT",
+    "group_by": [
+     "Region"
+    ],
+    "filters": [],
+    "rows": [
+     {
+      "group": {
+       "Region": "Almaty"
+      },
+      "value": 519685847.0
+     },
+     {
+      "group": {
+       "Region": "Astana"
+      },
+      "value": 387609871.0
+     },
+     {
+      "group": {
+       "Region": "Karaganda"
+      },
+      "value": 180043942.0
+     },
+     {
+      "group": {
+       "Region": "Shymkent"
+      },
+      "value": 258504182.0
+     }
+    ],
+    "overall": 1345843842.0
+   },
+   "notes": "Доли аддитивного показателя по четырём регионам: допустима круговая диаграмма."
+  },
+  {
+   "id": "fl-01",
+   "group": "filters",
+   "user_query": "Сравни выручку Web и Mobile",
+   "expected_behavior": "answer",
+   "expected_metric": "sum:Revenue_KZT",
+   "expected_columns": [
+    "Revenue_KZT",
+    "Channel"
+   ],
+   "expected_group_by": [
+    "Channel"
+   ],
+   "expected_filters": [
+    {
+     "column": "Channel",
+     "op": "in",
+     "value": [
+      "Web",
+      "Mobile"
+     ]
+    }
+   ],
+   "expected_chart_type": "bar",
+   "expected_rag_document": "sales_metrics.pdf",
+   "expected_rag_section": "2. Выручка",
+   "expected_numeric": {
+    "metric": "sum:Revenue_KZT",
+    "group_by": [
+     "Channel"
+    ],
+    "filters": [
+     {
+      "column": "Channel",
+      "op": "in",
+      "value": [
+       "Web",
+       "Mobile"
+      ]
+     }
+    ],
+    "rows": [
+     {
+      "group": {
+       "Channel": "Mobile"
+      },
+      "value": 474924410.0
+     },
+     {
+      "group": {
+       "Channel": "Web"
+      },
+      "value": 540017434.0
+     }
+    ],
+    "overall": 1014941844.0
+   },
+   "notes": ""
+  },
+  {
+   "id": "fl-02",
+   "group": "filters",
+   "user_query": "Покажи динамику выручки только по Almaty",
+   "expected_behavior": "answer",
+   "expected_metric": "sum:Revenue_KZT",
+   "expected_columns": [
+    "Revenue_KZT",
+    "Month",
+    "Region"
+   ],
+   "expected_group_by": [
+    "Month"
+   ],
+   "expected_filters": [
+    {
+     "column": "Region",
+     "op": "eq",
+     "value": "Almaty"
+    }
+   ],
+   "expected_chart_type": "line",
+   "expected_rag_document": "sales_metrics.pdf",
+   "expected_rag_section": "2. Выручка",
+   "expected_numeric": {
+    "metric": "sum:Revenue_KZT",
+    "group_by": [
+     "Month"
+    ],
+    "filters": [
+     {
+      "column": "Region",
+      "op": "eq",
+      "value": "Almaty"
+     }
+    ],
+    "rows": [
+     {
+      "group": {
+       "Month": "2026-01"
+      },
+      "value": 78949588.0
+     },
+     {
+      "group": {
+       "Month": "2026-02"
+      },
+      "value": 79742959.0
+     },
+     {
+      "group": {
+       "Month": "2026-03"
+      },
+      "value": 83251398.0
+     },
+     {
+      "group": {
+       "Month": "2026-04"
+      },
+      "value": 88027136.0
+     },
+     {
+      "group": {
+       "Month": "2026-05"
+      },
+      "value": 93398013.0
+     },
+     {
+      "group": {
+       "Month": "2026-06"
+      },
+      "value": 96316753.0
+     }
+    ],
+    "overall": 519685847.0
+   },
+   "notes": ""
+  },
+  {
+   "id": "fl-03",
+   "group": "filters",
+   "user_query": "Какой средний чек в категории Electronics по каналам?",
+   "expected_behavior": "answer",
+   "expected_metric": "ratio:Revenue_KZT/Orders",
+   "expected_columns": [
+    "Revenue_KZT",
+    "Orders",
+    "Channel",
+    "Category"
+   ],
+   "expected_group_by": [
+    "Channel"
+   ],
+   "expected_filters": [
+    {
+     "column": "Category",
+     "op": "eq",
+     "value": "Electronics"
+    }
+   ],
+   "expected_chart_type": "bar",
+   "expected_rag_document": "sales_metrics.pdf",
+   "expected_rag_section": "4. Средний чек",
+   "expected_numeric": {
+    "metric": "ratio:Revenue_KZT/Orders",
+    "group_by": [
+     "Channel"
+    ],
+    "filters": [
+     {
+      "column": "Category",
+      "op": "eq",
+      "value": "Electronics"
+     }
+    ],
+    "rows": [
+     {
+      "group": {
+       "Channel": "Mobile"
+      },
+      "value": 41129.714986548504
+     },
+     {
+      "group": {
+       "Channel": "Offline"
+      },
+      "value": 43338.800621563474
+     },
+     {
+      "group": {
+       "Channel": "Web"
+      },
+      "value": 42195.75096332239
+     }
+    ],
+    "overall": 42084.099548803475
+   },
+   "notes": ""
+  },
+  {
+   "id": "fl-04",
+   "group": "filters",
+   "user_query": "Сравни выручку регионов за март",
+   "expected_behavior": "answer",
+   "expected_metric": "sum:Revenue_KZT",
+   "expected_columns": [
+    "Revenue_KZT",
+    "Region",
+    "Month"
+   ],
+   "expected_group_by": [
+    "Region"
+   ],
+   "expected_filters": [
+    {
+     "column": "Month",
+     "op": "eq",
+     "value": "2026-03"
+    }
+   ],
+   "expected_chart_type": "bar",
+   "expected_rag_document": "sales_metrics.pdf",
+   "expected_rag_section": "2. Выручка",
+   "expected_numeric": {
+    "metric": "sum:Revenue_KZT",
+    "group_by": [
+     "Region"
+    ],
+    "filters": [
+     {
+      "column": "Month",
+      "op": "eq",
+      "value": "2026-03"
+     }
+    ],
+    "rows": [
+     {
+      "group": {
+       "Region": "Almaty"
+      },
+      "value": 83251398.0
+     },
+     {
+      "group": {
+       "Region": "Astana"
+      },
+      "value": 69448816.0
+     },
+     {
+      "group": {
+       "Region": "Karaganda"
+      },
+      "value": 29846178.0
+     },
+     {
+      "group": {
+       "Region": "Shymkent"
+      },
+      "value": 41428927.0
+     }
+    ],
+    "overall": 223975319.0
+   },
+   "notes": ""
+  },
+  {
+   "id": "fl-05",
+   "group": "filters",
+   "user_query": "Покажи заказы Offline по регионам",
+   "expected_behavior": "answer",
+   "expected_metric": "sum:Orders",
+   "expected_columns": [
+    "Orders",
+    "Region",
+    "Channel"
+   ],
+   "expected_group_by": [
+    "Region"
+   ],
+   "expected_filters": [
+    {
+     "column": "Channel",
+     "op": "eq",
+     "value": "Offline"
+    }
+   ],
+   "expected_chart_type": "bar",
+   "expected_rag_document": "sales_metrics.pdf",
+   "expected_rag_section": "3. Заказы и отмены",
+   "expected_numeric": {
+    "metric": "sum:Orders",
+    "group_by": [
+     "Region"
+    ],
+    "filters": [
+     {
+      "column": "Channel",
+      "op": "eq",
+      "value": "Offline"
+     }
+    ],
+    "rows": [
+     {
+      "group": {
+       "Region": "Almaty"
+      },
+      "value": 5566.0
+     },
+     {
+      "group": {
+       "Region": "Astana"
+      },
+      "value": 4519.0
+     },
+     {
+      "group": {
+       "Region": "Karaganda"
+      },
+      "value": 1987.0
+     },
+     {
+      "group": {
+       "Region": "Shymkent"
+      },
+      "value": 2833.0
+     }
+    ],
+    "overall": 14905.0
+   },
+   "notes": ""
+  },
+  {
+   "id": "rg-01",
+   "group": "rag_terminology",
+   "user_query": "Покажи cancellation rate",
+   "expected_behavior": "answer",
+   "expected_metric": "rate:Cancelled_Orders/Orders",
+   "expected_columns": [
+    "Cancelled_Orders",
+    "Orders",
+    "Month"
+   ],
+   "expected_group_by": [
+    "Month"
+   ],
+   "expected_filters": [],
+   "expected_chart_type": "line",
+   "expected_rag_document": "sales_metrics.pdf",
+   "expected_rag_section": "5. Доля отмен",
+   "expected_numeric": {
+    "metric": "rate:Cancelled_Orders/Orders",
+    "group_by": [
+     "Month"
+    ],
+    "filters": [],
+    "rows": [
+     {
+      "group": {
+       "Month": "2026-01"
+      },
+      "value": 4.409063074096754
+     },
+     {
+      "group": {
+       "Month": "2026-02"
+      },
+      "value": 4.428413986574491
+     },
+     {
+      "group": {
+       "Month": "2026-03"
+      },
+      "value": 4.508557457212714
+     },
+     {
+      "group": {
+       "Month": "2026-04"
+      },
+      "value": 4.441880588404961
+     },
+     {
+      "group": {
+       "Month": "2026-05"
+      },
+      "value": 4.3812740407167645
+     },
+     {
+      "group": {
+       "Month": "2026-06"
+      },
+      "value": 4.334449371097638
+     }
+    ],
+    "overall": 4.416002575867343
+   },
+   "notes": "Группировка не названа: показывается динамика по времени."
+  },
+  {
+   "id": "rg-02",
+   "group": "rag_terminology",
+   "user_query": "Покажи AOV по регионам",
+   "expected_behavior": "answer",
+   "expected_metric": "ratio:Revenue_KZT/Orders",
+   "expected_columns": [
+    "Revenue_KZT",
+    "Orders",
+    "Region"
+   ],
+   "expected_group_by": [
+    "Region"
+   ],
+   "expected_filters": [],
+   "expected_chart_type": "bar",
+   "expected_rag_document": "sales_metrics.pdf",
+   "expected_rag_section": "4. Средний чек",
+   "expected_numeric": {
+    "metric": "ratio:Revenue_KZT/Orders",
+    "group_by": [
+     "Region"
+    ],
+    "filters": [],
+    "rows": [
+     {
+      "group": {
+       "Region": "Almaty"
+      },
+      "value": 22162.388460062262
+     },
+     {
+      "group": {
+       "Region": "Astana"
+      },
+      "value": 20708.974248009832
+     },
+     {
+      "group": {
+       "Region": "Karaganda"
+      },
+      "value": 21953.90098768443
+     },
+     {
+      "group": {
+       "Region": "Shymkent"
+      },
+      "value": 22004.101293837248
+     }
+    ],
+    "overall": 21666.97000724463
+   },
+   "notes": ""
+  },
+  {
+   "id": "rg-03",
+   "group": "rag_terminology",
+   "user_query": "Как менялся Cancellation Rate по месяцам?",
+   "expected_behavior": "answer",
+   "expected_metric": "rate:Cancelled_Orders/Orders",
+   "expected_columns": [
+    "Cancelled_Orders",
+    "Orders",
+    "Month"
+   ],
+   "expected_group_by": [
+    "Month"
+   ],
+   "expected_filters": [],
+   "expected_chart_type": "line",
+   "expected_rag_document": "sales_metrics.pdf",
+   "expected_rag_section": "5. Доля отмен",
+   "expected_numeric": {
+    "metric": "rate:Cancelled_Orders/Orders",
+    "group_by": [
+     "Month"
+    ],
+    "filters": [],
+    "rows": [
+     {
+      "group": {
+       "Month": "2026-01"
+      },
+      "value": 4.409063074096754
+     },
+     {
+      "group": {
+       "Month": "2026-02"
+      },
+      "value": 4.428413986574491
+     },
+     {
+      "group": {
+       "Month": "2026-03"
+      },
+      "value": 4.508557457212714
+     },
+     {
+      "group": {
+       "Month": "2026-04"
+      },
+      "value": 4.441880588404961
+     },
+     {
+      "group": {
+       "Month": "2026-05"
+      },
+      "value": 4.3812740407167645
+     },
+     {
+      "group": {
+       "Month": "2026-06"
+      },
+      "value": 4.334449371097638
+     }
+    ],
+    "overall": 4.416002575867343
+   },
+   "notes": ""
+  },
+  {
+   "id": "rg-04",
+   "group": "rag_terminology",
+   "user_query": "Покажи Revenue по категориям",
+   "expected_behavior": "answer",
+   "expected_metric": "sum:Revenue_KZT",
+   "expected_columns": [
+    "Revenue_KZT",
+    "Category"
+   ],
+   "expected_group_by": [
+    "Category"
+   ],
+   "expected_filters": [],
+   "expected_chart_type": "bar",
+   "expected_rag_document": "sales_metrics.pdf",
+   "expected_rag_section": "2. Выручка",
+   "expected_numeric": {
+    "metric": "sum:Revenue_KZT",
+    "group_by": [
+     "Category"
+    ],
+    "filters": [],
+    "rows": [
+     {
+      "group": {
+       "Category": "Clothing"
+      },
+      "value": 229963004.0
+     },
+     {
+      "group": {
+       "Category": "Electronics"
+      },
+      "value": 736850499.0
+     },
+     {
+      "group": {
+       "Category": "Home"
+      },
+      "value": 296210200.0
+     },
+     {
+      "group": {
+       "Category": "Sports"
+      },
+      "value": 82820139.0
+     }
+    ],
+    "overall": 1345843842.0
+   },
+   "notes": ""
+  },
+  {
+   "id": "rg-05",
+   "group": "rag_terminology",
+   "user_query": "Покажи заказы по каналам продаж",
+   "expected_behavior": "answer",
+   "expected_metric": "sum:Orders",
+   "expected_columns": [
+    "Orders",
+    "Channel"
+   ],
+   "expected_group_by": [
+    "Channel"
+   ],
+   "expected_filters": [],
+   "expected_chart_type": "bar",
+   "expected_rag_document": "sales_channels_regions.pdf",
+   "expected_rag_section": "1. Каналы продаж",
+   "expected_numeric": {
+    "metric": "sum:Orders",
+    "group_by": [
+     "Channel"
+    ],
+    "filters": [],
+    "rows": [
+     {
+      "group": {
+       "Channel": "Mobile"
+      },
+      "value": 22324.0
+     },
+     {
+      "group": {
+       "Channel": "Offline"
+      },
+      "value": 14905.0
+     },
+     {
+      "group": {
+       "Channel": "Web"
+      },
+      "value": 24886.0
+     }
+    ],
+    "overall": 62115.0
+   },
+   "notes": ""
+  },
+  {
+   "id": "iv-01",
+   "group": "invalid_ambiguous",
+   "user_query": "Покажи EBITDA",
+   "expected_behavior": "reject",
+   "expected_columns": [],
+   "expected_group_by": [],
+   "expected_filters": [],
+   "notes": "Показателя нет ни в данных, ни в базе знаний."
+  },
+  {
+   "id": "iv-02",
+   "group": "invalid_ambiguous",
+   "user_query": "Покажи Return Rate по категориям",
+   "expected_behavior": "reject",
+   "expected_columns": [],
+   "expected_group_by": [],
+   "expected_filters": [],
+   "expected_rag_document": "sales_metrics.pdf",
+   "expected_rag_section": "6. Показатели без данных",
+   "notes": "Показатель описан в документе, но колонок для него в данных нет; доля отмен — другой показатель."
+  },
+  {
+   "id": "iv-03",
+   "group": "invalid_ambiguous",
+   "user_query": "Покажи прибыль по регионам",
+   "expected_behavior": "reject",
+   "expected_columns": [],
+   "expected_group_by": [],
+   "expected_filters": [],
+   "notes": "Колонки прибыли нет, определения тоже."
+  },
+  {
+   "id": "iv-04",
+   "group": "invalid_ambiguous",
+   "user_query": "Покажи выручку по группам",
+   "expected_behavior": "clarify",
+   "expected_columns": [],
+   "expected_group_by": [],
+   "expected_filters": [],
+   "notes": "«Группы» — это регион, канал или категория: нужен вопрос пользователю."
+  },
+  {
+   "id": "iv-05",
+   "group": "invalid_ambiguous",
+   "user_query": "Сделай прогноз выручки на июль",
+   "expected_behavior": "reject",
+   "expected_columns": [],
+   "expected_group_by": [],
+   "expected_filters": [],
+   "notes": "Прогнозы не поддерживаются; июль вне периода данных."
+  }
+ ]
+}

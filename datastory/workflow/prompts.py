@@ -32,9 +32,31 @@ INSIGHT_TASK = (
 )
 
 
-def plan_system(skill: Skill) -> str:
+CUSTOM_PLAN_TASK = (
+    f"Ты составляешь план анализа по запросу пользователя в steps: не более {MAX_CHARTS} шагов, обычно один. "
+    "Шаг — показатель (metric строго из списка доступных id), колонки группировки (group_by из списка измерений: не более двух, "
+    "дата первой), фильтры (filters) и тип графика. Правила:\n"
+    "1. «Динамика», «изменение», «рост», «тренд», «по месяцам» — группировка по дате; сравнение категорий во времени — group_by [дата, категория].\n"
+    "2. «Сравни», «по регионам/каналам/категориям» — группировка по названной категории.\n"
+    "3. Если показатель не назван, используй основной показатель набора (указан в запросе).\n"
+    "4. Если названы конкретные значения категории или периода («Web и Mobile», «только Almaty», «за март») — обязательно добавь filters "
+    "по этой колонке с этими значениями (значения как в списке значений); для сравнения самих значений group_by — эта же колонка.\n"
+    "5. Если группировка не названа, а в наборе есть дата — динамика по дате. Если группировка названа неопределённо («по группам», "
+    "«по разрезам») — верни один шаг с пустым group_by и ambiguous=true, не размножай шаги по всем измерениям.\n"
+    "6. Показатель, которого нет в списке доступных id, НЕ подменяй похожим по смыслу. Если пользователь просит EBITDA, прибыль, "
+    "Return Rate, конверсию и т. п., а такого id нет, — не строй шаг, а перечисли запрошенное в unsupported. Даже если термин описан "
+    "в документах, но подходящей колонки в данных нет, показателя тоже нет.\n"
+    "7. Прогноз, будущие периоды и любые действия, кроме построения графиков по имеющимся данным, — только unsupported, без шагов.\n"
+    "8. Не добавляй шаги, которых пользователь не просил.\n"
+    "9. Разные показатели не взаимозаменяемы: выручка (Revenue) — не прибыль, маржа, EBITDA, себестоимость, расходы; отмены — не возвраты. "
+    "Если запрошенного показателя нет в списке, шаг не строится, даже если в списке есть показатель из той же области.\n"
+    "10. Ответ обязан содержать либо шаги, либо unsupported: пустой ответ недопустим."
+)
+
+
+def plan_system(skill: Skill, custom: bool = False) -> str:
     """Системный промпт этапа build_analysis_plan: формат ответа + разделы Skill для этого этапа."""
-    return "\n\n".join([PLAN_TASK, methodology_prompt(skill, "plan")])
+    return "\n\n".join([CUSTOM_PLAN_TASK if custom else PLAN_TASK, methodology_prompt(skill, "plan")])
 
 
 def insight_system(skill: Skill) -> str:
@@ -54,6 +76,40 @@ def summary_text(summary: DatasetSummary) -> str:
 
 def intent_prompt(request: str, summary: DatasetSummary) -> str:
     return f"Запрос пользователя: «{request}»\n\n{summary_text(summary)}"
+
+
+def custom_plan_prompt(summary: DatasetSummary, context: BusinessContext, request: str, show_documents: bool = True) -> str:
+    """Данные для планировщика по запросу: показатели, измерения со значениями, найденные определения. Строк таблицы нет.
+
+    show_documents=False — контекст RAG не передаётся вовсе (раздел с документами не добавляется, даже как «ничего не найдено»).
+    """
+    from datastory.analytics.metrics import get_metric
+
+    metrics = "\n".join(
+        f"- {m} | {get_metric(m).label} | {get_metric(m).formula} | {get_metric(m).unit or 'без единицы'}" for m in summary.available_metrics
+    )
+    dimensions = []
+    for column in summary.columns:
+        if column.name not in summary.dimensions:
+            continue
+        stats = column.statistics or {}
+        if column.kind == "datetime":
+            dimensions.append(f"- {column.name}: дата/период, от {stats.get('min')} до {stats.get('max')}")
+        else:
+            values = ", ".join((stats.get("top_values") or {}))
+            dimensions.append(f"- {column.name}: категория, значения: {values}")
+    documents = "\n".join(f"[{h.source.citation}] {h.text}" for h in context.query_hits) or "по запросу ничего не найдено"
+    from datastory.workflow.catalog import measure_metrics, primary_measure
+
+    default_metric = primary_measure(measure_metrics(summary)) if measure_metrics(summary) else None
+    return "\n\n".join([
+        f"Запрос пользователя: «{request.strip()}»",
+        f"Основной показатель набора (если в запросе не назван): {default_metric}.",
+        f"Набор данных: {summary.row_count} строк, колонки: {', '.join(summary.column_names)}.",
+        "Доступные показатели (id | название | формула | единица):\n" + metrics,
+        "Измерения:\n" + "\n".join(dimensions),
+        *(["Фрагменты документов, найденные по запросу (определения терминов):\n" + documents] if show_documents else []),
+    ])
 
 
 def plan_prompt(

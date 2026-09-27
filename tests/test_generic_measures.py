@@ -6,15 +6,27 @@ from datastory.analytics.formatting import format_metric_value
 from datastory.analytics.metrics import SUM_PREFIX, available_metrics, get_metric, sum_metric
 from datastory.chat.classify import classify_by_rules, detect_metric
 from datastory.chat.graph import ChatService
-from datastory.errors import AnalyticsError, LLMError
+from datastory.errors import AnalyticsError
 from datastory.workflow.catalog import evaluate_candidates
 from datastory.workflow.graph import WorkflowDeps
-from datastory.workflow.models import AUTO_GOAL, IntentDraft
+from datastory.workflow.models import AUTO_GOAL
 from scripts import generate_sales_demo as sales
-from tests.helpers import ScriptedLLM
 from tests.workflow_helpers import approve, make_runner, save_dataset
 
-ROWS = sales.build_rows()
+FULL_ROWS = sales.build_rows()  # 288 строк: месяц × регион × канал × категория
+
+
+def aggregate(rows: list[dict], *keys: str) -> list[dict]:
+    """Суммы по ключам: простой набор «месяц × регион» для проверки универсального анализа без неоднозначных колонок."""
+    grouped: dict[tuple, dict] = {}
+    for row in rows:
+        entry = grouped.setdefault(tuple(row[k] for k in keys), {**{k: row[k] for k in keys}, "Orders": 0, "Cancelled_Orders": 0, "Revenue_KZT": 0})
+        for column in ("Orders", "Cancelled_Orders", "Revenue_KZT"):
+            entry[column] += row[column]
+    return list(grouped.values())
+
+
+ROWS = aggregate(FULL_ROWS, "Month", "Region")
 GOAL = "Покажи динамику выручки по месяцам, сравни регионы и найди основные изменения"
 
 
@@ -43,7 +55,7 @@ def test_malformed_sum_metric_is_rejected():
 
 
 def test_sums_are_offered_only_without_payment_columns():
-    assert available_metrics(["Orders", "Revenue_KZT"]) == ["sum:Orders", "sum:Revenue_KZT"]
+    assert available_metrics(["Orders", "Revenue_KZT"]) == ["sum:Orders", "sum:Revenue_KZT", "ratio:Revenue_KZT/Orders"]
     assert available_metrics(["Transactions", "Successful", "Orders"]) == ["transaction_count", "successful_count", "success_rate"]
     assert available_metrics([]) == []
 
@@ -97,20 +109,6 @@ def test_sales_analysis_runs_end_to_end_with_numbers_from_mcp(client, sales_id):
     assert "Причина изменения по данным не установлена" in dynamics.limitation
 
 
-def test_llm_intent_is_limited_to_the_analyses_of_the_dataset(client, sales_id):
-    def no_plan(system, user, n):
-        return LLMError("план по правилам")  # план строится правилами: проверяется только разбор запроса
-
-    llm = ScriptedLLM(
-        IntentDraft=lambda s, u, n: IntentDraft(analyses=["success_dynamics", "measure_comparison"], unsupported=[], comment="Регионы."),
-        PlanDraft=no_plan,
-    )
-    snapshot = make_runner(client, llm).start(sales_id, "Сравни регионы")
-    assert [c.analysis for c in snapshot.request.plan.charts] == ["measure_comparison"]  # платёжный анализ чужого набора отброшен
-    system = llm.prompts("IntentDraft")[0][0]
-    assert "measure_dynamics" in system and "success_dynamics" not in system
-
-
 # ================================================================== чат по продажам
 def test_chat_questions_about_revenue_and_regions(client, sales_id):
     runner = make_runner(client)
@@ -151,7 +149,7 @@ def test_revenue_words_map_to_the_revenue_column():
 
 # ================================================================== демо-файл
 def test_sales_demo_data_is_reproducible_and_has_the_astana_dip():
-    assert sales.build_rows() == sales.build_rows() and len(ROWS) == 24
+    assert sales.build_rows() == sales.build_rows() and len(FULL_ROWS) == 288 and len(ROWS) == 24
     astana = {r["Month"]: r["Revenue_KZT"] / r["Orders"] for r in ROWS if r["Region"] == "Astana"}
     assert astana["2026-04"] < 0.7 * astana["2026-03"]  # заметный провал выручки на заказ в апреле
     assert SUM_PREFIX == "sum:"

@@ -36,6 +36,7 @@ class ContextFragment(BaseModel):
 
 
 class BusinessContext(BaseModel):
+    query_hits: list[ContextFragment] = Field(default_factory=list, description="Фрагменты, найденные по запросу пользователя (Top-3)")
     definitions: dict[str, ContextFragment] = Field(default_factory=dict, description="metric -> определение из документации")
     events: list[ContextFragment] = Field(default_factory=list, description="Сопроводительный контекст (события, ограничения)")
     provider: str = ""
@@ -50,13 +51,32 @@ def _norm(text: str) -> str:
     return " ".join(text.casefold().replace("ё", "е").split())
 
 
-def find_definition(search: Callable[[str], object], query: str, terms: tuple[str, ...]) -> ContextFragment | None:
-    """Первый релевантный фрагмент, который называет показатель; иначе None (документации нет)."""
+def find_definition(
+    search: Callable[[str], object], query: str, terms: tuple[str, ...], require_all: bool = False
+) -> ContextFragment | None:
+    """Первый релевантный фрагмент, который называет показатель; иначе None (документации нет).
+
+    require_all: фрагмент обязан назвать все термины (у отношения — и числитель, и знаменатель).
+    """
     result = search(query)
+    check = all if require_all else any
     for hit in result.hits:
-        if hit.relevant and any(_norm(term) in _norm(hit.text) for term in terms):
+        if hit.relevant and check(_norm(term) in _norm(hit.text) for term in terms):
             return ContextFragment(source=hit.source, text=hit.text[:MAX_QUOTE], score=hit.score)
     return None
+
+
+def retrieve_query_hits(query: str, search: Callable[[str], object], only_relevant: bool = True) -> list[ContextFragment]:
+    """Фрагменты документов по запросу пользователя (для планировщика). Ошибка поиска — пустой список.
+
+    only_relevant=False — все найденные фрагменты по убыванию близости (Top-k как есть), без порога релевантности.
+    """
+    try:
+        result = search(query)
+    except Exception as exc:  # noqa: BLE001 — база знаний недоступна: планируем без неё
+        logger.warning("Поиск по запросу не удался: %s", exc)
+        return []
+    return [ContextFragment(source=h.source, text=h.text[:MAX_QUOTE], score=h.score) for h in result.hits if h.relevant or not only_relevant]
 
 
 def retrieve_business_context(
@@ -87,7 +107,9 @@ def retrieve_business_context(
     return context
 
 
-def make_searcher(kb: KnowledgeBase | None, dataset_id: str) -> Callable[[str], object]:
+def make_searcher(kb: KnowledgeBase | None, dataset_id: str, top_k: int | None = None) -> Callable[[str], object]:
     from datastory.rag.api import search_business_context
 
-    return lambda query: search_business_context(query, dataset_id=dataset_id, kb=kb)
+    if top_k is None:
+        return lambda query: search_business_context(query, dataset_id=dataset_id, kb=kb)
+    return lambda query: search_business_context(query, top_k, dataset_id=dataset_id, kb=kb)

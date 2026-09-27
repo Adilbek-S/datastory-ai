@@ -88,9 +88,46 @@ def sum_metric(column: str) -> MetricDefinition:
     )
 
 
+RATIO_PREFIX, RATE_PREFIX = "ratio:", "rate:"
+_COUNT_HINTS = re.compile(r"order|count|qty|quantity|units|transaction|заказ|колич|числ|штук", re.IGNORECASE)
+
+
+def _label(column: str) -> str:
+    return _CURRENCY_SUFFIX.sub("", column).replace("_", " ").strip() or column
+
+
+def is_count_like(column: str) -> bool:
+    """Колонка-счётчик (заказы, отмены), а не денежная сумма: только такие годятся знаменателем и числителем долей."""
+    return not _CURRENCY_SUFFIX.search(column) and bool(_COUNT_HINTS.search(column))
+
+
+def ratio_metric(numerator: str, denominator: str, *, percent: bool) -> MetricDefinition:
+    """Универсальное отношение сумм: SUM(числитель) / SUM(знаменатель), для «rate» — в процентах (× 100).
+
+    Как и у показателей платёжной системы, сначала суммируются числитель и знаменатель, потом делятся (не среднее по строкам).
+    """
+    prefix = RATE_PREFIX if percent else RATIO_PREFIX
+    currency = _CURRENCY_SUFFIX.search(numerator)
+    formula = f"SUM({numerator}) / SUM({denominator})" + (" × 100" if percent else "")
+    unit = "%" if percent else (currency.group(1).upper() if currency else "")
+    return MetricDefinition(
+        f"{prefix}{numerator}/{denominator}", f"{_label(numerator)} / {_label(denominator)}", unit, formula, (numerator, denominator),
+        _ratio(numerator, denominator, 100.0 if percent else 1.0),
+    )
+
+
+def _parse_ratio(name: str, prefix: str) -> tuple[str, str] | None:
+    body = name[len(prefix):]
+    numerator, _, denominator = body.partition("/")
+    return (numerator, denominator) if numerator and denominator and "/" not in denominator else None
+
+
 def get_metric(name: Any) -> MetricDefinition:
     if isinstance(name, str) and name.startswith(SUM_PREFIX) and len(name) > len(SUM_PREFIX):
         return sum_metric(name[len(SUM_PREFIX):])
+    for prefix in (RATIO_PREFIX, RATE_PREFIX):
+        if isinstance(name, str) and name.startswith(prefix) and (pair := _parse_ratio(name, prefix)):
+            return ratio_metric(*pair, percent=prefix == RATE_PREFIX)
     if not isinstance(name, str) or name not in METRICS:
         raise AnalyticsError(f"Неизвестная метрика {name!r}. Поддерживаются: {', '.join(METRICS)}.")
     return METRICS[name]
@@ -445,4 +482,10 @@ def available_metrics(numeric_columns: list[str]) -> list[str]:
     """
     numeric = {c.casefold() for c in numeric_columns}
     found = [name for name, d in METRICS.items() if all(canonical.casefold() in numeric for canonical in d.columns)]
-    return found or [f"{SUM_PREFIX}{column}" for column in numeric_columns]
+    if found:
+        return found
+    columns = list(numeric_columns)
+    counters = [c for c in columns if is_count_like(c)]
+    ratios = [f"{RATIO_PREFIX}{n}/{d}" for d in counters for n in columns if n != d and not is_count_like(n)]  # сумма денег на единицу
+    rates = [f"{RATE_PREFIX}{n}/{d}" for d in counters for n in counters if n != d]  # доля одного счётчика в другом, %
+    return [*(f"{SUM_PREFIX}{c}" for c in columns), *ratios, *rates]

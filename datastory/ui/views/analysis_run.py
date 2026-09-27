@@ -94,6 +94,8 @@ def _plan_screen(runner, snapshot: WorkflowSnapshot, session: dict) -> None:
         st.warning(f"Исключено: {item.label} — {item.reason}.", icon=":material/block:")
     for note in plan.notes:
         st.caption(f":material/tune: {note}")
+    for text in plan.unsupported:
+        st.warning(f"Не выполнено: {text}. Система не строит показатели, которых нет в данных.", icon=":material/block:")
 
     thread, round_number = snapshot.thread_id, request.round
     with st.form(f"plan::{thread}::{round_number}"):
@@ -117,7 +119,9 @@ def _plan_screen(runner, snapshot: WorkflowSnapshot, session: dict) -> None:
                     if picked != PLACEHOLDER:
                         choices[step.chart_id] = picked
                 else:
-                    group_col.markdown(f"**Группировка**\n\n{step.x_column}")
+                    group_col.markdown(f"**Группировка**\n\n{', '.join(step.grouping)}")
+                    if step.filters:
+                        group_col.caption("Фильтры: " + "; ".join(f"{c.column} {c.op.value} {c.value}" for c in step.filters))
                 chart_col.markdown(f"**Визуализация**\n\n{CHART_TYPE_LABELS[step.chart_type]}")
                 if definition.documented:
                     st.caption(f":material/menu_book: Определение показателя найдено в документации: {definition.definition_source}")
@@ -262,6 +266,8 @@ def _empty(snapshot: WorkflowSnapshot) -> None:
     st.info("Для этого датасета не удалось составить план из поддерживаемых графиков.", icon=":material/info:")
     for item in snapshot.plan.excluded if snapshot.plan else []:
         st.caption(f":material/block: {item.label}: {item.reason}.")
+    for text in (snapshot.plan.unsupported if snapshot.plan else []):
+        st.warning(f"Не выполнено: {text}. Система не строит показатели, которых нет в данных.", icon=":material/block:")
     _show_warnings(snapshot.warnings)
     _overview_charts(snapshot.dataset_id)
     _restart(get_runner(), snapshot.thread_id)

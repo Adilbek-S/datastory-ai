@@ -175,8 +175,15 @@ def apply_choices(plan: AnalysisPlan, choices: dict[str, str], summary: DatasetS
             errors.append(f"Колонка «{choice}» не подходит для графика «{chart.title}»: доступно {', '.join(chart.mapping.candidates)}.")
             charts.append(chart)
         else:
-            kind = BY_ID[chart.analysis]
             mapping = chart.mapping.model_copy(update={"column": choice, "status": "confirmed", "basis": "выбор пользователя"})
+            if chart.analysis == "custom":  # шаг по запросу: группировка = выбранная колонка
+                from datastory.workflow.custom_plan import fit_custom_chart
+
+                chart_type, _ = fit_custom_chart(chart.chart_type, [choice], chart.metric, summary, chart.filters)
+                mapping = mapping.model_copy(update={"role": "time" if summary.column_types.get(choice) == "datetime" else "category"})
+                charts.append(chart.model_copy(update={"x_column": choice, "group_by": [choice], "mapping": mapping, "chart_type": chart_type}))
+                continue
+            kind = BY_ID[chart.analysis]
             chart_type, _ = fit_chart_type(
                 kind, chart.chart_type, unique_count(summary, choice) if kind.role == "category" else None
             )

@@ -62,6 +62,7 @@ class OpenAIEmbeddings(EmbeddingProvider):
         self.model = model
         self.name = f"openai-{model}"
         self.batch_size, self.max_retries, self._sleep = batch_size, max_retries, sleep
+        self.tokens_used = 0  # токены запросов эмбеддингов по данным OpenAI (для evaluation)
         if client is None:
             from openai import OpenAI
 
@@ -98,6 +99,7 @@ class OpenAIEmbeddings(EmbeddingProvider):
             except openai.APIError as exc:
                 raise EmbeddingError(f"Ошибка OpenAI при получении эмбеддингов: {exc}") from exc
 
+            self.tokens_used += int(getattr(getattr(response, "usage", None), "total_tokens", 0) or 0)
             items = sorted(response.data, key=lambda d: d.index)
             if len(items) != len(batch):
                 raise EmbeddingError("OpenAI вернул неполный ответ. Повторите попытку.")

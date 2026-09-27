@@ -9,7 +9,7 @@ from typing import Literal
 
 from pydantic import BaseModel, Field
 
-from datastory.analytics.models import DatasetSummary, MetricResult
+from datastory.analytics.models import DatasetSummary, FilterCondition, MetricResult
 from datastory.models import KPI, ChartSpec, Insight
 
 MAX_CHARTS = 4  # для MVP в плане не больше четырёх графиков
@@ -21,6 +21,7 @@ AUTO_GOAL = (
 AnalysisId = Literal[
     "count_dynamics", "volume_dynamics", "success_dynamics", "channel_distribution",  # показатели платёжной системы
     "measure_dynamics", "measure_comparison",  # универсальные: сумма числовой колонки (продажи и т. п.)
+    "custom",  # шаг, составленный по запросу пользователя (показатель, группировка, фильтры)
 ]
 ChartType = Literal["line", "bar", "pie"]
 MappingStatus = Literal["confident", "confirmed", "ambiguous"]
@@ -80,6 +81,12 @@ class AnalysisStep(BaseModel):
     x_column: str | None = None
     mapping: ColumnMapping
     rationale: str = ""
+    group_by: list[str] = Field(default_factory=list, description="Все колонки группировки (первая — ось X); пусто — по x_column")
+    filters: list[FilterCondition] = Field(default_factory=list, description="Условия отбора строк (только у шагов по запросу)")
+
+    @property
+    def grouping(self) -> list[str]:
+        return self.group_by or ([self.x_column] if self.x_column else [])
 
 
 PlannedChart = AnalysisStep  # прежнее название
@@ -107,6 +114,7 @@ class AnalysisPlan(BaseModel):
     clarifications: list[Clarification] = Field(default_factory=list)
     documentation_gaps: list[str] = Field(default_factory=list, description="Показатели без бизнес-определения")
     notes: list[str] = Field(default_factory=list)
+    unsupported: list[str] = Field(default_factory=list, description="Запрошенное, чего система не строит (нет показателя, колонки, значения)")
     available_analyses: list[AnalysisId] = Field(default_factory=list)
 
     def metric_definition(self, metric: str) -> MetricDefinition | None:
@@ -212,8 +220,31 @@ class ChartDraft(BaseModel):
     rationale: str = Field(description="Одно предложение: зачем этот график")
 
 
+class FilterDraft(BaseModel):
+    column: str = Field(description="Колонка-измерение из списка")
+    op: Literal["eq", "in", "ne", "not_in"]
+    values: list[str] = Field(description="Значения как в данных: одно для eq/ne, несколько для in/not_in; период — «2026-03»")
+
+
+class StepDraft(BaseModel):
+    """Шаг плана по запросу пользователя (набор данных без колонок платёжной системы)."""
+
+    title: str = Field(description="Название графика на русском")
+    metric: str = Field(description="Идентификатор показателя строго из списка доступных")
+    requested_term: str = Field(default="", description="Фраза из запроса, которой пользователь назвал показатель («cancellation rate», «средний чек»); пусто, если показатель не назван")
+    group_by: list[str] = Field(description="Колонки группировки из списка измерений: не более двух, дата первой; пусто, если запрос неоднозначен")
+    filters: list[FilterDraft] = Field(description="Условия отбора из запроса; пустой список, если фильтров нет")
+    chart_type: ChartType
+    rationale: str = Field(description="Одно предложение: зачем этот график")
+
+
 class PlanDraft(BaseModel):
     """Ответ LLM на этапе build_analysis_plan (проверяется в validate_analysis_plan)."""
 
     goal: str = Field(description="Цель анализа одной фразой")
-    charts: list[ChartDraft]
+    charts: list[ChartDraft] = Field(default_factory=list, description="Шаги из каталога анализов (когда выбраны анализы каталога)")
+    steps: list[StepDraft] = Field(default_factory=list, description="Шаги по запросу пользователя (когда каталога анализов нет)")
+    unsupported: list[str] = Field(
+        default_factory=list, description="Запрошенные показатели и действия, которых нет среди доступных (не придумывай их): по одной фразе на каждое"
+    )
+    ambiguous: bool = Field(default=False, description="Запрос допускает несколько разных толкований группировки, выбрать без уточнения нельзя")

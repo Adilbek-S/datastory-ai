@@ -310,8 +310,13 @@ def rules_answer(question: str, bundle: Bundle) -> tuple[str, list[str], list[Co
         metric = bundle.metrics[0]
         inp = bundle.inputs[metric]
         shares = sorted((f for f in inp.facts if f.kind == "share"), key=lambda f: f.value, reverse=True)
-        if not shares:
-            return f"Для «{inp.result.label}» нет значений по категориям.", cited, used
+        if not shares:  # отношение или процент: долей нет, лидер определяется по значению
+            values = sorted((f for f in inp.facts if f.id.endswith("_value")), key=lambda f: f.value, reverse=True)
+            if not values:
+                return f"Для «{inp.result.label}» нет значений по категориям.", cited, used
+            ranking = "; ".join(f"«{f.group}» — {f.formatted}" for f in values)
+            cited += [f"{metric}.{f.id}" for f in values]
+            return f"Наибольшее значение «{inp.result.label}» у «{values[0].group}»: {values[0].formatted}. По всем категориям: {ranking}.", cited, used
         ranking = []
         for share in shares:
             value = next(f for f in inp.facts if f.id == share.id.replace("_share", "_value"))

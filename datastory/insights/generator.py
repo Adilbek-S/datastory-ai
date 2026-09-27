@@ -75,7 +75,9 @@ class ChartInsightInput:
 
 def data_source(inp: ChartInsightInput) -> str:
     by = ", ".join(inp.result.group_by)
-    return f"MCP calculate_metrics: {inp.result.label} = {inp.result.formula}; группировка по {by}; датасет {inp.filename}"
+    filters = "; ".join(f"{c.column} {c.op.value} {c.value}" for c in inp.result.filters)
+    tail = f"; фильтры: {filters}" if filters else ""
+    return f"MCP calculate_metrics: {inp.result.label} = {inp.result.formula}; группировка по {by}{tail}; датасет {inp.filename}"
 
 
 def _sentence(text: str) -> str:
@@ -91,8 +93,7 @@ def system_limitations(inp: ChartInsightInput, event_used: bool) -> list[str]:
     limits = []
     if inp.definition is not None and not inp.definition.documented:
         limits.append(NO_DEFINITION.format(formula=inp.definition.formula))
-    facts = _by_id(inp.facts)
-    changed = inp.role == "time" and any(k in facts and facts[k].value != 0 for k in ("change", "drop", "rise"))
+    changed = inp.role == "time" and any(f.kind == "difference" and f.value != 0 for f in inp.facts)
     if changed:
         limits.append(CAUSE_UNKNOWN)
     if event_used:
@@ -169,6 +170,17 @@ def rules_category(inp: ChartInsightInput) -> tuple[str, str, list[str]]:
     facts, label = _by_id(inp.facts), inp.result.label
     shares = sorted((f for f in inp.facts if f.kind == "share"), key=lambda f: f.value, reverse=True)
     total = facts.get("overall")
+    if not shares and total is not None:  # отношение или процент: долей нет, категории сравниваются по значению
+        values = sorted((f for f in inp.facts if f.id.endswith("_value")), key=lambda f: f.value, reverse=True)
+        if values:
+            top, bottom = values[0], values[-1]
+            sentences = [f"«{label}» по категориям: наибольшее значение у «{top.group}» — {top.formatted}."]
+            cited = [total.id, top.id]
+            if bottom is not top:
+                sentences.append(f"Наименьшее — у «{bottom.group}»: {bottom.formatted}.")
+                cited.append(bottom.id)
+            sentences.append(f"В целом по всем строкам — {total.formatted}.")
+            return "info", " ".join(sentences), cited
     if not shares or total is None:
         return "info", f"Для «{label}» нет значений по категориям.", []
 
@@ -185,8 +197,35 @@ def rules_category(inp: ChartInsightInput) -> tuple[str, str, list[str]]:
     return "info", " ".join(sentences), cited
 
 
+def rules_series(inp: ChartInsightInput) -> tuple[str, str, list[str]]:
+    """Динамика с разбивкой на серии: лидер роста и изменение каждой серии (числа — только из фактов)."""
+    facts, label = _by_id(inp.facts), inp.result.label
+    leader = facts.get("growth_leader")
+    if leader is None:
+        return "info", f"Для «{label}» нет рядов из двух и более периодов: сравнивать рост серий не с чем.", []
+    series_column = inp.result.group_by[1]
+    if leader.value > 0:
+        sentences = [f"Наибольший рост «{label}» показала {series_column} «{leader.group}»: {leader.formatted}."]
+    else:
+        sentences = [f"Ни одна серия «{label}» не показала роста; наименьшее снижение у {series_column} «{leader.group}»: {leader.formatted}."]
+    cited = ["growth_leader"]
+    changes = sorted((f for f in inp.facts if f.id.endswith("_change_pct") or (f.id.endswith("_change") and inp.result.unit == "%")), key=lambda f: f.value, reverse=True)
+    parts = []
+    for fact in changes:
+        prefix = fact.id.rsplit("_", 2)[0] if fact.id.endswith("_change_pct") else fact.id.rsplit("_", 1)[0]
+        first, last = facts[f"{prefix}_first"], facts[f"{prefix}_last"]
+        parts.append(f"«{fact.group}»: с {first.formatted} до {last.formatted} ({'рост' if fact.value > 0 else 'снижение'} {fact.formatted})")
+        cited += [first.id, last.id, fact.id]
+    if parts:
+        sentences.append("По сериям: " + "; ".join(parts) + ".")
+    return "info", " ".join(sentences), cited
+
+
 def rules_insight(inp: ChartInsightInput) -> Insight:
-    severity, text, cited = rules_time_series(inp) if inp.role == "time" else rules_category(inp)
+    if len(inp.result.group_by) == 2:
+        severity, text, cited = rules_series(inp)
+    else:
+        severity, text, cited = rules_time_series(inp) if inp.role == "time" else rules_category(inp)
     facts = _by_id(inp.facts)
     limits = system_limitations(inp, event_used=False)
     return Insight(

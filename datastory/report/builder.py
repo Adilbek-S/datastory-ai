@@ -151,7 +151,10 @@ def build_markdown_report(result: AnalysisResult, profile: DatasetProfile | None
         if step and step.rationale:
             out += [f"- **Зачем:** {step.rationale}"]
         out += [f"- **Показатель:** {metric.label} = {metric.formula} ({metric.unit})"]
-        out += [f"- **Группировка:** {', '.join(metric.group_by)}", f"- **Визуализация:** {CHART_LABELS.get(spec.kind, spec.kind)}", ""]
+        out += [f"- **Группировка:** {', '.join(metric.group_by)}"]
+        if metric.filters:
+            out += ["- **Фильтры:** " + "; ".join(f"{c.column} {c.op.value} {c.value}" for c in metric.filters)]
+        out += [f"- **Визуализация:** {CHART_LABELS.get(spec.kind, spec.kind)}", ""]
         out += _chart_table(spec)
         if insight:
             out += ["", f"**{insight.title}.** {insight.text}", ""]

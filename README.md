@@ -115,7 +115,37 @@ print(get_source_reference(top.source.chunk_id))
 
 ### Наборы без колонок платёжной системы
 
-Если в файле нет `Transactions`/`Successful`/`Amount_KZT` (например, продажи с колонками `Month`, `Region`, `Revenue_KZT`), анализируется сумма основной числовой колонки: динамика по периодам и сравнение по категориям. MCP считает такие показатели тем же инструментом `calculate_metrics` (`metric="sum:<колонка>"`).
+Если в файле нет `Transactions`/`Successful`/`Amount_KZT` (например, продажи `data/demo/sales_2026.xlsx`), система строит план **по вашему запросу**: LLM выбирает показатель, группировку, фильтры и тип графика, а код проверяет выбор по данным. Доступные показатели — суммы числовых колонок (`sum:Revenue_KZT`), отношения сумм (`ratio:Revenue_KZT/Orders` — средний чек) и доли в процентах (`rate:Cancelled_Orders/Orders` — доля отмен); их считает тот же MCP-инструмент `calculate_metrics`. Определения терминов («средний чек», «cancellation rate») ищутся в базе знаний (RAG). Показатель, которого нет в данных (EBITDA, прибыль), не выдумывается: шаг не строится, запрос попадает в «Не выполнено». Без запроса («Предложить анализ автоматически») строятся динамика основной суммы и сравнение по категориям.
+
+## Evaluation
+
+30 полностью синтетических golden cases на `sales_2026` (6 групп по 5: интерпретация показателя, динамика, сравнение категорий, фильтры, терминология из базы знаний, недопустимые и неоднозначные запросы). Для каждого хранятся `id`, `user_query`, `expected_metric`, `expected_columns`, `expected_group_by`, `expected_chart_type`, `expected_rag_document`, `expected_behavior`, а для ответов — эталонные числа, рассчитанные обычным Python-кодом.
+
+```bash
+python -m datastory.evaluation                     # все 30 случаев → evaluation/results/latest.json и EVALS.md
+python -m datastory.evaluation --groups filters    # часть случаев: результат в partial.json, EVALS.md не меняется
+python -m datastory.evaluation --report-only       # пересобрать EVALS.md из latest.json
+python -m datastory.evaluation.golden_builder      # перестроить golden cases (evaluation/golden/cases.json)
+```
+
+Метрики: Retrieval Hit@3, Analysis Plan Accuracy (показатель, колонки, группировка), Numeric Accuracy (числа MCP против Python с допуском float), а также задержка, токены LLM, доля отклонённых недопустимых запросов. Запуск использует настоящие OpenAI (`OPENAI_API_KEY`), RAG и MCP; без ключа шаги LLM пропускаются и помечаются «не вычислялась». `EVALS.md` формируется только из результатов реального запуска и содержит хеш `latest.json`; прошлые прогоны хранятся в `evaluation/results/history/`.
+
+### Выбор гиперпараметров LLM
+
+```bash
+python -m datastory.evaluation --hyperparams              # temperature 0 против 0.4 на 10 golden cases × 5 повторов → evaluation/results/hyperparameters.json и раздел в EVALS.md
+```
+
+Небольшой ограниченный эксперимент для MVP: меняется только temperature, остальное одинаково (модель, промпты, RAG, max output tokens). Сравниваются Analysis Plan Accuracy, стабильность структуры ответа (доля повторов, совпавших с типичной структурой случая), задержка и токены. Конфигурация выбирается кодом по правилу, заданному до запуска (точность → стабильность → стоимость → temperature 0), а не вручную; каждый запуск сохраняется, прошлые результаты не затираются. Итог записан в `EVALS.md` и применяется настройками `LLM_TEMPERATURE` и `LLM_MAX_OUTPUT_TOKENS` (тест сверяет значения по умолчанию с последним результатом эксперимента). top_p и другие комбинации не исследовались.
+
+### A/B эксперимент: влияет ли RAG на AnalysisPlan
+
+```bash
+python -m datastory.evaluation --ab                 # A и B (и вспомогательная A0) на 30 случаях × 3 повтора → evaluation/results/ab_test.json и секция в EVALS.md
+python -m datastory.evaluation --ab --repeats 5     # больше повторов: меньше шума от недетерминизма LLM
+```
+
+Гипотеза: RAG улучшает интерпретацию доменных показателей и построение AnalysisPlan. **A** — LLM получает DatasetProfile и `user_query`, контекст RAG не передаётся; **B** — то же и Top-5 фрагментов базы знаний. Одинаковы LLM, системный промпт (в результатах — его хеш и проверка идентичности), temperature 0, `max_tokens`, набор данных и golden cases. Сравниваются Analysis Plan Accuracy (отдельно по RAG-dependent случаям), Retrieval Hit@3 для B, доля отклонённых недопустимых запросов, задержка и токены. Для разницы B − A считаются 95% бутстрап-интервал по случаям и точный тест знаков; вывод «RAG лучше» формируется автоматически только если интервал целиком выше нуля, иначе результат называется неподтверждённым. Секция A/B в `EVALS.md` собирается из `ab_test.json` (в ней его sha256). Для запуска нужен `OPENAI_API_KEY`: без него эксперимент не выполняется и ничего не записывает.
 
 ## Тесты
 
@@ -196,6 +226,9 @@ datastory/
   insights/                 числовые доказательства, генерация и проверка выводов
   skills.py                 загрузка Skill из .claude/skills/
   observability.py          трассировка LangSmith: конфигурация из окружения, span-ы
+  evaluation/               evaluation pipeline: golden cases, метрики, runner, отчёт (python -m datastory.evaluation)
+evaluation/                 golden cases (golden/cases.json) и результаты прогонов (results/)
+EVALS.md                    отчёт последнего полного прогона (генерируется)
   evaluation/               Evaluation Pipeline
 scripts/                    generate_demo_data.py — генератор демо-данных
 .claude/skills/             datastory-analysis — методика анализа (SKILL.md)

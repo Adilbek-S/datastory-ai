@@ -21,7 +21,7 @@ from datastory.profiler.pii import detect_sensitive
 from datastory.profiler.quality import find_quality_issues
 
 MAX_SAMPLES = 5
-MAX_TOP_VALUES = 5
+MAX_TOP_VALUES = 12  # столько значений категории видят планировщик и проверка фильтров (график читаем до 12 категорий)
 MAX_VALUE_LEN = 60
 DESCRIPTION_LIST_LIMIT = 8
 
