@@ -76,6 +76,10 @@ MAX_INSIGHT_ATTEMPTS = 2  # первая попытка LLM и одна повт
 EMPTY_PLAN_REMINDER = (
     "\n\nПредыдущий ответ был пустым. Верни хотя бы один шаг в steps или перечисли запрошенное в unsupported."
 )
+WRONG_FIELD_REMINDER = (
+    "\n\nПредыдущий ответ описал график в поле charts — это неправильное поле для этого сценария, оно не используется и было проигнорировано. "
+    "Опиши тот же самый график в поле steps (title, metric — id показателя из списка, group_by, filters, chart_type), а charts оставь пустым []."
+)
 LLM_OFF = "Языковая модель недоступна (не задан OPENAI_API_KEY): план и выводы составлены по детерминированным правилам."
 
 
@@ -252,8 +256,9 @@ def build_graph(deps: WorkflowDeps, checkpointer=None):
                         else plan_prompt(state["summary"], state["candidates"], selected, state["context"], state.get("user_request", ""))
                     )
                     draft = llm.generate(PlanDraft, system=system, user=user)
-                    if custom and not draft.steps and not draft.unsupported:  # пустой ответ: одна повторная попытка с напоминанием
-                        draft = llm.generate(PlanDraft, system=system, user=user + EMPTY_PLAN_REMINDER)
+                    if custom and not draft.steps and not draft.unsupported:  # пустой ответ или график ушёл не в то поле: одна повторная попытка
+                        reminder = WRONG_FIELD_REMINDER if draft.charts else EMPTY_PLAN_REMINDER
+                        draft = llm.generate(PlanDraft, system=system, user=user + reminder)
                     planner, methodology = "llm", _record_stage(deps, state, "plan")
                 except LLMError as exc:
                     warnings = _merge(warnings, f"План составлен по правилам: {exc.user_message}")

@@ -5,7 +5,7 @@ import pytest
 from datastory.analytics.formatting import format_metric_value
 from datastory.errors import LLMError
 from datastory.rag.knowledge_base import KnowledgeBase
-from datastory.workflow.models import AUTO_GOAL, ApprovalDecision, FilterDraft, PlanDraft, StepDraft
+from datastory.workflow.models import AUTO_GOAL, ApprovalDecision, ChartDraft, FilterDraft, PlanDraft, StepDraft
 from scripts import generate_sales_demo as sales
 from tests.helpers import ScriptedLLM
 from tests.workflow_helpers import approve, make_runner, save_dataset
@@ -301,6 +301,21 @@ def test_an_empty_model_answer_is_retried_once_with_a_reminder(client, sales_id)
     snapshot = plan_for(client, sales_id, llm, None, "Покажи динамику выручки по месяцам")
     assert snapshot.phase == "awaiting_approval" and len(llm.prompts("PlanDraft")) == 2
     assert "Предыдущий ответ был пустым" in llm.prompts("PlanDraft")[1][1]
+
+
+def test_a_chart_placed_in_the_wrong_schema_field_gets_a_targeted_retry_not_a_silent_drop(client, sales_id):
+    """Реальный сбой из аудита: модель кладёт шаг в charts (каталог) вместо steps. Retry должен получить конкретное
+    указание про charts, а не общее «ответ был пустым» — и построить план из второй попытки."""
+    def plan(system, user, n):
+        if n == 1:
+            return PlanDraft(goal="x", charts=[ChartDraft(analysis="volume_dynamics", title="Динамика выручки", chart_type="line", x_column="Month", rationale="r")])
+        return PlanDraft(goal="x", steps=[step(REVENUE, ("Month",))])
+
+    llm = ScriptedLLM(PlanDraft=plan)
+    snapshot = plan_for(client, sales_id, llm, None, "Покажи динамику выручки по месяцам")
+    prompts = llm.prompts("PlanDraft")
+    assert len(prompts) == 2 and "поле charts" in prompts[1][1] and "Предыдущий ответ был пустым" not in prompts[1][1]
+    assert snapshot.phase == "awaiting_approval" and snapshot.plan.charts[0].metric == REVENUE
 
 
 def test_a_persistently_empty_answer_is_reported_not_left_silent(client, sales_id):

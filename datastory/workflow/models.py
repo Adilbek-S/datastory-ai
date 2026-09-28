@@ -242,8 +242,11 @@ class PlanDraft(BaseModel):
     """Ответ LLM на этапе build_analysis_plan (проверяется в validate_analysis_plan)."""
 
     goal: str = Field(description="Цель анализа одной фразой")
-    charts: list[ChartDraft] = Field(default_factory=list, description="Шаги из каталога анализов (когда выбраны анализы каталога)")
-    steps: list[StepDraft] = Field(default_factory=list, description="Шаги по запросу пользователя (когда каталога анализов нет)")
+    charts: list[ChartDraft] = Field(
+        default_factory=list,
+        description="ТОЛЬКО для устаревшего каталога платёжных анализов, когда явно выбраны его пункты; иначе всегда [] — обычный план идёт в steps",
+    )
+    steps: list[StepDraft] = Field(default_factory=list, description="План анализа по запросу пользователя: сюда, а не в charts, идёт каждый график")
     unsupported: list[str] = Field(
         default_factory=list, description="Запрошенные показатели и действия, которых нет среди доступных (не придумывай их): по одной фразе на каждое"
     )
