@@ -14,6 +14,8 @@
 | `LANGSMITH_ENDPOINT` | нет | по умолчанию `https://api.smith.langchain.com`; для EU — `https://eu.api.smith.langchain.com` |
 | `LANGSMITH_WORKSPACE_ID` | нет | нужен, только если ключ привязан к нескольким рабочим пространствам |
 
+**Старые имена переменных.** Официальные примеры LangSmith годами учили задавать `LANGCHAIN_TRACING_V2` / `LANGCHAIN_API_KEY` / `LANGCHAIN_PROJECT` / `LANGCHAIN_ENDPOINT` (текущее имя — `LANGSMITH_*`). Приложение принимает оба варианта: если заданы одновременно и новое, и старое имя, старое игнорируется, даже если новое пустое (это и защищает тесты от случайной отправки трасс). Если у вас уже есть `LANGCHAIN_API_KEY` из старого туториала — добавьте только `LANGSMITH_TRACING=true` (или, что то же самое, `LANGCHAIN_TRACING_V2=true`), переименовывать ключ не нужно.
+
 Правила включения:
 
 - `LANGSMITH_TRACING=true` **и** `LANGSMITH_API_KEY` заданы → трассировка включена.

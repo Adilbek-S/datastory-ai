@@ -5,7 +5,7 @@ import os
 from functools import lru_cache
 from pathlib import Path
 
-from pydantic import Field
+from pydantic import AliasChoices, Field
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
 PROJECT_ROOT = Path(__file__).resolve().parent.parent
@@ -34,10 +34,12 @@ class Settings(BaseSettings):
     mcp_startup_timeout: float = 30.0
     mcp_call_timeout: float = 60.0
 
-    langsmith_tracing: bool = False
-    langsmith_api_key: str = ""
-    langsmith_project: str = "datastory-ai"
-    langsmith_endpoint: str = ""  # пусто — облако LangSmith по умолчанию; для EU и self-hosted укажите свой URL
+    # Официальные примеры LangSmith годами учили задавать LANGCHAIN_TRACING_V2 / LANGCHAIN_API_KEY / LANGCHAIN_PROJECT
+    # (текущее имя — LANGSMITH_*); принимаем оба варианта, чтобы ключ, заданный по любому туториалу, не терялся молча.
+    langsmith_tracing: bool = Field(default=False, validation_alias=AliasChoices("LANGSMITH_TRACING", "LANGCHAIN_TRACING_V2"))
+    langsmith_api_key: str = Field(default="", validation_alias=AliasChoices("LANGSMITH_API_KEY", "LANGCHAIN_API_KEY"))
+    langsmith_project: str = Field(default="datastory-ai", validation_alias=AliasChoices("LANGSMITH_PROJECT", "LANGCHAIN_PROJECT"))
+    langsmith_endpoint: str = Field(default="", validation_alias=AliasChoices("LANGSMITH_ENDPOINT", "LANGCHAIN_ENDPOINT"))  # пусто — облако LangSmith по умолчанию; для EU и self-hosted укажите свой URL
     langsmith_workspace_id: str = ""  # нужен только для ключей, привязанных к нескольким рабочим пространствам
 
     @property

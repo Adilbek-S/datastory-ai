@@ -84,6 +84,27 @@ def test_settings_are_read_from_environment_variables(monkeypatch):
     assert tracing_status(loaded).endpoint == "https://eu.api.smith.langchain.com"
 
 
+def test_the_legacy_langchain_env_names_are_accepted_as_a_fallback(monkeypatch):
+    """Официальные примеры LangSmith годами учили задавать LANGCHAIN_TRACING_V2 / LANGCHAIN_API_KEY / LANGCHAIN_PROJECT;
+    ключ, заданный по такому туториалу, не должен теряться молча."""
+    for name in ("LANGSMITH_TRACING", "LANGSMITH_API_KEY", "LANGSMITH_PROJECT", "LANGSMITH_ENDPOINT"):
+        monkeypatch.delenv(name, raising=False)
+    monkeypatch.setenv("LANGCHAIN_TRACING_V2", "true")
+    monkeypatch.setenv("LANGCHAIN_API_KEY", "lsv2_legacy")
+    monkeypatch.setenv("LANGCHAIN_PROJECT", "legacy-project")
+    loaded = Settings(_env_file=None)
+    assert loaded.langsmith_tracing and loaded.langsmith_api_key == "lsv2_legacy" and loaded.langsmith_project == "legacy-project"
+    assert tracing_status(loaded).enabled
+
+
+def test_an_explicit_new_style_value_wins_over_the_legacy_name_even_when_empty(monkeypatch):
+    """Тестовая изоляция (conftest) полагается на это: monkeypatch.setenv("LANGSMITH_API_KEY", "") не должен считать
+    настоящий ключ из LANGCHAIN_API_KEY, если он тоже задан в окружении."""
+    monkeypatch.setenv("LANGSMITH_API_KEY", "")
+    monkeypatch.setenv("LANGCHAIN_API_KEY", "real-secret")
+    assert Settings(_env_file=None).langsmith_api_key == ""
+
+
 def test_enabled_tracing_exports_the_variables_langsmith_reads(monkeypatch):
     for name in ("LANGSMITH_TRACING", "LANGSMITH_API_KEY", "LANGSMITH_PROJECT", "LANGSMITH_ENDPOINT", "LANGSMITH_WORKSPACE_ID"):
         monkeypatch.setenv(name, "")  # значения вернутся после теста

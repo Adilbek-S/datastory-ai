@@ -313,6 +313,51 @@ def render_hp(hp: dict[str, Any], hp_sha256: str, queries: dict[str, str] | None
     return lines
 
 
+def render_golden(results: dict[str, Any]) -> list[str]:
+    """Раздел о golden dataset: состав и поля берутся из результатов (случаи хранят ожидаемые значения)."""
+    cases = results["cases"]
+    behaviors: dict[str, int] = {}
+    for case in cases:
+        behaviors[case["expected_behavior"]] = behaviors.get(case["expected_behavior"], 0) + 1
+    names = {"answer": "ответ (построить шаг плана)", "reject": "отказ (показателя нет в данных)", "clarify": "уточнение (запрос неоднозначен)"}
+    lines = [
+        "", "## Golden dataset", "",
+        f"{len(cases)} полностью синтетических случаев на `{results['environment']['dataset']}` (файл `evaluation/golden/cases.json`, sha256 `{results['environment']['golden_sha256'][:12]}…`). "
+        "Поля случая: `id`, `user_query`, `expected_metric`, `expected_columns`, `expected_group_by`, `expected_filters`, `expected_chart_type`, `expected_rag_document`, `expected_rag_section`, "
+        "`expected_behavior`, для ответов — эталонные числа (`expected_numeric`), посчитанные обычным Python-кодом по строкам генератора, а не MCP и не LLM.", "",
+        "| Группа | Случаев | Пример запроса |", "|---|---|---|",
+    ]
+    for group, title in GROUP_TITLES.items():
+        items = [c for c in cases if c["group"] == group]
+        if items:
+            lines.append(f"| {title} | {len(items)} | «{items[0]['user_query']}» |")
+    lines += ["", "Ожидаемое поведение: " + "; ".join(f"{names.get(k, k)} — {v}" for k, v in behaviors.items()) + ".", ""]
+    return lines
+
+
+def render_limitations(has_ab: bool, has_hp: bool) -> list[str]:
+    lines = [
+        "## Ограничения", "",
+        "- **Golden dataset не является независимой отложенной выборкой.** Промпт и правила планировщика дорабатывались во время разработки на запросах, близких к этим "
+        "(в том числе примеры из постановки задачи и провалы первого прогона), поэтому значения завышают качество на новых запросах.",
+        "- Данные и golden cases синтетические (вымышленная сеть SalesDemo KZ), один набор данных и одна предметная область.",
+        "- Numeric Accuracy проверяет расчёты MCP при эталонном плане (независимо от LLM); «план системы» — сквозная проверка: числа по тому плану, который построила модель.",
+        "- Ответы LLM недетерминированы даже при temperature 0: повторный запуск даёт другие значения, поэтому одиночный прогон основных метрик — не статистическая оценка "
+        "(A/B и выбор гиперпараметров повторяют каждый случай несколько раз именно поэтому).",
+        "- Задержка включает сеть OpenAI; Hit@3 зависит от эмбеддингов: с офлайн-режимом (лексический поиск) значения ниже и не отражают семантический поиск.",
+        "- Известная причина промахов Plan Accuracy: планировщик по запросу иногда заполняет в `PlanDraft` поле `charts` (каталог анализов) вместо `steps`, и ответ считается пустым "
+        "(диагностика аудита); значения Plan Accuracy и ошибочных отказов отражают эту ненадёжность, а не только качество подбора показателей.",
+        "- Оценивается построение плана и расчёты; качество формулировок выводов и чата, Vision, интерфейс и трассировка LangSmith этими метриками не измеряются "
+        "(их проверяют автотесты `pytest` и ручные сценарии, доставку трасс в LangSmith — `scripts/run_sales_scenario.py`, отдельно от evals).",
+    ]
+    if has_ab:
+        lines.append("- A/B эксперимент: 30 случаев и малое число расходящихся пар дают мало статистической силы; результат «не подтверждено» не доказывает, что RAG бесполезен. "
+                     "RAG в A/B проверялся только как контекст в промпте планировщика.")
+    if has_hp:
+        lines.append("- Выбор гиперпараметров: сравнивались только два значения temperature на 10 случаях; top_p и другие параметры не исследовались, выбор сделан по точечной оценке и может измениться при большем числе повторов.")
+    return lines
+
+
 def render_report(
     results: dict[str, Any], results_sha256: str, history: list[dict[str, Any]] | None = None, ab: dict[str, Any] | None = None, ab_sha256: str = "",
     hp: dict[str, Any] | None = None, hp_sha256: str = "", previous_hp: list[dict[str, Any]] | None = None,
@@ -338,7 +383,7 @@ def render_report(
         f"| Golden cases | sha256 `{env['golden_sha256'][:12]}…` |",
         f"| Коммит | `{(env['git_commit'] or 'неизвестен')[:10]}`{' (есть несохранённые изменения)' if env['git_dirty'] else ''} |",
         f"| Допуск float | rel {env['float_tolerance']['rel']}, abs {env['float_tolerance']['abs']} |",
-        "",
+        *render_golden(results),
         "## Итоговые метрики",
         "",
         "| Метрика | Значение | Что измеряет |", "|---|---|---|",
@@ -402,20 +447,13 @@ def render_report(
         "", "## История прогонов", "",
         *(_history_rows(history) if history else ["Других сохранённых прогонов нет."]),
         "", "Каждый прогон сохраняется в `evaluation/results/history/`; таблица строится из этих файлов.",
-        "", "## Как читать и что не проверяется", "",
-        "- **Набор не является независимой отложенной выборкой.** Промпт и правила планировщика дорабатывались во время разработки на запросах, "
-        "близких к этим (в том числе примеры из постановки задачи и провалы первого прогона), поэтому высокие значения завышают качество на новых запросах.",
-        "- Golden cases и данные полностью синтетические (вымышленная сеть SalesDemo KZ); эталонные числа посчитаны обычным Python-кодом по строкам генератора, а не MCP и не LLM.",
-        "- Numeric Accuracy проверяет расчёты MCP при эталонном плане (независимо от LLM); «план системы» — сквозная проверка: числа по тому плану, который построила модель.",
-        "- Ответы LLM недетерминированы даже при temperature=0: повторный запуск может дать другие значения. Одиночный запуск на 30 случаях — не статистическая оценка.",
-        "- Каждый случай выполняется один раз; задержка включает сеть OpenAI. Hit@3 зависит от эмбеддингов: с офлайн-режимом (лексический поиск) значения ниже и не отражают семантический поиск.",
-        "- Оценивается построение плана и расчёты; качество формулировок выводов и чата проверяют автотесты (`pytest`), а не эти метрики.",
         "",
     ]
     if ab:
         lines += render_ab(ab, ab_sha256, {c["id"]: c["user_query"] for c in results["cases"]}) + [""]
     if hp:
         lines += render_hp(hp, hp_sha256, {c["id"]: c["user_query"] for c in results["cases"]}, previous_hp) + [""]
+    lines += render_limitations(has_ab=bool(ab), has_hp=bool(hp)) + [""]
     return "\n".join(lines)
 
 
